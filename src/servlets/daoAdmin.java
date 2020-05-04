@@ -1,9 +1,8 @@
 package servlets;
 
+import dao.admin;
 import hibernate.HibernateUtil;
-
-import dao.collMapTable;
-import model.MapTable;
+import model.UsersAdmin;
 import org.hibernate.SessionFactory;
 
 import javax.servlet.ServletException;
@@ -11,17 +10,21 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
 
-@WebServlet(name = "daoCollMapTable", urlPatterns = {"/daoCollOpen"})
-public class daoCollMapTable extends HttpServlet {
+@WebServlet(name = "daoAdmins", urlPatterns = {"/OpenListManager", "/NewManager"})
+public class daoAdmin extends HttpServlet {
     private SessionFactory sessionFactory;
+    private HttpSession httpSession;
+
     @Override
     public void init() throws ServletException {
         super.init();
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
@@ -31,14 +34,14 @@ public class daoCollMapTable extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getServletPath();
-        System.out.println(action);
-            switch (action) {
-//                case "/new":
-//                    showNewForm(request, response);
-//                    break;
-                case "/daoCollOpen":
-                    showAllMapTable(request, response);
-                    break;
+
+        switch (action) {
+            case "/NewManager":
+                showNewForm(request, response);
+                break;
+            case "/OpenListManager":
+                showAllManager(request, response);
+                break;
 //                case "/insert":
 //                    insertUser(request, response);
 //                    break;
@@ -54,18 +57,28 @@ public class daoCollMapTable extends HttpServlet {
 //                default:
 //                    listUser(request, response);
 //                    break;
-            }
+        }
 
     }
-    private void showAllMapTable(HttpServletRequest request, HttpServletResponse response)
+
+    private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        httpSession = request.getSession();
+        String user = (String) httpSession.getAttribute("user");
+        request.setAttribute("name", user);
+        getServletContext().getRequestDispatcher("/register.jsp").forward(request, response);
+    }
+
+    private void showAllManager(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Long id = Long.parseLong(request.getParameter("collection_id"));
 
         sessionFactory = HibernateUtil.getSessionFactory();
-        List<MapTable> MapTables = collMapTable.FindMap(id);
-
-        request.setAttribute("MapTables", MapTables);
-        getServletContext().getRequestDispatcher("/userMapTable.jsp").forward(request, response);
+        List<UsersAdmin> usersAdminList = admin.FindAdmins();
+        httpSession = request.getSession();
+        String user = (String) httpSession.getAttribute("user");
+        request.setAttribute("name", user);
+        request.setAttribute("UsersAdmin", usersAdminList);
+        getServletContext().getRequestDispatcher("/listAdmins.jsp").forward(request, response);
     }
+
 }

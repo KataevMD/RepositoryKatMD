@@ -2,7 +2,7 @@ package servlets;
 
 import hibernate.HibernateUtil;
 import model.CollectionMapTable;
-import dao.DAO;
+import dao.collMapTable;
 import org.hibernate.SessionFactory;
 
 import javax.servlet.ServletException;
@@ -27,7 +27,7 @@ public class indexServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         sessionFactory = HibernateUtil.getSessionFactory();
 
-        List<CollectionMapTable> collectionMapTables = DAO.FindColl();
+        List<CollectionMapTable> collectionMapTables = collMapTable.FindColl();
 
         request.setAttribute("collectionMapTables", collectionMapTables);
         getServletContext().getRequestDispatcher("/mainUsers.jsp").forward(request, response);

@@ -1,6 +1,7 @@
 package servlets;
 
-import dao.DAO;
+import dao.collMapTable;
+import dao.admin;
 import hibernate.HibernateUtil;
 import model.CollectionMapTable;
 import model.UsersAdmin;
@@ -30,14 +31,14 @@ public class auth extends HttpServlet {
 
         String login = request.getParameter("login");
         String passw = request.getParameter("password");
-        String shaPassw = DAO.getHash(passw);
+        String shaPassw = admin.getHash(passw);
         HttpSession httpSession = request.getSession();
 
-            usersAdmins = DAO.findByUserNameAndPassword(login, shaPassw);
+            usersAdmins = admin.findByUserNameAndPassword(login, shaPassw);
 
             if(usersAdmins != null){
-                httpSession.setAttribute("user", usersAdmins);
-                List<CollectionMapTable> collectionMapTables = DAO.FindColl();
+                httpSession.setAttribute("user", usersAdmins.getFirstName() +" "+usersAdmins.getLastName());
+                List<CollectionMapTable> collectionMapTables = collMapTable.FindColl();
                 request.setAttribute("name", usersAdmins.getFirstName() +" "+usersAdmins.getLastName());
                 request.setAttribute("collectionMapTables", collectionMapTables);
                 getServletContext().getRequestDispatcher("/mainAdmins.jsp").forward(request, response);

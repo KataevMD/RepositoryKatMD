@@ -58,7 +58,7 @@
 <%--          <td>--%>
 <%--            <button id="view" class="btn btn-light">Просмотреть</button>--%>
 <%--          </td>--%>
-          <td><a href="open?collection_id=<c:out value='${collMapTable.collection_id}'/>" class="btn btn-light">Проссмотреть</a>
+          <td><a href="${pageContext.request.contextPath}/daoCollOpen?collection_id=<c:out value='${collMapTable.collection_id}'/>" class="btn btn-light">Проссмотреть</a>
         </tr>
       </c:forEach>
       </tbody>

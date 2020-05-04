@@ -1,22 +1,20 @@
 package dao;
 
 import hibernate.HibernateUtil;
-import model.CollectionMapTable;
+import model.MapTable;
 import model.UsersAdmin;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.Iterator;
 import java.util.List;
 
-public class DAO {
-    private static List<CollectionMapTable> collectionMapTables;
+public class admin {
+    private static List<UsersAdmin> usersAdminList = null;
 
     public static String getHash(String password) {
         return DigestUtils.sha512Hex(password);
@@ -26,7 +24,7 @@ public class DAO {
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
-        List<UsersAdmin> usersAdmins = null;
+        List<UsersAdmin> usersAdmins;
 
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<UsersAdmin> criteria = builder.createQuery(UsersAdmin.class);
@@ -34,13 +32,13 @@ public class DAO {
         criteria.select( root );
         criteria.where( builder.equal( root.get("login"), login ), builder.equal(root.get("password"), password) );
 
-            session.beginTransaction();
-            usersAdmins = session.createQuery(criteria).getResultList();
-            session.getTransaction().commit();
+        session.beginTransaction();
+        usersAdmins = session.createQuery(criteria).getResultList();
+        session.getTransaction().commit();
 
         Iterator<UsersAdmin> it = usersAdmins.iterator();
-        UsersAdmin user = new UsersAdmin();
-        if (it.hasNext() == true) {
+        UsersAdmin user;
+        if (it.hasNext()) {
             user = it.next();
             return user;
         } else {
@@ -48,24 +46,22 @@ public class DAO {
             return null;
         }
     }
-
-    public static List<CollectionMapTable> FindColl(){
+    public static List<UsersAdmin> FindAdmins(){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<CollectionMapTable> criteria = builder.createQuery(CollectionMapTable.class);
-        Root<CollectionMapTable> root = criteria.from( CollectionMapTable.class );
+        CriteriaQuery<UsersAdmin> criteria = builder.createQuery(UsersAdmin.class);
+        Root<UsersAdmin> root = criteria.from( UsersAdmin.class );
         criteria.select( root );
-        //criteria.where( builder.equal( root.get("login"), "maksim12" ) );
+
         session.beginTransaction();
-        collectionMapTables = session.createQuery(criteria).getResultList();
+        usersAdminList = session.createQuery(criteria).getResultList();
         session.getTransaction().commit();
         session.close();
-        if(!collectionMapTables.isEmpty()){
-            return collectionMapTables;
+        if(!usersAdminList.isEmpty()){
+            return usersAdminList;
         }
-            return null;
-
+        return null;
     }
 }

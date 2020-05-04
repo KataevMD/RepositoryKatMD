@@ -17,7 +17,8 @@
   <title>Единая база нормативов технологических операций</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="http://localhost:8081/cstrmo/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
   <meta name="theme-color" content="#563d7c">
 
   <!-- Custom styles for this template -->
@@ -26,11 +27,9 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
   <a class="navbar-brand" href="#">Единая база нормативов технологических операций</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <a class="btn btn-outline-light my-2 my-sm-0" href="${pageContext.request.contextPath}/OpenListManager">Уч.записи администраторов</a>
     <form class="form-inline my-2 my-lg-0" action="index.jsp">
       <button class="btn btn-outline-light my-2 my-sm-0" >${name} (Выйти)</button>
     </form>

@@ -18,7 +18,7 @@ public class UsersAdmin {
     @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "patronymic", nullable = true)
+    @Column(name = "patronymic")
     private  String patronymic;
 
     @Column(name = "login")
