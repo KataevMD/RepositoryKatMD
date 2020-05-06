@@ -27,23 +27,43 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="#">Единая база нормативов технологических операций</a>
 </nav>
+<%
+    Cookie[] cookies=request.getCookies();
+    String userName = "", password = "",rememberVal="";
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if(cookie.getName().equals("cookuser")) {
+                userName = cookie.getValue();
+            }
+            if(cookie.getName().equals("cookpass")){
+                password = cookie.getValue();
+            }
+            if(cookie.getName().equals("cookrem")){
+                rememberVal = cookie.getValue();
+            }
+        }
+    }
+%>
+<div>
 
-<form class="form-signin" method="post" action="${pageContext.request.contextPath}/authUsers">
-    <h1 class="h3 mb-3 font-weight-normal">Пожалуйста, войдите в систему</h1>
-    <label for="inputEmail" class="sr-only">Email address</label>
-    <input  id="inputEmail" class="form-control" name="login" placeholder="Login" required autofocus>
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
-    <p>${enter}</p>
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" value="remember-me"> Запомнить меня
-        </label>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Вход</button>
-    <button type="button" onclick="document.location='loadCollforUsers'" class="btn btn-outline-secondary btn-block">Продолжить без авторизации</button>
-    <p class="mt-5 mb-3 text-muted">&copy; 2020-....</p>
-</form>
+    <form class="form-signin" autocomplete="off" method="post" action="${pageContext.request.contextPath}/login">
+        <h1 class="h3 mb-3 font-weight-normal">Пожалуйста, войдите в систему</h1>
+        <label for="inputLogin" class="sr-only">Email address</label>
+        <input  id="inputLogin" autocomplete="off"  value="<%=userName%>" class="form-control" name="login" placeholder="Login" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" autocomplete="new-password" id="inputPassword" value="<%=password%>" name="password" class="form-control" placeholder="Password" required>
+        <%=request.getAttribute("msg") != null ? request.getAttribute("msg") : ""%>
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="remember" value="1" <%= "1".equals(rememberVal.trim()) ? "checked=\"checked\"" : "" %> > Запомнить меня
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Вход</button>
+        <button type="button" onclick="document.location='loadCollforUsers'" class="btn btn-outline-secondary btn-block">Продолжить без авторизации</button>
+        <p class="mt-5 mb-3 text-muted">&copy; 2020-....</p>
+    </form>
+</div>
+
 
 </body>
 </html>

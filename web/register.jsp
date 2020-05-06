@@ -25,6 +25,8 @@
     <div class="row">
         <div class="col">
             <form class="" method="post" action="${pageContext.request.contextPath}/authUsers">
+                    <p class="text-center h3">Добавление учетной записи нового администратора</p>
+                <br>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputFirstName">Имя</label>
@@ -34,11 +36,15 @@
                         <label for="inputLastName">Фамилия</label>
                         <input type="text" class="form-control" pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{1,23})$" id="inputLastName" required>
                     </div>
-                    <div class="form-group">
+
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
                         <label for="inputPatronymic">Отчество</label>
                         <input type="text" class="form-control" id="inputPatronymic">
                     </div>
                 </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Создать учетную запись</button>
             </form>
         </div>
     </div>

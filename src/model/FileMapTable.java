@@ -19,6 +19,7 @@ public class FileMapTable {
     private Long mapTable_id;
 
     @Column(name = "filePdf")
+    @Lob
     private Blob filePDF;
 
 

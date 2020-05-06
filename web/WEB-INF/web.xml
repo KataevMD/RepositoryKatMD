@@ -3,7 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-
+    <display-name>Servlet Login Logout - Remember Me</display-name>
+    <session-config>
+        <!-- Timeout of inactivity in minutes -->
+        <session-timeout>15</session-timeout>
+    </session-config>
     <listener>
         <listener-class>
             servlets.startHibernate

@@ -12,6 +12,9 @@ public class UsersAdmin {
     @Column(name = "id", updatable = false, nullable = false, unique = true)
     private Long id;
 
+    @Column(name = "role_id", unique = true)
+    private Long role_id;
+
     @Column(name = "firstName")
     private String firstName;
 
