@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Base64" %><%--
   Created by IntelliJ IDEA.
   User: katai
   Date: 21.03.2020
@@ -33,9 +33,11 @@
     if (cookies != null) {
         for (Cookie cookie : cookies) {
             if(cookie.getName().equals("cookuser")) {
+                //userName = new String(Base64.getDecoder().decode(cookie.getValue()));
                 userName = cookie.getValue();
             }
             if(cookie.getName().equals("cookpass")){
+                //password = new String(Base64.getDecoder().decode(cookie.getValue()));
                 password = cookie.getValue();
             }
             if(cookie.getName().equals("cookrem")){
@@ -45,7 +47,6 @@
     }
 %>
 <div>
-
     <form class="form-signin" autocomplete="off" method="post" action="${pageContext.request.contextPath}/login">
         <h1 class="h3 mb-3 font-weight-normal">Пожалуйста, войдите в систему</h1>
         <label for="inputLogin" class="sr-only">Email address</label>
