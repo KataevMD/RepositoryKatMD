@@ -24,7 +24,7 @@
     <!-- Custom styles for this template -->
 
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="#">Единая база нормативов технологических операций</a>
     <div class="navbar-nav">
@@ -37,7 +37,7 @@
 
 </nav>
 
-<main role="main">
+<main role="main" class="flex-shrink-0">
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
@@ -70,9 +70,10 @@
     </div>
 
 </main>
-
-<footer class="container fixed-bottom">
-    <p>&copy; Company 2020-.... </p>
+<footer class="footer bg-dark py-3 mt-auto text-muted">
+    <div class="container">
+        <p class="text-white">&copy; Company 2020-.... </p>
+    </div>
 </footer>
 
 </body>

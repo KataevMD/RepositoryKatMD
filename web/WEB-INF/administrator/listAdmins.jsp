@@ -9,17 +9,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="generator" content="Jekyll v3.8.6">
     <title>Единая база нормативов технологических операций</title>
-
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <meta name="theme-color" content="#563d7c">
 
     <!-- Custom styles for this template -->
     <style>
@@ -27,20 +20,19 @@
     </style>
 
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="#">Единая база нормативов технологических операций</a>
     <div class="navbar-nav">
         <a class="nav-item nav-link active" href="${pageContext.request.contextPath}/OpenListManager">Уч.записи
             администраторов</a>
-        <%--        <a class="nav-item nav-link" href="#">Features</a>--%>
         <a class="btn btn-outline-light align-middle " href="${pageContext.request.contextPath}/logout">${name} (Выйти)</a>
     </div>
 </nav>
 <br>
 <br>
 <br>
-<main role="main">
+<main role="main" class="flex-shrink-0">
     <div class="container">
             <div class="container">
                 <a class="btn btn-outline-secondary" href="${pageContext.request.contextPath}/NewManager">Добавить
@@ -80,9 +72,10 @@
 
     </div>
 </main>
-
-<footer class="container fixed-bottom">
-    <p>&copy; Company 2020-.... </p>
+<footer class="footer bg-dark py-3 mt-auto text-muted">
+    <div class="container">
+        <p class="text-white">&copy; Company 2020-.... </p>
+    </div>
 </footer>
 
 </body>

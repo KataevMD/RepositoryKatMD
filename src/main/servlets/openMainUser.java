@@ -16,7 +16,6 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/loadCollforUsers", name = "loadCollforUsers")
 public class openMainUser extends HttpServlet {
-    private SessionFactory sessionFactory;
     @Override
     public void init() throws ServletException {
         super.init();
@@ -25,9 +24,7 @@ public class openMainUser extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        sessionFactory = HibernateUtil.getSessionFactory();
-
-        List<CollectionMapTable> collectionMapTables = collMapTable.FindColl();
+        List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
 
         request.setAttribute("collectionMapTables", collectionMapTables);
         getServletContext().getRequestDispatcher("/WEB-INF/user/mainUsers.jsp").forward(request, response);

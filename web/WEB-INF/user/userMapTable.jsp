@@ -9,35 +9,38 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="generator" content="Jekyll v3.8.6">
     <title>Единая база нормативов технологических операций</title>
-
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <style><%@include file="/WEB-INF/css/offcanvas.css"%></style>
 </head>
-<body>
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<body class="d-flex flex-column h-100">
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Единая база нормативов технологических операций</a>
 
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <form class="form-inline my-2 my-lg-0" action="../../index.jsp">
-            <button class="btn btn-outline-light my-2 my-sm-0" >Войти</button>
-        </form>
-        <button class="btn btn-outline-light my-2 my-sm-0"></button>
-
+    <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <form class="form-inline my-2 my-lg-0" action="../../index.jsp">
+                    <button class="btn btn-outline-light my-2 my-sm-0" >Войти</button>
+                </form>
+            </li>
+        </ul>
     </div>
 </nav>
 
-<main role="main">
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <p class="text-justify h3 text-center font-weight-bold">Добро пожаловать в систему управления техническим нормированием операций механической обработки деталей!</p>
-    </div>
+<main role="main" class="flex-shrink-0">
+    <br>
+    <div class="container text-center">
+        <p class="h4 mt-auto">Список карт трудового нормирования справочника "${idCollMapTable}"</p>
+    </div><br>
     <div class="container ">
         <table id="tableMapTable" class="table table-bordered container text-left">
             <thead class="thead-light">
@@ -62,14 +65,12 @@
     </div>
 
 </main>
-
-<footer class="footer bg-dark py-3 ">
+<footer class="footer py-3 mt-auto bg-dark ">
     <div class="container">
         <p class="text-white">&copy; Company 2020-.... </p>
     </div>
-
 </footer>
 
 </body>
-
+<script><%@include file="/WEB-INF/js/offcanvas.js"%></script>
 </html>

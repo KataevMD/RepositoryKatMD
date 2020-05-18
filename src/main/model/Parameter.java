@@ -23,12 +23,14 @@ public class Parameter {
 	private MapTable mapTable;
 	
 	public Parameter() {
-
-
 	}
-
-	public MapTable getMapTable(){
-		return this.mapTable;
+	public void setItem(MapTable mapTable)
+	{
+		if (this.mapTable != null)
+		this.mapTable.internalRemoveParametr(this);
+		this.mapTable = mapTable;
+		if (mapTable != null)
+		mapTable.internalAddParametr(this);
 	}
 
 	public Long getParameter_id() {
@@ -39,19 +41,6 @@ public class Parameter {
 		this.parameter_id = parameter_id;
 	}
 
-	public void setMapTable(MapTable mapTable) {
-		this.mapTable = mapTable;
-	}
-
-	public void setItem(MapTable mapTable)
-	{
-		if (this.mapTable != null)
-		this.mapTable.internalRemoveParametr(this);
-		this.mapTable = mapTable;
-		if (mapTable != null)
-		mapTable.internalAddParametr(this);
-	}
-	
 	public String getNameParametr() {
 		return nameParametr;
 	}
@@ -60,7 +49,6 @@ public class Parameter {
 		this.nameParametr = nameParametr;
 	}
 
-
 	public Double getStep() {
 		return step;
 	}
@@ -68,5 +56,12 @@ public class Parameter {
 	public void setStep(Double step) {
 		this.step = step;
 	}
-	
+
+	public MapTable getMapTable() {
+		return mapTable;
+	}
+
+	public void setMapTable(MapTable mapTable) {
+		this.mapTable = mapTable;
+	}
 }

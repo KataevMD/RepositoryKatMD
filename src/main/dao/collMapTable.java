@@ -3,6 +3,7 @@ package main.dao;
 import main.hibernate.HibernateUtil;
 import main.model.CollectionMapTable;
 import main.model.MapTable;
+import main.model.Parameter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -10,17 +11,15 @@ import javax.persistence.criteria.*;
 import java.util.List;
 
 public class collMapTable {
-    private static List<MapTable> MapTables;
-    private static List<CollectionMapTable> collectionMapTables;
 
     public collMapTable(){}
 
-    public static List<MapTable> findMapbyId(Long id){
+    public static List<MapTable> findMapByIdColl(Long id){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
         session.beginTransaction();
-        MapTables = session.createQuery("from MapTable m where m.collectionMapTable.collection_id=" + id).getResultList();
+        List<MapTable> MapTables = session.createQuery("from MapTable m where m.collectionMapTable.collection_id=" + id).getResultList();
         session.getTransaction().commit();
         session.close();
         if(!MapTables.isEmpty()){
@@ -39,13 +38,25 @@ public class collMapTable {
         Root<CollectionMapTable> root = criteria.from( CollectionMapTable.class );
         criteria.select( root );
         session.beginTransaction();
-        collectionMapTables = session.createQuery(criteria).getResultList();
+        List<CollectionMapTable> collectionMapTables = session.createQuery(criteria).getResultList();
         session.getTransaction().commit();
         session.close();
         if(!collectionMapTables.isEmpty()){
             return collectionMapTables;
         }
         return null;
+    }
 
+    public static List<Parameter> findParamByIdMap(Long id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<Parameter> parameters = session.createQuery("from Parameter p where p.mapTable.mapTable_id = " + id).getResultList();
+        session.getTransaction().commit();
+        session.close();
+        if(!parameters.isEmpty()){
+            return parameters;
+        }
+        return null;
     }
 }

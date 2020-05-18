@@ -5,7 +5,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "mapTable")
-//@SequenceGenerator(name = "mapseq2", sequenceName="mapseq",allocationSize=50)
 public class MapTable {
 
     @Id
@@ -55,7 +54,7 @@ public class MapTable {
     }
 
 
-    public Long getId() {
+    public Long getMapTable_id() {
         return mapTable_id;
     }
 

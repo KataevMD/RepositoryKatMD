@@ -14,61 +14,66 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 </head>
-<body>
+<body  class="d-flex flex-column h-100">
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="#">Единая база нормативов технологических операций</a>
 </nav>
 <br>
 <br>
 <br>
-<div class="container border border-secondary ">
-    <div class="row">
-        <div class="col">
-            <form class="" autocomplete="off" method="post" action="">
-                <p class="text-center h3">Добавление учетной записи нового администратора</p>
-                <br>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputFirstName">Имя</label>
-                        <input type="text" autocomplete="off" class="form-control"
-                               pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" id="inputFirstName" required
-                               autofocus>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputLastName">Фамилия</label>
-                        <input type="text" autocomplete="off" class="form-control"
-                               pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" id="inputLastName" required>
-                    </div>
+<main role="main" class="flex-shrink-0">
+    <div class="container border border-secondary ">
+        <div class="row">
+            <div class="col">
+                <form class="" autocomplete="off" method="post" action="">
+                    <p class="text-center h3">Добавление учетной записи нового администратора</p>
+                    <br>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputFirstName">Имя</label>
+                            <input type="text" autocomplete="off" class="form-control"
+                                   pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" id="inputFirstName" required
+                                   autofocus>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputLastName">Фамилия</label>
+                            <input type="text" autocomplete="off" class="form-control"
+                                   pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" id="inputLastName" required>
+                        </div>
 
-                </div>
-                <div class="form-row justify-content-center">
-                    <div class="form-group col-md-6 ">
-                        <label for="inputPatronymic">Отчество</label>
-                        <input type="text" autocomplete="off" class="form-control"
-                               pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" id="inputPatronymic">
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputLogin">Логин</label>
-                        <input type="text" autocomplete="off" class="form-control" pattern="^[a-zA-Z][a-zA-Z0-9]{6,20}$"
-                               id="inputLogin" required>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-6 ">
+                            <label for="inputPatronymic">Отчество</label>
+                            <input type="text" autocomplete="off" class="form-control"
+                                   pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" id="inputPatronymic">
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputPassw">Пароль</label>
-                        <input type="password" autocomplete="off" class="form-control"
-                               pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}"
-                               id="inputPassw" value="Passw0rd" readonly>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputLogin">Логин</label>
+                            <input type="text" autocomplete="off" class="form-control" pattern="^[a-zA-Z][a-zA-Z0-9]{6,20}$"
+                                   id="inputLogin" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassw">Пароль</label>
+                            <input type="password" autocomplete="off" class="form-control"
+                                   pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}"
+                                   id="inputPassw" value="Passw0rd" readonly>
+                        </div>
                     </div>
-                </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Создать учетную запись</button>
-            </form>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Создать учетную запись</button>
+                </form>
+            </div>
         </div>
-    </div>
 
-</div>
-<footer class="container fixed-bottom">
-    <p>&copy; Company 2020-.... </p>
+    </div>
+</main>
+
+<footer class="footer bg-dark py-3 mt-auto text-muted">
+    <div class="container">
+        <p class="text-white">&copy; Company 2020-.... </p>
+    </div>
 </footer>
 
 </body>

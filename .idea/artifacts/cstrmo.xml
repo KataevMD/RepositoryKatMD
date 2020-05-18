@@ -5,11 +5,14 @@
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="CSTRMO" />
+          <element id="jpa-descriptors" facet="CSTRMO/jpa/JPA" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Hibernate 5.4.11-5.4.11" />
           <element id="library" level="project" name="jstl-1.2" />
           <element id="library" level="project" name="commons-codec-1.10" />
+          <element id="library" level="project" name="javax.json.bind-api-1.0" />
+          <element id="library" level="project" name="gson-2.8.5" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="CSTRMO/web/Web" />

@@ -1,11 +1,8 @@
 package main.servlets;
 
-import main.hibernate.HibernateUtil;
-
 import main.dao.collMapTable;
 import main.model.MapTable;
-import org.hibernate.SessionFactory;
-
+import main.model.Parameter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,9 +12,10 @@ import java.io.IOException;
 import java.util.List;
 
 
-@WebServlet(name = "daoCollMapTable", urlPatterns = {"/daoCollOpen"})
-public class daoCollMapTable extends HttpServlet {
-    private SessionFactory sessionFactory;
+@WebServlet(name = "daoCollMapTable", urlPatterns = {"/daoCollOpen","/viewParamAndCoeff"})
+public class viewCollMapTable extends HttpServlet {
+
+
     @Override
     public void init() throws ServletException {
         super.init();
@@ -39,9 +37,9 @@ public class daoCollMapTable extends HttpServlet {
                 case "/daoCollOpen":
                     findAllMapTable(request, response);
                     break;
-//                case "/insert":
-//                    insertUser(request, response);
-//                    break;
+                case "/viewParamAndCoeff":
+                    findParamAndCoeffById(request, response);
+                    break;
 //                case "/delete":
 //                    deleteUser(request, response);
 //                    break;
@@ -64,11 +62,25 @@ public class daoCollMapTable extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Long id = Long.parseLong(request.getParameter("collection_id"));
-
-        sessionFactory = HibernateUtil.getSessionFactory();
-        List<MapTable> MapTables = collMapTable.findMapbyId(id);
+        String nameColl = request.getParameter("nameCollectionMapTable");
+        List<MapTable> MapTables = collMapTable.findMapByIdColl(id);
 
         request.setAttribute("MapTables", MapTables);
+        request.setAttribute("idCollMapTable",nameColl);
+        getServletContext().getRequestDispatcher("/WEB-INF/user/userMapTable.jsp").forward(request, response);
+    }
+    /*
+    Метод поиска всех параметров по id выбранной карты
+     */
+    private void findParamAndCoeffById(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //response.setContentType("text/html;charset=UTF-8");
+        Long id = Long.parseLong(request.getParameter("mapTable_id").trim());
+      //  String nameColl = request.getParameter("nameCollectionMapTable");
+        List<Parameter> parameters = collMapTable.findParamByIdMap(id);
+
+
+        request.setAttribute("Parametr", parameters);
         getServletContext().getRequestDispatcher("/WEB-INF/user/userMapTable.jsp").forward(request, response);
     }
 }
