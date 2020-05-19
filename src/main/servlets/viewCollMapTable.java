@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-@WebServlet(name = "daoCollMapTable", urlPatterns = {"/daoCollOpen","/viewParamAndCoeff"})
+@WebServlet(name = "daoCollMapTable", urlPatterns = {"/daoCollOpen","/viewParamAndCoeff","/out"})
 public class viewCollMapTable extends HttpServlet {
 
 
@@ -31,9 +31,9 @@ public class viewCollMapTable extends HttpServlet {
         String action = request.getServletPath();
         System.out.println(action);
             switch (action) {
-//                case "/new":
-//                    showNewForm(request, response);
-//                    break;
+                case "/out":
+                    getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+                    break;
                 case "/daoCollOpen":
                     findAllMapTable(request, response);
                     break;

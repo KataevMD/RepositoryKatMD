@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -72,5 +73,24 @@ public class admin {
             return usersAdminList;
         }
         return null;
+    }
+
+    public static void createAdmin(String firstName, String lastName, String patronymic, String passw, String login) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        UsersAdmin usersAdmin = new UsersAdmin();
+        usersAdmin.setFirstName(firstName);
+        usersAdmin.setLastName(lastName);
+        usersAdmin.setLogin(login);
+        usersAdmin.setPassword(getHash(passw));
+        Date date = new Date();
+        usersAdmin.setDateCreat(date);
+
+        session.getTransaction().begin();// Начало транзакции
+        session.merge(usersAdmin);// Загрузка объекта mapTable класса MapTable, а также всех связанных с ним
+        // объектов, в БД
+        session.getTransaction().commit();// Конец транзакции
+        session.close();
+
     }
 }

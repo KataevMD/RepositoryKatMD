@@ -1,5 +1,6 @@
 package main.servlets;
 
+import com.google.gson.Gson;
 import main.dao.admin;
 import main.hibernate.HibernateUtil;
 import main.model.UsersAdmin;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-@WebServlet(name = "daoAdmins", urlPatterns = {"/OpenListManager", "/NewManager"})
+@WebServlet(name = "daoAdmins", urlPatterns = {"/OpenListManager", "/NewManager","/createAccAdmin"})
 public class daoAdmin extends HttpServlet {
     private SessionFactory sessionFactory;
     private HttpSession httpSession;
@@ -42,9 +43,9 @@ public class daoAdmin extends HttpServlet {
             case "/OpenListManager":
                 showAllManager(request, response);
                 break;
-//                case "/insert":
-//                    insertUser(request, response);
-//                    break;
+            case "/createAccAdmin":
+                createAccounAdmin(request, response);
+                break;
 //                case "/delete":
 //                    deleteUser(request, response);
 //                    break;
@@ -59,6 +60,24 @@ public class daoAdmin extends HttpServlet {
 //                    break;
         }
 
+    }
+
+    private void createAccounAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        String firstName = request.getParameter("firstName").trim();
+        String lastName = request.getParameter("lastName").trim();
+        String patronymic = request.getParameter("patronymic").trim();
+        String login = request.getParameter("login").trim();
+        String passw = request.getParameter("password").trim();
+        if(ajax){
+            if(login.length() > 0 && firstName.length() > 0 && passw.length() > 0 && patronymic.length() > 0 && lastName.length() > 0){
+                admin.createAdmin(firstName,lastName,patronymic,passw,login);
+                String answer = "success";
+                response.setContentType("text/plain");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(answer);
+            }
+        }
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
