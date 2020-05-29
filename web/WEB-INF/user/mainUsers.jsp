@@ -57,11 +57,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="form-signin" autocomplete="off" method="post" action="${pageContext.request.contextPath}/login">
+                <form class="form-signin" autocomplete="off" method="post"
+                      action="${pageContext.request.contextPath}/login">
                     <label for="inputLogin" class="sr-only">Email address</label>
-                    <input  id="inputLogin" autocomplete="off"  class="form-control" name="login" placeholder="Login" required autofocus>
+                    <input id="inputLogin" autocomplete="off" class="form-control" name="login" placeholder="Login"
+                           required autofocus>
                     <label for="inputPassword" class="sr-only">Password</label>
-                    <input type="password" autocomplete="new-password" id="inputPassword"  name="password" class="form-control" placeholder="Password" required>
+                    <input type="password" autocomplete="new-password" id="inputPassword" name="password"
+                           class="form-control" placeholder="Password" required>
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
                     <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button>
                 </form>
@@ -74,10 +77,11 @@
 <%--Контент--%>
 <main role="main" class="flex-shrink-0">
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <p class="text-justify h3 text-center font-weight-bold">Добро пожаловать в систему управления техническим
-            нормированием операций механической обработки деталей!</p>
+    <br>
+    <div class="container text-center">
+        <p class="h4 mt-auto">Справочники операций</p>
     </div>
+    <br>
     <div class="container ">
         <table id="CollMapTable" class="table table-bordered container text-left">
             <thead class="thead-light">
@@ -88,13 +92,19 @@
             </tr>
             </thead>
             <tbody>
+            <jsp:useBean id="collectionMapTables" scope="request" type="java.util.List"/>
             <c:forEach var="collMapTable" items="${collectionMapTables}">
                 <tr>
                     <td><c:out value="${collMapTable.collection_id}"/></td>
                     <td><c:out value="${collMapTable.nameCollectionMapTable}"/></td>
                     <td>
-                        <a href="${pageContext.request.contextPath}/daoCollOpen?collection_id=<c:out value='${collMapTable.collection_id}'/>&nameCollectionMapTable=<c:out value='${collMapTable.nameCollectionMapTable}'/>"
-                           class="btn btn-light">Просмотреть</a></td>
+                        <div class="form-row">
+                            <div class="col">
+                                <a href="${pageContext.request.contextPath}/daoCollOpen?collection_id=<c:out value='${collMapTable.collection_id}'/>&nameCollectionMapTable=<c:out value='${collMapTable.nameCollectionMapTable}'/>"
+                                   class="btn btn-light">Просмотреть</a>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </c:forEach>
             </tbody>

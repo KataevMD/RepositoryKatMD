@@ -68,12 +68,21 @@
 <main role="main" class="flex-shrink-0">
     <br>
     <div class="container text-center">
-        <p class="h4 mt-auto">Список карт трудового нормирования справочника "${idCollMapTable}"</p>
+        <p class="h4 mt-auto">Список карт трудового нормирования справочника "${nameCollMapTable}"</p>
     </div>
     <br>
     <div class="container ">
         <table id="tableMapTable" class="table table-bordered container text-left">
             <thead class="thead-light">
+            <tr class='table-filters'>
+                <td class="border-0">
+                </td>
+                <td class="border-0">
+                    Название карты: <label>
+                    <input type="text"/>
+                </label>
+                </td>
+            </tr>
             <tr>
                 <th class="w-7p5">№ таблицы</th>
                 <th class="w-75">Название карты трудового нормирования техпроцесса</th>
@@ -82,7 +91,7 @@
             </thead>
             <tbody>
             <c:forEach var="MapTable" items="${MapTables}">
-                <tr>
+                <tr class='table-data'>
                     <td><c:out value="${MapTable.numberTable}"/></td>
                     <td><c:out value="${MapTable.name}"/></td>
                     <td><a href="" class="btn btn-light">Проссмотреть</a>
@@ -90,8 +99,6 @@
             </c:forEach>
             </tbody>
         </table>
-    </div>
-
     </div>
 
 </main>
@@ -107,5 +114,7 @@
         crossorigin="anonymous"></script>
 <script>
     <%@include file="/WEB-INF/js/offcanvas.js" %>
+    <%@include file="/WEB-INF/js/filters.js" %>
 </script>
+
 </html>

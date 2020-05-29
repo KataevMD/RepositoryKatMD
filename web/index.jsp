@@ -32,13 +32,13 @@
     String userName = "", password = "",rememberVal="";
     if (cookies != null) {
         for (Cookie cookie : cookies) {
-            if(cookie.getName().equals("cookuser")) {
-                //userName = new String(Base64.getDecoder().decode(cookie.getValue()));
-                userName = cookie.getValue();
+            if(cookie.getName().equals("cooklogin")) {
+                userName = new String(Base64.getDecoder().decode(cookie.getValue()));
+               // userName = cookie.getValue();
             }
             if(cookie.getName().equals("cookpass")){
-                //password = new String(Base64.getDecoder().decode(cookie.getValue()));
-                password = cookie.getValue();
+                password = new String(Base64.getDecoder().decode(cookie.getValue()));
+               // password = cookie.getValue();
             }
             if(cookie.getName().equals("cookrem")){
                 rememberVal = cookie.getValue();
@@ -60,7 +60,7 @@
             </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Вход</button>
-        <button type="button" onclick="document.location='loadCollforUsers'" class="btn btn-outline-secondary btn-block">Продолжить без авторизации</button>
+        <button type="button" onclick="document.location='loadCollForUsers'" class="btn btn-outline-secondary btn-block">Продолжить без авторизации</button>
         <p class="mt-5 mb-3 text-muted">&copy; 2020-....</p>
     </form>
 </div>

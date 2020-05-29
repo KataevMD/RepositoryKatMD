@@ -24,9 +24,21 @@
             crossorigin="anonymous"></script>
     <script>
         <%@include file="/WEB-INF/js/offcanvas.js" %>
+        <%@include file="/WEB-INF/js/collectMapTable.js"%>
     </script>
 </head>
 <body class="d-flex flex-column h-100">
+<%
+    Cookie[] cookies = request.getCookies();
+    String userName = "";
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("cookuser")) {
+                userName = cookie.getValue();
+            }
+        }
+    }
+%>
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Единая база нормативов технологических операций</a>
 
@@ -35,57 +47,135 @@
     </button>
     <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link active" href="${pageContext.request.contextPath}/openMainAdminsPage">Справочники</a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="false"
                 >Уч.записи
                     администраторов</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown03">
-                    <a class="dropdown-item" href="${pageContext.request.contextPath}/OpenListManager">Просмотр
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/openListAdminPage">Просмотр
                         уч.записей</a>
-                    <a class="dropdown-item" href="${pageContext.request.contextPath}/NewManager">Добавить уч.запись</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/openRegisterAdmins">Добавить
+                        уч.запись</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="btn btn-outline-light align-middle" href="${pageContext.request.contextPath}/logout">${name}
+                <a class="btn btn-outline-light align-middle"
+                   href="${pageContext.request.contextPath}/logout"><%=userName%>
                     (Выйти)</a>
             </li>
         </ul>
     </div>
 </nav>
-
-<main role="main" class="flex-shrink-0">
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <p class="text-justify h3 text-center font-weight-bold">Добро пожаловать в систему управления техническим
-            нормированием операций механической обработки деталей!</p>
+<%--Модальное окно создания нового справочника--%>
+<div class="modal fade " id="staticBackdrop" data-backdrop="static" data-keyboard="false"
+     tabindex="-1"
+     role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Создание справочника</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-signin" id="createForm" autocomplete="off" method="post"
+                      action="${pageContext.request.contextPath}/addNewCollMapTable">
+                    <label for="inputNameCollMapTable" class="sr-only">Название справочника</label>
+                    <input id="inputNameCollMapTable" autocomplete="off" class="form-control" pattern="^[А-Яа-яЁё\s]+$"
+                           name="nameCollMapTable" placeholder="Название справочника"
+                           required autofocus>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Создать</button>
+                    <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
     </div>
-    <div class="container ">
-        <table id="CollMapTable" class="table table-bordered container text-left">
+</div>
+<%--Контент--%>
+<main role="main" class="flex-shrink-0">
+    <br>
+    <div class="container text-center">
+        <p class="h4 mt-auto">Справочники операций</p>
+    </div>
+    <br>
+    <div class="container">
+        <button id="createNewColl" data-toggle="modal"
+                data-target="#staticBackdrop" class="btn btn-outline-secondary">Добавить новый справочник
+        </button>
+    </div>
+    <br>
+    <div class="container-fluid w-75 ">
+        <table id="CollMapTable" class="table table-hover table-responsive text-left">
             <thead class="thead-light">
             <tr>
-                <th class="w-7p5">№</th>
-                <th class="w-75">Название справочника</th>
+                <th>№</th>
+                <th>Название справочника</th>
+                <th></th>
+                <th></th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
             <c:forEach var="collMapTable" items="${collectionMapTables}">
-                <tr>
+                <tr id="tr_<c:out value="${collMapTable.collection_id}"/>" >
                     <td><c:out value="${collMapTable.collection_id}"/></td>
                     <td><c:out value="${collMapTable.nameCollectionMapTable}"/></td>
                     <td>
-                        <button id="view" class="btn btn-light">Просмотреть</button>
+                        <a href="${pageContext.request.contextPath}/openListMapTablePage?collection_id=<c:out value='${collMapTable.collection_id}'/>&nameCollectionMapTable=<c:out value='${collMapTable.nameCollectionMapTable}'/>"
+                           class="btn btn-light">Просмотреть</a>
                     </td>
+                    <td>
+                        <button class="btn btn-light " id="viewUpdate"
+                                onclick="viewUpdate(<c:out value="${collMapTable.collection_id}"/>)">
+                            Редактировать
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" id="delete"
+                                onclick="deleteCollMapTableById(<c:out value="${collMapTable.collection_id}"/>)"
+                                class="btn btn-light">Удалить
+                        </button>
+                    </td>
+                </tr>
+                <%--Блок редактирования Справочника--%>
+                <tr id="coll_<c:out value="${collMapTable.collection_id}"/>" class="table-active" hidden>
+                        <%--                    <form autocomplete="off" id="update_<c:out value="${collMapTable.collection_id}"/>"--%>
+                        <%--                          action="${pageContext.request.contextPath}/updateCollMapTable"--%>
+                        <%--                          method="post">--%>
+                    <td>
+                    </td>
+                    <td>
+                        <label>
+                            <input id="upColl_<c:out value="${collMapTable.collection_id}"/>"
+                                   value="<c:out value="${collMapTable.nameCollectionMapTable}"/>"
+                                   pattern="^[А-Яа-яЁё\s]+$" type="text" required>
+                        </label>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary "
+                                onclick="updateColl(<c:out value="${collMapTable.collection_id}"/>)">Сохранить
+                        </button>
+                    </td>
+                        <%--                    </form>--%>
+                    <td>
+                        <button class="btn btn-secondary "
+                                onclick="closeUpdate(<c:out value="${collMapTable.collection_id}"/>)">Отмена
+                        </button>
+                    </td><td></td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
     </div>
-
-    </div>
-
 </main>
+<%--Подвал--%>
 <footer class="footer bg-dark py-3 mt-auto text-muted">
     <div class="container">
         <p class="text-white">&copy; Company 2020-.... </p>

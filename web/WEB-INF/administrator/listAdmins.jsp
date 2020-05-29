@@ -22,9 +22,24 @@
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
-    <script><%@include file="/WEB-INF/js/offcanvas.js"%></script>
+    <script>
+        <%@include file="/WEB-INF/js/offcanvas.js"%>
+        <%@include file="/WEB-INF/js/accAdmin.js"%>
+    </script>
 </head>
 <body class="d-flex flex-column h-100">
+<%
+    Cookie[] cookies = request.getCookies();
+    String userName = "", password = "", rememberVal = "";
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("cookuser")) {
+                //userName = new String(Base64.getDecoder().decode(cookie.getValue()));
+                userName = cookie.getValue();
+            }
+        }
+    }
+%>
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Единая база нормативов технологических операций</a>
 
@@ -33,62 +48,79 @@
     </button>
     <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/openMainAdminsPage">Справочники</a>
+            </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                <a class="nav-link dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false"
                 >Уч.записи администраторов</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
-                    <a class="dropdown-item active" href="${pageContext.request.contextPath}/OpenListManager">Просмотр уч.записей</a>
-                    <a class="dropdown-item" href="${pageContext.request.contextPath}/NewManager">Добавить уч.запись</a>
+                    <a class="dropdown-item active" href="${pageContext.request.contextPath}/openListAdminPage">Просмотр
+                        уч.записей</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/openRegisterAdmins">Добавить
+                        уч.запись</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="btn btn-outline-light align-middle" href="${pageContext.request.contextPath}/logout">${name}
+                <a class="btn btn-outline-light align-middle"
+                   href="${pageContext.request.contextPath}/logout"><%=userName%>
                     (Выйти)</a>
             </li>
         </ul>
     </div>
 </nav>
-
-<br>
-<br>
-<br>
+<div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 65px;">
+    <div class="toast" id="erer" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+        <div class="toast-header">
+            <strong class="mr-auto">Уведомление</strong>
+            <button type="button" id="closeToast" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+        </div>
+    </div>
+</div>
 <main role="main" class="flex-shrink-0">
     <div class="container">
-            <div class="container">
-                <a class="btn btn-outline-secondary" href="${pageContext.request.contextPath}/NewManager">Добавить
-                    нового администратора</a>
-            </div>
-            <br>
-            <table id="CollMapTable" class="table table-bordered container text-left">
-                <thead class="thead-light">
-                <tr>
-                    <th class="w-3p5">№</th>
-                    <th class="w-60">Имя</th>
-                    <th class="w-36p5"></th>
+        <div class="container">
+            <a class="btn btn-outline-secondary" href="${pageContext.request.contextPath}/openRegisterAdmins">Добавить
+                новую уч.запись администратора</a>
+        </div>
+        <br>
+        <table id="listAdmin" class="table table-bordered container text-left">
+            <thead class="thead-light">
+            <tr>
+                <th class="w-3p5">№</th>
+                <th class="w-60">Имя</th>
+                <th class="w-36p5">Фамилия</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="admin" items="${UsersAdmin}">
+                <tr id="adm_<c:out value="${admin.id}"/>">
+                    <td id="idAdmin"><c:out value="${admin.id}"/></td>
+                    <td><c:out value="${admin.firstName}"/></td>
+                    <td><c:out value="${admin.lastName}"/></td>
+                    <td>
+                        <button id="view" class="btn btn-light">Просмотреть</button>
+                    </td>
+                    <td>
+                        <button id="update" class="btn btn-light">Редактировать</button>
+                    </td>
+                    <td>
+                        <button type="button" id="delete" onclick="deleteUserById(<c:out value="${admin.id}"/>)"
+                                class="btn btn-light">Удалить
+                        </button>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                <c:forEach var="admin" items="${UsersAdmin}">
-                    <tr>
-                        <td><c:out value="${admin.id}"/></td>
-                        <td><c:out value="${admin.firstName}"/></td>
-                        <td>
-                            <div class="form-row">
-                                <div class="col">
-                                    <button id="view" class="btn btn-light">Просмотреть</button>
-                                </div>
-                                <div class="col">
-                                    <button id="update" class="btn btn-light">Редактировать</button>
-                                </div>
-                                <div class="col">
-                                    <button id="delete" class="btn btn-light">Удалить</button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+            </c:forEach>
+            </tbody>
+        </table>
 
     </div>
 </main>

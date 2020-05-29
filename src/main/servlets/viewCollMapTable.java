@@ -1,8 +1,10 @@
 package main.servlets;
 
 import main.dao.collMapTable;
+import main.model.CollectionMapTable;
 import main.model.MapTable;
 import main.model.Parameter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-@WebServlet(name = "daoCollMapTable", urlPatterns = {"/daoCollOpen","/viewParamAndCoeff","/out"})
+@WebServlet(name = "daoCollMapTable", urlPatterns = {"/daoCollOpen", "/viewParamAndCoeff", "/out", "/loadCollForUsers"})
 public class viewCollMapTable extends HttpServlet {
 
 
@@ -20,6 +22,7 @@ public class viewCollMapTable extends HttpServlet {
     public void init() throws ServletException {
         super.init();
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
@@ -30,19 +33,19 @@ public class viewCollMapTable extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getServletPath();
         System.out.println(action);
-            switch (action) {
-                case "/out":
-                    getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
-                    break;
-                case "/daoCollOpen":
-                    findAllMapTable(request, response);
-                    break;
-                case "/viewParamAndCoeff":
-                    findParamAndCoeffById(request, response);
-                    break;
-//                case "/delete":
-//                    deleteUser(request, response);
-//                    break;
+        switch (action) {
+            case "/out":
+                getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+                break;
+            case "/daoCollOpen":
+                findAllMapTable(request, response);
+                break;
+            case "/viewParamAndCoeff":
+                findParamAndCoeffById(request, response);
+                break;
+            case "/loadCollForUsers":
+                openMainUser(request, response);
+                break;
 //                case "/edit":
 //                    showEditForm(request, response);
 //                    break;
@@ -52,9 +55,10 @@ public class viewCollMapTable extends HttpServlet {
 //                default:
 //                    listUser(request, response);
 //                    break;
-            }
+        }
 
     }
+
     /*
     Метод поиска всех карт трудового номирования техпроцессов
      */
@@ -66,9 +70,10 @@ public class viewCollMapTable extends HttpServlet {
         List<MapTable> MapTables = collMapTable.findMapByIdColl(id);
 
         request.setAttribute("MapTables", MapTables);
-        request.setAttribute("idCollMapTable",nameColl);
+        request.setAttribute("nameCollMapTable", nameColl);
         getServletContext().getRequestDispatcher("/WEB-INF/user/userMapTable.jsp").forward(request, response);
     }
+
     /*
     Метод поиска всех параметров по id выбранной карты
      */
@@ -76,11 +81,18 @@ public class viewCollMapTable extends HttpServlet {
             throws ServletException, IOException {
         //response.setContentType("text/html;charset=UTF-8");
         Long id = Long.parseLong(request.getParameter("mapTable_id").trim());
-      //  String nameColl = request.getParameter("nameCollectionMapTable");
+        //  String nameColl = request.getParameter("nameCollectionMapTable");
         List<Parameter> parameters = collMapTable.findParamByIdMap(id);
 
 
         request.setAttribute("Parametr", parameters);
         getServletContext().getRequestDispatcher("/WEB-INF/user/userMapTable.jsp").forward(request, response);
+    }
+
+    private void openMainUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
+        request.setAttribute("collectionMapTables", collectionMapTables);
+        getServletContext().getRequestDispatcher("/WEB-INF/user/mainUsers.jsp").forward(request, response);
     }
 }

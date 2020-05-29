@@ -3,6 +3,7 @@ package main.dao;
 import main.hibernate.HibernateUtil;
 import main.model.UsersAdmin;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -19,10 +20,12 @@ public class admin {
     public static String getHash(String password) {
         return DigestUtils.sha512Hex(password);
     }
+
     /**
      * Метод возвращает объект класса UsersAdmin
      * для дальнейшей авторизации пользователя в системе
-     * @param login - логин пользователя
+     *
+     * @param login    - логин пользователя
      * @param password - пароль пользователя
      * @return - объект класса UsersAdmin
      */
@@ -34,9 +37,9 @@ public class admin {
 
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<UsersAdmin> criteria = builder.createQuery(UsersAdmin.class);
-        Root<UsersAdmin> root = criteria.from( UsersAdmin.class );
-        criteria.select( root );
-        criteria.where( builder.equal( root.get("login"), login ), builder.equal(root.get("password"), password) );
+        Root<UsersAdmin> root = criteria.from(UsersAdmin.class);
+        criteria.select(root);
+        criteria.where(builder.equal(root.get("login"), login), builder.equal(root.get("password"), password));
 
         session.beginTransaction();
         usersAdmins = session.createQuery(criteria).getResultList();
@@ -52,29 +55,40 @@ public class admin {
             return null;
         }
     }
+
     /**
      * Метод возвращает список объектов класса UsersAdmin
      * для дальнейшего вывода информации на страницу
      */
-    public static List<UsersAdmin> FindAdmins(){
+    public static List<UsersAdmin> FindAdmins(String idUser) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<UsersAdmin> criteria = builder.createQuery(UsersAdmin.class);
-        Root<UsersAdmin> root = criteria.from( UsersAdmin.class );
-        criteria.select( root );
+        Root<UsersAdmin> root = criteria.from(UsersAdmin.class);
+        criteria.select(root);
 
         session.beginTransaction();
         usersAdminList = session.createQuery(criteria).getResultList();
         session.getTransaction().commit();
         session.close();
-        if(!usersAdminList.isEmpty()){
+        if (!usersAdminList.isEmpty()) {
             return usersAdminList;
         }
         return null;
     }
 
+    /**
+     * Метод возвращает объект класса UsersAdmin
+     * для дальнейшей авторизации пользователя в системе
+     * @param login - логин пользователя
+     * @param passw - пароль пользователя
+     * @param firstName - пароль пользователя
+     * @param lastName - пароль пользователя
+     * @param patronymic - пароль пользователя
+     * @ - Результатом являются данные добавленные в БД
+     */
     public static void createAdmin(String firstName, String lastName, String patronymic, String passw, String login) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -82,14 +96,31 @@ public class admin {
         usersAdmin.setFirstName(firstName);
         usersAdmin.setLastName(lastName);
         usersAdmin.setLogin(login);
+        usersAdmin.setPatronymic(patronymic);
         usersAdmin.setPassword(getHash(passw));
         Date date = new Date();
         usersAdmin.setDateCreat(date);
 
         session.getTransaction().begin();// Начало транзакции
-        session.merge(usersAdmin);// Загрузка объекта mapTable класса MapTable, а также всех связанных с ним
-        // объектов, в БД
+        session.merge(usersAdmin);// Загрузка объекта usersAdmin класса UsersAdmin в базу данных
         session.getTransaction().commit();// Конец транзакции
+        session.close();
+
+    }
+    /**
+     * Метод возвращает объект класса UsersAdmin
+     * для дальнейшей авторизации пользователя в системе
+     * @param id - логин пользователя
+     * @ - Результатом являются удаленная уч.запись администратора
+     */
+    public static void deleteAdmin(Long id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        UsersAdmin usersAdmin = new UsersAdmin();
+        usersAdmin.setId(id);
+        session.getTransaction().begin();
+        session.remove(usersAdmin);
+        session.getTransaction().commit();
         session.close();
 
     }

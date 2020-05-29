@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -47,24 +48,30 @@ public class login extends HttpServlet {
                 if (request.getParameter("remember") != null) {
                     String remember = request.getParameter("remember");
 
-//                    byte [] encodedLogin = Base64.getEncoder().encode(login.getBytes());
-//                    byte [] encodedPassw = Base64.getEncoder().encode(passw.getBytes());
+                    String encodedLogin = Base64.getEncoder().encodeToString(login.getBytes());
+                    String encodedPassw = Base64.getEncoder().encodeToString(passw.getBytes());
 
-                    Cookie cUserName = new Cookie("cookuser", login.trim());
-                    Cookie cPassword = new Cookie("cookpass", passw.trim());
+
+                    Cookie cLogin = new Cookie("cooklogin", encodedLogin);
+                    Cookie cPassword = new Cookie("cookpass", encodedPassw);
                     Cookie cRemember = new Cookie("cookrem", remember.trim());
-                    cUserName.setMaxAge(60 * 60 * 24);// хранение 1 день
+                    cLogin.setMaxAge(60 * 60 * 24);// хранение 1 день
                     cPassword.setMaxAge(60 * 60 * 24);
                     cRemember.setMaxAge(60 * 60 * 24);
-                    response.addCookie(cUserName);
+                    response.addCookie(cLogin);
                     response.addCookie(cPassword);
                     response.addCookie(cRemember);
                 }
-
+                String who = usersAdmins.getLastName()+usersAdmins.getFirstName();
+                Cookie cId = new Cookie("iduser", usersAdmins.getId().toString());
+                Cookie cUserName = new Cookie("cookuser", who);
+                cUserName.setMaxAge(60 * 60 * 24);
+                cId.setMaxAge(60*60*24);
+                response.addCookie(cId);
+                response.addCookie(cUserName);
 
                 httpSession.setAttribute("sessuser", usersAdmins.getLogin());
                 List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
-                request.setAttribute("name", usersAdmins.getFirstName() +" "+ usersAdmins.getLastName());
                 request.setAttribute("collectionMapTables", collectionMapTables);
                 getServletContext().getRequestDispatcher("/WEB-INF/administrator/mainAdmins.jsp").forward(request, response);
 

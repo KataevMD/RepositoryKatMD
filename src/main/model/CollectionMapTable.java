@@ -6,9 +6,9 @@ import java.util.List;
 @Entity
 @Table(name = "collectionMapTable")
 public class CollectionMapTable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column(name = "collection_id", updatable = false, nullable = false)
     private Long collection_id;
 

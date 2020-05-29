@@ -4,6 +4,7 @@ import main.hibernate.HibernateUtil;
 import main.model.CollectionMapTable;
 import main.model.MapTable;
 import main.model.Parameter;
+import main.model.UsersAdmin;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -12,9 +13,10 @@ import java.util.List;
 
 public class collMapTable {
 
-    public collMapTable(){}
+    public collMapTable() {
+    }
 
-    public static List<MapTable> findMapByIdColl(Long id){
+    public static List<MapTable> findMapByIdColl(Long id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
@@ -22,26 +24,26 @@ public class collMapTable {
         List<MapTable> MapTables = session.createQuery("from MapTable m where m.collectionMapTable.collection_id=" + id).getResultList();
         session.getTransaction().commit();
         session.close();
-        if(!MapTables.isEmpty()){
+        if (!MapTables.isEmpty()) {
             return MapTables;
         }
-            return null;
+        return null;
 
     }
 
-    public static List<CollectionMapTable> findAllCollectionMapTable(){
+    public static List<CollectionMapTable> findAllCollectionMapTable() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<CollectionMapTable> criteria = builder.createQuery(CollectionMapTable.class);
-        Root<CollectionMapTable> root = criteria.from( CollectionMapTable.class );
-        criteria.select( root );
+        Root<CollectionMapTable> root = criteria.from(CollectionMapTable.class);
+        criteria.select(root);
         session.beginTransaction();
         List<CollectionMapTable> collectionMapTables = session.createQuery(criteria).getResultList();
         session.getTransaction().commit();
         session.close();
-        if(!collectionMapTables.isEmpty()){
+        if (!collectionMapTables.isEmpty()) {
             return collectionMapTables;
         }
         return null;
@@ -54,9 +56,43 @@ public class collMapTable {
         List<Parameter> parameters = session.createQuery("from Parameter p where p.mapTable.mapTable_id = " + id).getResultList();
         session.getTransaction().commit();
         session.close();
-        if(!parameters.isEmpty()){
+        if (!parameters.isEmpty()) {
             return parameters;
         }
         return null;
+    }
+
+    public static void createCollMapTable(String nameCollMapTable) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        CollectionMapTable collectionMapTable = new CollectionMapTable();
+        collectionMapTable.setNameCollectionMapTable(nameCollMapTable);
+        session.getTransaction().begin();// Начало транзакции
+        session.merge(collectionMapTable);// Загрузка объекта collectionMapTable класса CollectionMapTable в базу данных
+        session.getTransaction().commit();// Конец транзакции
+        session.close();
+    }
+
+    public static void deleteCollMapTableById(Long collection_id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        CollectionMapTable collectionMapTable = new CollectionMapTable();
+        collectionMapTable.setCollection_id(collection_id);
+        session.getTransaction().begin();
+        session.remove(collectionMapTable);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public static void rewriteCollMapTable(String nameCollMapTable, Long collection_id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        CollectionMapTable collectionMapTable = new CollectionMapTable();
+        collectionMapTable.setCollection_id(collection_id);
+        collectionMapTable.setNameCollectionMapTable(nameCollMapTable);
+        session.getTransaction().begin();
+        session.update(collectionMapTable);
+        session.getTransaction().commit();
+        session.close();
     }
 }
