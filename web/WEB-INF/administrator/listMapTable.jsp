@@ -19,9 +19,7 @@
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-            crossorigin="anonymous"></script>
-    <script>
-        <%@include file="/WEB-INF/js/mapTable.js" %>
+            crossorigin="anonymous">
     </script>
 </head>
 <body class="d-flex flex-column h-100">
@@ -69,89 +67,98 @@
 </nav>
 
 <main role="main" class="flex-shrink-0">
+    <br><label for="collection_Id"></label><input id="collection_Id" value="${collection_Id}" hidden>
+    <div class="container text-center">
+        <p class="h4 mt-auto">Список карт нормативов техопераций справочника "${nameCollMapTable}"</p>
+    </div>
     <br>
-    <div class="container-fluid w-75">
-        <div class="container text-center">
-            <p class="h4 mt-auto">Список карт трудового нормирования справочника "${nameCollMapTable}"</p>
-        </div>
-        <br>
-        <table id="tableMapTable" class="table table-hover table-responsive text-left">
-            <thead class="thead-light">
-            <tr class='table-filters'>
-                <td class="border-0">
-                </td>
-                <td class="border-0">
-                    Название карты: <label>
-                    <input type="text"/>
-                </label>
-                </td>
-            </tr>
-            <tr>
-                <th>№ таблицы</th>
-                <th>Название карты</th>
-                <th>Формула</th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="MapTable" items="${MapTables}">
-                <tr id="tr_<c:out value="${MapTable.mapTable_id}"/>" class='table-data'>
-                    <td><c:out value="${MapTable.numberTable}"/></td>
-                    <td><c:out value="${MapTable.name}"/></td>
-                    <td><c:out value="${MapTable.formul}"/></td>
-                    <td><a href="" class="btn btn-light">Просмотреть</a>
-                    <td>
-                        <button class="btn btn-light " id="viewUpdate"
-                                onclick="viewUpdateMap(<c:out value="${MapTable.mapTable_id}"/>)">
-                            Редактировать
-                        </button>
+    <div id="tableMap" class="container-fluid w-75">
+        <data value="23242342">
+            <table id="tableMapTable" class="table table-hover table-responsive text-left">
+                <thead class="thead-light">
+                <tr class='table-filters'>
+                    <td class="border-0">
                     </td>
-                    <td>
-                        <button type="button" id="delete"
-                                onclick="deleteMapTableById(<c:out value="${MapTable.mapTable_id}"/>)"
-                                class="btn btn-light">Удалить
-                        </button>
+                    <td class="border-0">
+                        Название карты: <label>
+                        <input class="form-control" type="text"/>
+                    </label>
                     </td>
                 </tr>
-                <tr id="map_<c:out value="${MapTable.mapTable_id}"/>" hidden class="table-active">
-                    <td>
-                        <label class="w-100">
-                            <input id="numberMap_<c:out value="${MapTable.numberTable}"/>"
-                                   value="<c:out value="${MapTable.numberTable}"/>"
-                                   pattern="^[А-Яа-яЁё\s]+$" type="text" class="form-control " required>
-                        </label>
-                    </td>
-                    <td>
-                        <label class="w-100">
-                            <input id="nameMap_<c:out value="${MapTable.mapTable_id}"/>"
-                                   value="<c:out value="${MapTable.name}"/>"
-                                   pattern="^[А-Яа-яЁё\s]+$" type="text" class="form-control " required>
-                        </label>
-                    </td>
-                    <td>
-                        <label class="w-100">
-                            <input id="formulMap_<c:out value="${MapTable.mapTable_id}"/>"
-                                   value="<c:out value="${MapTable.formul}"/>"
-                                   pattern="^[А-Яа-яЁё\s]+$" type="text" class="form-control" required>
-                        </label>
-                    </td>
-                    <td>
-                        <button class="btn btn-primary"
-                                onclick="updateMap(<c:out value="${MapTable.mapTable_id}"/>)">Сохранить
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-secondary"
-                                onclick="closeUpdateMap(<c:out value="${MapTable.mapTable_id}"/>)">Отмена
-                        </button>
-                    </td>
-                    <td></td>
+                <tr>
+                    <th>№ таблицы</th>
+                    <th>Название карты</th>
+                    <th>Формула</th>
+                    <th class="text-center" colspan="3">Управление</th>
+                    <th></th>
+                    <th></th>
                 </tr>
-            </c:forEach>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <c:forEach var="MapTable" items="${MapTables}">
+                    <tr id="tr_<c:out value="${MapTable.mapTable_id}"/>" class='table-data'>
+                        <td><c:out value="${MapTable.numberTable}"/></td>
+                        <td><c:out value="${MapTable.name}"/></td>
+                        <td><c:out value="${MapTable.formul}"/></td>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/openListParameterAndCoefficientPage?mapTable_id=<c:out value='${MapTable.mapTable_id}'/>&nameMapTable=<c:out value='${MapTable.name}'/>"
+                               class="btn btn-light">Просмотреть</a>
+                        </td>
+                        <td>
+                            <button class="btn btn-light " id="viewUpdate"
+                                    onclick="viewUpdateMap(<c:out value="${MapTable.mapTable_id}"/>)">
+                                Редактировать
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id="delete"
+                                    onclick="deleteMapTableById(<c:out value="${MapTable.mapTable_id}"/>)"
+                                    class="btn btn-light">Удалить
+                            </button>
+                        </td>
+                    </tr>
+                    <tr id="map_<c:out value="${MapTable.mapTable_id}"/>" hidden class="table-active">
+                        <td>
+                            <label class="w-100">
+                                <input id="numberMap_<c:out value="${MapTable.mapTable_id}"/>"
+                                       value="<c:out value="${MapTable.numberTable}"/>"
+                                       onkeyup="checkNumberMap(<c:out value="${MapTable.mapTable_id}"/>)"
+                                       title="Разрешено использовать только цифры"
+                                       type="text" class="form-control " required>
+                            </label>
+                        </td>
+                        <td>
+                            <label class="w-100">
+                                <input id="nameMap_<c:out value="${MapTable.mapTable_id}"/>"
+                                       value="<c:out value="${MapTable.name}"/>"
+                                       onkeyup="checkNameMap(<c:out value="${MapTable.mapTable_id}"/>)"
+                                       title="Разрешено использовать только пробелы и русские буквы"
+                                       type="text" class="form-control " required>
+                            </label>
+                        </td>
+                        <td>
+                            <label class="w-100">
+                                <input id="formulMap_<c:out value="${MapTable.mapTable_id}"/>"
+                                       value="<c:out value="${MapTable.formul}"/>"
+                                       type="text" class="form-control" required>
+                            </label>
+                        </td>
+                        <td>
+                            <button id="save<c:out value="${MapTable.mapTable_id}"/>" class="btn btn-primary"
+                                    onclick="updateMap(<c:out value="${MapTable.mapTable_id}"/>)">Сохранить
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-secondary"
+                                    onclick="closeUpdateMap(<c:out value="${MapTable.mapTable_id}"/>)">Отмена
+                            </button>
+                        </td>
+                        <td></td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </data>
     </div>
 
 </main>
@@ -168,5 +175,7 @@
 <script>
     <%@include file="/WEB-INF/js/offcanvas.js" %>
     <%@include file="/WEB-INF/js/filters.js" %>
+    <%@include file="/WEB-INF/js/mapTable.js" %>
 </script>
+
 </html>

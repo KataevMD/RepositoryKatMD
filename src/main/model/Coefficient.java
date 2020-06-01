@@ -26,6 +26,22 @@ public class Coefficient {
 
     }
 
+    public Long getCoefficient_id() {
+        return coefficient_id;
+    }
+
+    public void setCoefficient_id(Long coefficient_id) {
+        this.coefficient_id = coefficient_id;
+    }
+
+    public MapTable getMapTable() {
+        return mapTable;
+    }
+
+    public void setMapTable(MapTable mapTable) {
+        this.mapTable = mapTable;
+    }
+
     public Long getId() {
         return coefficient_id;
     }

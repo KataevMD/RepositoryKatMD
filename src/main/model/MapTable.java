@@ -53,6 +53,17 @@ public class MapTable {
         this.formul = formul;
     }
 
+    public void setMapTable_id(Long mapTable_id) {
+        this.mapTable_id = mapTable_id;
+    }
+
+    public void setListParameter(List<Parameter> listParameter) {
+        this.listParameter = listParameter;
+    }
+
+    public void setCollectionMapTable(CollectionMapTable collectionMapTable) {
+        this.collectionMapTable = collectionMapTable;
+    }
 
     public Long getMapTable_id() {
         return mapTable_id;
@@ -103,6 +114,14 @@ public class MapTable {
 		param.setItem(this);
 	}
     //
+
+    public List<Parameter> getListParameter() {
+        return listParameter;
+    }
+
+    public CollectionMapTable getCollectionMapTable() {
+        return collectionMapTable;
+    }
 
     public List<Coefficient> getListCoefficient() {
         return listCoefficient;

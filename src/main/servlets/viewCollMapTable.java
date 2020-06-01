@@ -1,9 +1,13 @@
 package main.servlets;
 
 import main.dao.collMapTable;
+import main.dao.parameterAndCoefficient;
+import main.hibernate.HibernateUtil;
 import main.model.CollectionMapTable;
 import main.model.MapTable;
 import main.model.Parameter;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,7 +36,6 @@ public class viewCollMapTable extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getServletPath();
-        System.out.println(action);
         switch (action) {
             case "/out":
                 getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
@@ -64,7 +67,6 @@ public class viewCollMapTable extends HttpServlet {
      */
     private void findAllMapTable(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         Long id = Long.parseLong(request.getParameter("collection_id"));
         String nameColl = request.getParameter("nameCollectionMapTable");
         List<MapTable> MapTables = collMapTable.findMapByIdColl(id);
@@ -79,18 +81,16 @@ public class viewCollMapTable extends HttpServlet {
      */
     private void findParamAndCoeffById(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //response.setContentType("text/html;charset=UTF-8");
         Long id = Long.parseLong(request.getParameter("mapTable_id").trim());
         //  String nameColl = request.getParameter("nameCollectionMapTable");
-        List<Parameter> parameters = collMapTable.findParamByIdMap(id);
+        List<Parameter> parameters = parameterAndCoefficient.findParametersByIdMapTable(id);
 
 
-        request.setAttribute("Parametr", parameters);
+        request.setAttribute("Parameter", parameters);
         getServletContext().getRequestDispatcher("/WEB-INF/user/userMapTable.jsp").forward(request, response);
     }
 
     private void openMainUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
         request.setAttribute("collectionMapTables", collectionMapTables);
         getServletContext().getRequestDispatcher("/WEB-INF/user/mainUsers.jsp").forward(request, response);

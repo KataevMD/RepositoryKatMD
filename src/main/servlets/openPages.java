@@ -2,9 +2,12 @@ package main.servlets;
 
 import main.dao.admin;
 import main.dao.collMapTable;
-import main.model.CollectionMapTable;
-import main.model.MapTable;
-import main.model.UsersAdmin;
+import main.dao.mapTables;
+import main.dao.parameterAndCoefficient;
+import main.hibernate.HibernateUtil;
+import main.model.*;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +15,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ServletOpenPages", urlPatterns = {"/openRegisterAdmins", "/openListAdminPage", "/openMainAdminsPage","/openListMapTablePage"})
+@WebServlet(name = "ServletOpenPages", urlPatterns = {"/openRegisterAdmins", "/openListAdminPage", "/openMainAdminsPage","/openListMapTablePage","/openListParameterAndCoefficientPage"})
 public class openPages extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -25,7 +28,6 @@ public class openPages extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("UTF-8");
         String action = request.getServletPath();
-
         switch (action) {
             case "/openRegisterAdmins":
                 openRegisterAdmin(request, response);
@@ -39,15 +41,30 @@ public class openPages extends HttpServlet {
             case "/openListMapTablePage":
                 openListMapTables(request, response);
                 break;
+            case "/openListParameterAndCoefficientPage":
+                openListParameterAndCoefficient(request, response);
+                break;
         }
     }
 
+    private void openListParameterAndCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long id = Long.parseLong(request.getParameter("mapTable_id"));
+        String nameMap = request.getParameter("nameMapTable");
+        List<Coefficient> coefficients = mapTables.findCoefficientByIdMap(id);
+        List<Parameter> parameter = parameterAndCoefficient.findParametersByIdMapTable(id);
+        request.setAttribute("Parameter", parameter);
+        request.setAttribute("Coefficient", coefficients);
+        request.setAttribute("nameMapTable", nameMap);
+        request.setAttribute("mapTable_Id", id);
+        getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
+    }
+
     private void openListMapTables(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+
         Long id = Long.parseLong(request.getParameter("collection_id"));
         String nameColl = request.getParameter("nameCollectionMapTable");
         List<MapTable> MapTables = collMapTable.findMapByIdColl(id);
-
+        request.setAttribute("collection_Id", id);
         request.setAttribute("MapTables", MapTables);
         request.setAttribute("nameCollMapTable", nameColl);
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/listMapTable.jsp").forward(request, response);

@@ -5,6 +5,7 @@ import main.dao.admin;
 import main.hibernate.HibernateUtil;
 import main.model.CollectionMapTable;
 import main.model.UsersAdmin;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javax.servlet.ServletException;
@@ -34,7 +35,6 @@ public class login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
         String login = request.getParameter("login");
         String passw = request.getParameter("password");
 

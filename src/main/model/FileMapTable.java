@@ -23,6 +23,13 @@ public class FileMapTable {
     private Blob filePDF;
 
 
+    public Blob getFilePDF() {
+        return filePDF;
+    }
+
+    public void setFilePDF(Blob filePDF) {
+        this.filePDF = filePDF;
+    }
 
     public Blob getFile() {
         return filePDF;
