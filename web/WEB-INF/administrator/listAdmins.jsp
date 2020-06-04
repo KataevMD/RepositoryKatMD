@@ -71,14 +71,25 @@
     </div>
 </nav>
 <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 65px;">
-    <div class="toast" id="erer" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+    <div class="toast" id="deleteAcc" data-delay="10000" style="position: absolute; top: 0; right: 0;">
         <div class="toast-header">
-            <strong class="mr-auto">Уведомление</strong>
-            <button type="button" id="closeToast" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <strong class="mr-auto">Удаление учетной записи</strong>
+            <button type="button" id="closeToast3" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="toast-body">
+            Учетная запись удалена!
+        </div>
+    </div>
+    <div class="toast" id="error" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+        <div class="toast-header">
+            <strong class="mr-auto">ВНИМАНИЕ!</strong>
+            <button type="button" id="closeToast4" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="bodyError" class="toast-body">
         </div>
     </div>
 </div>
@@ -89,7 +100,7 @@
                 новую уч.запись администратора</a>
         </div>
         <br>
-        <table id="listAdmin" class="table table-bordered container text-left">
+        <table id="listAdmin" class="table table-hover table-responsive text-left">
             <thead class="thead-light">
             <tr>
                 <th class="w-3p5">№</th>

@@ -50,8 +50,10 @@ public class openPages extends HttpServlet {
     private void openListParameterAndCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("mapTable_id"));
         String nameMap = request.getParameter("nameMapTable");
-        List<Coefficient> coefficients = mapTables.findCoefficientByIdMap(id);
+
+        List<Coefficient> coefficients = parameterAndCoefficient.findCoefficientByIdMap(id);
         List<Parameter> parameter = parameterAndCoefficient.findParametersByIdMapTable(id);
+
         request.setAttribute("Parameter", parameter);
         request.setAttribute("Coefficient", coefficients);
         request.setAttribute("nameMapTable", nameMap);
@@ -63,7 +65,8 @@ public class openPages extends HttpServlet {
 
         Long id = Long.parseLong(request.getParameter("collection_id"));
         String nameColl = request.getParameter("nameCollectionMapTable");
-        List<MapTable> MapTables = collMapTable.findMapByIdColl(id);
+        CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(id);
+        List<MapTable> MapTables = collectionMapTable.getListMapTable() ;
         request.setAttribute("collection_Id", id);
         request.setAttribute("MapTables", MapTables);
         request.setAttribute("nameCollMapTable", nameColl);

@@ -88,16 +88,6 @@ public class MapTable {
         this.numberTable = numberTable;
     }
 
-
-	//
-	public List<Parameter> getListParametr() {
-		return this.listParameter;
-	}
-
-	public void setListParametr(List<Parameter> listParametr) {
-		this.listParameter = listParametr;
-	}
-
 	public void internalAddParametr(Parameter param) {
 		this.listParameter.add(param);
 	}
@@ -113,7 +103,6 @@ public class MapTable {
 	public void addParametr(Parameter param) {
 		param.setItem(this);
 	}
-    //
 
     public List<Parameter> getListParameter() {
         return listParameter;

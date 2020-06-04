@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "coefficient")
-public class Coefficient {
+public class Coefficient implements Cloneable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +25,20 @@ public class Coefficient {
     public Coefficient() {
 
     }
+    public Coefficient clone() throws CloneNotSupportedException{
 
+        return (Coefficient) super.clone();
+    }
     public Long getCoefficient_id() {
         return coefficient_id;
+    }
+
+    public List<ValueCoefficient> getCoefficientValue() {
+        return coefficientValue;
+    }
+
+    public void setCoefficientValue(List<ValueCoefficient> coefficientValue) {
+        this.coefficientValue = coefficientValue;
     }
 
     public void setCoefficient_id(Long coefficient_id) {
@@ -52,15 +63,6 @@ public class Coefficient {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    //
-    public List<ValueCoefficient> getCoefficientValue() {
-        return this.coefficientValue;
-    }
-
-    public void setCoefficientValue(List<ValueCoefficient> coefficientValue) {
-        this.coefficientValue = coefficientValue;
     }
 
     public void internalAddCoeffValue(ValueCoefficient cValue) {

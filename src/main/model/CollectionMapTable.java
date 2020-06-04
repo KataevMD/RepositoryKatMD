@@ -48,4 +48,8 @@ public class CollectionMapTable {
     public void internalRemoveMapTable(MapTable mapTable) {
         this.listMapTable.remove(mapTable);
     }
+
+    public void addMapTable(MapTable mapTable) {
+        mapTable.setItem(this);
+    }
 }

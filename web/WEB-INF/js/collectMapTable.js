@@ -6,9 +6,7 @@ function deleteCollMapTableById(collection_id) {
             collection_id: collection_id
         },
         success: function (response) {
-                // $('#erer').toast('show');
-                // $('.toast-body').text(decode_utf8('Справочник удален!'));
-                alert(decode_utf8('Справочник удален!'));
+                $('#deleteColl').toast('show');
                 $("#divColl").html($(response).find("data").html());
 
         }
@@ -28,13 +26,14 @@ function updateColl(collection_id) {
             },
             success: function (response) {
                 $("#divColl").html($(response).find("data").html());
-                    // $('#erer').toast('show');
-                    // $('.toast-body').text(decode_utf8('Справочник удален!'));
-                    alert(decode_utf8('Данные успешно обновлены!'));
-
+                $('#error').toast('show');
+                $('#bodyError').text(decode_utf8('Данные справочника обновлены!'));
             }
         });
-    }else {alert(decode_utf8('Все хуйня регекс говно'))}
+    }else {
+        $('#error').toast('show');
+        $('#bodyError').text(decode_utf8('Проверьте введенные данные!'));
+    }
 }
 //Функция отображение блока редактирования Справочника
 function viewUpdate(collection_id) {
@@ -53,14 +52,10 @@ $(document).on("submit", "#createForm", function (event) {
     let $form = $(this);
 
     $.post($form.attr("action"), $form.serialize(), function (response) {
-
-            alert(decode_utf8('Справочник успешно создан!'));
             $("#divColl").html($(response).find("data").html());
             $('.close').click();
-            // $('#erer').toast('show');
-            // $('.toast-body').text(decode_utf8('Учетная запись пользователя не создана. Проверьте введенные данные!'));
-
-
+            $('#addNewColl').toast('show');
+            $('#createForm')[0].reset();
     });
     event.preventDefault(); // Important! Prevents submitting the form.
 });
@@ -74,5 +69,17 @@ function checkNameColl(collection_id){
     }else {
         $('#save'+collection_id).prop('disabled', false);
         $('#upColl'+collection_id).removeClass('error');
+    }
+}
+//Функция проверки введенных данных при создании Справочника
+function checkInputNameColl(){
+    let name = $('#inputNameCollMapTable').val();
+    let regName = decode_utf8('^[А-Яа-яЁё,\\s]+$');
+    if(!name.match(regName)){
+        $('#createColl').prop('disabled', true);
+        $('#inputNameCollMapTable').blur().addClass('error');
+    }else {
+        $('#createColl').prop('disabled', false);
+        $('#inputNameCollMapTable').removeClass('error');
     }
 }

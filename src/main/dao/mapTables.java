@@ -2,6 +2,7 @@ package main.dao;
 
 import main.hibernate.HibernateUtil;
 import main.model.Coefficient;
+import main.model.CollectionMapTable;
 import main.model.MapTable;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,24 +10,11 @@ import org.hibernate.SessionFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class mapTables {
-
-    public static List<Coefficient> findCoefficientByIdMap(Long id) {
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        List<Coefficient> coefficients = session.createQuery("from Coefficient c where c.mapTable.mapTable_id=" + id).getResultList();
-        session.getTransaction().commit();
-        session.close();
-        if (!coefficients.isEmpty()) {
-            return coefficients;
-        }
-        return null;
-
-    }
 
     public static MapTable findMapTableById(Long mapTable_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -41,21 +29,20 @@ public class mapTables {
         session.beginTransaction();
         MapTables = session.createQuery(criteria).getResultList();
         session.getTransaction().commit();
-
+        session.close();
 
         Iterator<MapTable> it = MapTables.iterator();
-        session.close();
-        if (it.hasNext()) {
+
+
             return it.next();
-        }
-        return null;
+
     }
 
     public static boolean deleteMapTableById(Long mapTable_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         MapTable map = findMapTableById(mapTable_id);
-        if(map!=null){
+        if (map != null) {
             session.getTransaction().begin();
             session.delete(map);
             session.getTransaction().commit();
@@ -70,7 +57,7 @@ public class mapTables {
         MapTable mapTable = findMapTableById(mapTable_id);
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
-        if(mapTable!=null){
+        if (mapTable != null) {
             mapTable.setFormul(formul);
             mapTable.setName(nameMapTable);
             mapTable.setNumberTable(numberTable);
@@ -82,5 +69,37 @@ public class mapTables {
         }
         session.close();
         return false;
+    }
+
+    public static void createMapTable(String nameMapTable, String formul, String numberTable, Long collection_id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        MapTable mapTable = new MapTable();
+        mapTable.setFormul(formul);
+        mapTable.setName(nameMapTable);
+        mapTable.setNumberTable(numberTable);
+
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<CollectionMapTable> criteria = builder.createQuery(CollectionMapTable.class);
+        Root<CollectionMapTable> root = criteria.from(CollectionMapTable.class);
+        criteria.select(root);
+        criteria.where(builder.equal(root.get("collection_id"), collection_id));
+
+        session.beginTransaction();
+        List<CollectionMapTable> collectionMapTables = session.createQuery(criteria).getResultList();
+        session.getTransaction().commit();
+
+
+        Iterator<CollectionMapTable> it = collectionMapTables.iterator();
+
+        if (it.hasNext()) {
+
+            CollectionMapTable collectionMapTable = it.next();
+            collectionMapTable.addMapTable(mapTable);
+            session.beginTransaction();
+            session.merge(collectionMapTable);
+            session.getTransaction().commit();
+            session.close();
+        }
     }
 }

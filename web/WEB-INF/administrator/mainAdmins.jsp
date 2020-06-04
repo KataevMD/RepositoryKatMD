@@ -67,13 +67,43 @@
         </div>
     </div>
 </nav>
+<%--Всплывающие уведомления--%>
+<div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 65px;">
+    <div class="toast" id="addNewColl" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+        <div class="toast-header">
+            <strong class="mr-auto">Создание справочника</strong>
+            <button type="button" id="closeToast1" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            Новый справочник успешно создан!
+        </div>
+    </div>
+    <div class="toast" id="deleteColl" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+        <div class="toast-header">
+            <strong class="mr-auto">Удаление справочника</strong>
+            <button type="button" id="closeToast3" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            Справочник удален!
+        </div>
+    </div>
+    <div class="toast" id="error" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+        <div class="toast-header">
+            <strong class="mr-auto">ВНИМАНИЕ!</strong>
+            <button type="button" id="closeToast4" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="bodyError" class="toast-body">
+        </div>
+    </div>
+</div>
 <%--Контент--%>
-
 <main role="main" class="flex-shrink-0">
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-
-    <br>
-    <br>
     <div class="container text-center">
         <p class="h4 mt-auto">Справочники операций</p>
     </div>
@@ -85,7 +115,8 @@
         </button>
     </div>
     <br>
-    <div id="divColl" class="container ">
+
+    <div id="divColl" class="container text-center ">
         <data value="454253">
             <table id="CollMapTable" class="table table-hover table-responsive text-left">
                 <thead class="thead-light">
@@ -102,7 +133,6 @@
                     <th>№</th>
                     <th class="w-75">Название справочника</th>
                     <th class="text-center" colspan="3">Управление</th>
-                    <th></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -132,11 +162,11 @@
                         <td>
                         </td>
                         <td>
-                            <label>
+                            <label class="w-100">
                                 <input id="upColl<c:out value="${collMapTable.collection_id}"/>"
                                        onkeyup="checkNameColl(<c:out value="${collMapTable.collection_id}"/>)"
                                        value="<c:out value="${collMapTable.nameCollectionMapTable}"/>"
-                                       title="Разрешено использовать только пробелы и русские буквы"
+                                       title="Разрешено использовать только пробелы, запятые и русские буквы"
                                        type="text" class="form-control" required>
                             </label>
                         </td>
@@ -175,11 +205,13 @@
                 <form id="createForm" autocomplete="off" method="post"
                       action="${pageContext.request.contextPath}/addNewCollMapTable">
                     <label for="inputNameCollMapTable" class="sr-only">Название справочника</label>
-                    <input id="inputNameCollMapTable" autocomplete="off" class="form-control" pattern="^[А-Яа-яЁё\s]+$"
-                           name="nameCollMapTable" placeholder="Название справочника"
-                           required autofocus>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Создать</button>
-                    <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button>
+                    <input id="inputNameCollMapTable" onkeyup="checkInputNameColl()" autocomplete="off" class="form-control" pattern="^[А-Яа-яЁё\s]+$"
+                           name="nameCollMapTable"
+                           title="Разрешено использовать только пробелы, запятые и русские буквы"
+                           placeholder="Название справочника"
+                           required autofocus><br>
+                    <button id="createColl" class="btn btn-lg btn-primary btn-block" type="submit">Создать</button><br>
+                    <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button><br>
                 </form>
             </div>
             <div class="modal-footer">

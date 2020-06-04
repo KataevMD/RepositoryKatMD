@@ -43,22 +43,27 @@ public class daoMapTable extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("UTF-8");
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
         String action = request.getServletPath();
         if ("/deleteMapTable".equals(action)) {
             deleteMap(request, response);
         }
     }
 
-    private void addMapTable(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void addMapTable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
-        String nameCollMapTable = request.getParameter("nameCollMapTable").trim();
+        String nameMapTable = request.getParameter("nameMapTable").trim();
+        String formulMapTable = request.getParameter("formulMapTable");
+        String numberMapTable = request.getParameter("numberMapTable");
+        Long collection_id = Long.parseLong(request.getParameter("collection_Id").trim());
 
         if (ajax) {
-            if (nameCollMapTable.length() > 0) {
-                collMapTable.createCollMapTable(nameCollMapTable);
-                String answer = "success";
+            if (nameMapTable.length() > 0) {
+                mapTables.createMapTable(nameMapTable, formulMapTable, numberMapTable,collection_id);
+                List<MapTable> MapTables = collMapTable.findMapByIdColl(collection_id);
+                request.setAttribute("MapTables", MapTables);
+                getServletContext().getRequestDispatcher("/WEB-INF/administrator/listMapTable.jsp").forward(request, response);
+            }else {
+                String answer = "fail";
                 response.getWriter().write(answer);
             }
         }

@@ -96,4 +96,27 @@ public class collMapTable {
         session.getTransaction().commit();
         session.close();
     }
+
+    public static CollectionMapTable findCollectionMapTableById(Long collection_id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        List<CollectionMapTable> collectionMapTables;
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<CollectionMapTable> criteria = builder.createQuery(CollectionMapTable.class);
+        Root<CollectionMapTable> root = criteria.from(CollectionMapTable.class);
+        criteria.select(root);
+        criteria.where(builder.equal(root.get("collection_id"), collection_id));
+
+        session.beginTransaction();
+        collectionMapTables = session.createQuery(criteria).getResultList();
+        session.getTransaction().commit();
+
+
+        Iterator<CollectionMapTable> it = collectionMapTables.iterator();
+        CollectionMapTable collectionMapTable = null;
+        if (it.hasNext()) {
+            collectionMapTable = it.next();
+
+        }return collectionMapTable;
+    }
 }
