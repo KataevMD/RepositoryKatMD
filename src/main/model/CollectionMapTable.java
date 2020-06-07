@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "collectionMapTable")
-public class CollectionMapTable {
+public class CollectionMapTable implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +17,10 @@ public class CollectionMapTable {
 
     @OneToMany(mappedBy = "collectionMapTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MapTable> listMapTable;
+
+    public CollectionMapTable clone() throws CloneNotSupportedException{
+        return (CollectionMapTable) super.clone();
+    }
 
     public Long getCollection_id() {
         return collection_id;

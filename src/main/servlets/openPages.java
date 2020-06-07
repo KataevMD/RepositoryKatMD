@@ -50,10 +50,15 @@ public class openPages extends HttpServlet {
     private void openListParameterAndCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("mapTable_id"));
         String nameMap = request.getParameter("nameMapTable");
-
+        MapTable mapTable = mapTables.findMapTableById(id);
         List<Coefficient> coefficients = parameterAndCoefficient.findCoefficientByIdMap(id);
         List<Parameter> parameter = parameterAndCoefficient.findParametersByIdMapTable(id);
-
+        FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(id);
+        if(fileMapTable != null){
+            request.setAttribute("downloadFileMap","http://localhost:8081/cstrmo/downloadFile?mapTable_id="+id.toString());
+            request.setAttribute("selectFile","disabled");
+        }
+        request.setAttribute("formulMap",mapTable.getFormul());
         request.setAttribute("Parameter", parameter);
         request.setAttribute("Coefficient", coefficients);
         request.setAttribute("nameMapTable", nameMap);

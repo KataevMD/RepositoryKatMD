@@ -35,6 +35,7 @@ public class MapTable {
     public MapTable() {
 
     }
+
     public void setItem(CollectionMapTable collectionMapTable)
     {
         if (this.collectionMapTable != null)
@@ -125,7 +126,7 @@ public class MapTable {
     }
 
     public void internalRemoveCoefficient(Coefficient coefficient) {
-        this.listParameter.remove(coefficient);
+        this.listCoefficient.remove(coefficient);
     }
 
     public void addCoefficient(Coefficient coefficient) {

@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "coefficient")
-public class Coefficient implements Cloneable{
+public class Coefficient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +25,7 @@ public class Coefficient implements Cloneable{
     public Coefficient() {
 
     }
-    public Coefficient clone() throws CloneNotSupportedException{
 
-        return (Coefficient) super.clone();
-    }
     public Long getCoefficient_id() {
         return coefficient_id;
     }

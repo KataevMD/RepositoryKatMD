@@ -142,7 +142,7 @@
                         <td><c:out value="${collMapTable.collection_id}"/></td>
                         <td><c:out value="${collMapTable.nameCollectionMapTable}"/></td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/openListMapTablePage?collection_id=<c:out value='${collMapTable.collection_id}'/>&nameCollectionMapTable=<c:out value='${collMapTable.nameCollectionMapTable}'/>"
+                            <a href="http://localhost:8081/cstrmo/openListMapTablePage?collection_id=<c:out value='${collMapTable.collection_id}'/>&nameCollectionMapTable=<c:out value='${collMapTable.nameCollectionMapTable}'/>"
                                class="btn btn-light">Просмотреть</a>
                         </td>
                         <td>

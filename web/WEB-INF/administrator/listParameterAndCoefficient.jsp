@@ -15,13 +15,18 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <style>
         <%@include file="/WEB-INF/css/offcanvas.css" %>
+        <%--        <%@include file="/WEB-INF/css/uploadFile.css" %>--%>
     </style>
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <script>
         <%@include file="/WEB-INF/js/coefficientAndParameters.js" %>
+        <%@include file="/WEB-INF/js/uploadFile.js" %>
     </script>
 </head>
 <body class="d-flex flex-column h-100">
@@ -46,6 +51,9 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link " href="${pageContext.request.contextPath}/openMainAdminsPage">Справочники</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="javascript:history.go(-1);">Карты</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true"
@@ -76,7 +84,23 @@
     <label for="mapTableId"></label><input id="mapTableId" name="mapTable_id" value="${mapTable_Id}"
                                            hidden>
     <br>
-    <div class="row">
+    <div class="d-flex justify-content-start">
+        <form id="upload-container" accept-charset='utf-8' enctype="multipart/form-data" method="post"
+              action="${pageContext.request.contextPath}/uploadFileMapTable">
+            <div><label for="map_id"></label>
+                <input id="map_id" name="mapTable_id" value="${mapTable_Id}" hidden>
+                <label for="fileName"></label>
+                <input id="fileName" name="fileName" value="" hidden>
+                <label for="file-input"></label>
+                <input id="file-input" type="file" name="file" ${selectFile}>
+            </div>
+        </form>
+        <a id="downloadFile" href="${downloadFileMap}"
+           class="btn btn-light">Скачать файл</a>
+        <button class="btn btn-light" onclick="deleteFile()">Удалить файл</button>
+    </div>
+   <br>
+    <div class="row ">
         <%--        Блок таблицы Параметров--%>
         <div class="col">
             <div class="container">
@@ -150,6 +174,11 @@
                     </table>
                 </data>
             </div>
+<%--            <img src="http://latex.numberempire.com/render?${formulMap}"--%>
+<%--                 alt="Корни квадратного уравнения">--%>
+            <p>
+                $$ ${formulMap} $$
+            </p>
         </div>
         <%--        Блок таблицы Коэффициенты--%>
         <div class="col">

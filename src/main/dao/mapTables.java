@@ -1,8 +1,8 @@
 package main.dao;
 
 import main.hibernate.HibernateUtil;
-import main.model.Coefficient;
 import main.model.CollectionMapTable;
+import main.model.FileMapTable;
 import main.model.MapTable;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,11 +10,30 @@ import org.hibernate.SessionFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class mapTables {
+
+    public static FileMapTable findFileMapTableByMapTable_id(Long mapTable_id) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<FileMapTable> criteria = builder.createQuery(FileMapTable.class);
+        Root<FileMapTable> root = criteria.from(FileMapTable.class);
+        criteria.select(root);
+        criteria.where(builder.equal(root.get("mapTable_id"), mapTable_id));
+
+        session.beginTransaction();
+        List<FileMapTable> fileMapTablesList = session.createQuery(criteria).getResultList();
+        session.getTransaction().commit();
+        session.close();
+        Iterator<FileMapTable> it = fileMapTablesList.iterator();
+
+        if (it.hasNext()) {
+            return it.next();
+        }
+        return null;
+    }
 
     public static MapTable findMapTableById(Long mapTable_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -101,5 +120,19 @@ public class mapTables {
             session.getTransaction().commit();
             session.close();
         }
+    }
+
+    public static boolean deleteFileByIdMapTable(Long mapTable_id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        FileMapTable fileMapTable = findFileMapTableByMapTable_id(mapTable_id);
+        if(fileMapTable!=null){
+            session.beginTransaction();
+            session.delete(fileMapTable);
+            session.getTransaction().commit();
+            session.close();
+            return true;
+        }
+        return false;
     }
 }

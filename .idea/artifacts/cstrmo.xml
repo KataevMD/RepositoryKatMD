@@ -13,6 +13,8 @@
           <element id="library" level="project" name="commons-codec-1.10" />
           <element id="library" level="project" name="javax.json.bind-api-1.0" />
           <element id="library" level="project" name="gson-2.8.5" />
+          <element id="library" level="project" name="commons-fileupload-1.4" />
+          <element id="library" level="project" name="poi-3.17" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="CSTRMO/web/Web" />

@@ -3,19 +3,31 @@ package main.servlets;
 import main.dao.collMapTable;
 import main.dao.mapTables;
 import main.hibernate.HibernateUtil;
+import main.model.FileMapTable;
 import main.model.MapTable;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.List;
 
-@WebServlet(name = "daoMapTable", urlPatterns = {"/deleteMapTable", "/addNewMapTable", "/updateMapTable"})
+@WebServlet(name = "daoMapTable", urlPatterns = {"/deleteMapTable", "/addNewMapTable", "/updateMapTable", "/deleteFile"})
 public class daoMapTable extends HttpServlet {
     @Override
     public void init() throws ServletException {
@@ -23,29 +35,50 @@ public class daoMapTable extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=utf-8");
-        response.setCharacterEncoding("UTF-8");
-        String action = request.getServletPath();
-        switch (action) {
-            case "/addNewMapTable":
-                addMapTable(request, response);
-                break;
-            case "/updateMapTable":
-                upMapTable(request, response);
-                break;
-            default:
-                doGet(request, response);
-                break;
+        synchronized (this) {
+            response.setContentType("text/html;charset=utf-8");
+            response.setCharacterEncoding("UTF-8");
+            String action = request.getServletPath();
+            switch (action) {
+                case "/addNewMapTable":
+                    addMapTable(request, response);
+                    break;
+                case "/updateMapTable":
+                    upMapTable(request, response);
+                    break;
+                default:
+                    doGet(request, response);
+                    break;
+            }
         }
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("UTF-8");
         String action = request.getServletPath();
-        if ("/deleteMapTable".equals(action)) {
-            deleteMap(request, response);
+        switch (action) {
+            case "/deleteMapTable":
+                deleteMap(request, response);
+                break;
+            case "/deleteFile":
+                deleteFile(request, response);
+                break;
+        }
+    }
+
+    private void deleteFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if(ajax) {
+            Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
+           boolean res =  mapTables.deleteFileByIdMapTable(mapTable_id);
+           if(res){
+               String answer = "success";
+               response.getWriter().write(answer);
+           }else {
+               String answer = "fail";
+               response.getWriter().write(answer);
+           }
         }
     }
 
@@ -58,11 +91,11 @@ public class daoMapTable extends HttpServlet {
 
         if (ajax) {
             if (nameMapTable.length() > 0) {
-                mapTables.createMapTable(nameMapTable, formulMapTable, numberMapTable,collection_id);
+                mapTables.createMapTable(nameMapTable, formulMapTable, numberMapTable, collection_id);
                 List<MapTable> MapTables = collMapTable.findMapByIdColl(collection_id);
                 request.setAttribute("MapTables", MapTables);
                 getServletContext().getRequestDispatcher("/WEB-INF/administrator/listMapTable.jsp").forward(request, response);
-            }else {
+            } else {
                 String answer = "fail";
                 response.getWriter().write(answer);
             }
