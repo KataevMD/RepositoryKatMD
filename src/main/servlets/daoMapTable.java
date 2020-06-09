@@ -27,8 +27,8 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 
-@WebServlet(name = "daoMapTable", urlPatterns = {"/deleteMapTable", "/addNewMapTable", "/updateMapTable", "/deleteFile"})
-public class daoMapTable extends HttpServlet {
+@WebServlet(name = "daoMapTable", urlPatterns = {"/deleteMapTable", "/addNewMapTable", "/updateMapTable", "/deleteFile","/cloneableMapTable"})
+public class daoMapTable extends HttpServlet{
     @Override
     public void init() throws ServletException {
         super.init();
@@ -64,6 +64,21 @@ public class daoMapTable extends HttpServlet {
             case "/deleteFile":
                 deleteFile(request, response);
                 break;
+            case "/cloneableMapTable":
+                cloneMap(request, response);
+                break;
+        }
+    }
+
+    private void cloneMap(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if(ajax) {
+            Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
+            Long collection_id = Long.parseLong(request.getParameter("collection_id"));
+            mapTables.cloneableMapTable(mapTable_id,collection_id);
+            List<MapTable> MapTables = collMapTable.findMapByIdColl(collection_id);
+            request.setAttribute("MapTables", MapTables);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/listMapTable.jsp").forward(request, response);
         }
     }
 

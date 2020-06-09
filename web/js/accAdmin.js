@@ -2,24 +2,20 @@ $('#erer').on('hidden.bs.toast', function () {
     $('.toast-body').empty();
 });
 
-function decode_utf8(s) {
-    return decodeURIComponent(escape(s));
-}
-
 $(document).on("submit", "#createForm", function (event) {
     let $form = $(this);
 
     $.post($form.attr("action"), $form.serialize(), function (response) {
         if (response === "fail") {
             $('#error').toast('show');
-            $('#bodyError').text(decode_utf8('Учетная запись пользователя не создана. Проверьте введенные данные!'));
+            $('#bodyError').text('Учетная запись с таким логином уже существует! Используйте другой логин');
         } else {
             $('#addNewAcc').toast('show');
             $('#createForm')[0].reset();
         }
 
     });
-    event.preventDefault(); // Important! Prevents submitting the form.
+    event.preventDefault();
 });
 
 function deleteUserById(idUser) {
@@ -31,7 +27,7 @@ function deleteUserById(idUser) {
         success: function (response) {
             if(response === "yoursAcc"){
                 $('#error').toast('show');
-                $('#bodyError').text(decode_utf8('Вы не можете удалить свою учетную запись!'));
+                $('#bodyError').text('Вы не можете удалить свою учетную запись!');
             }else{
                 $('#delete').toast('show');
                 //$("#adm_"+idUser).remove();

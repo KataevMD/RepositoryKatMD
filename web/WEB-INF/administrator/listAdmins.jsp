@@ -14,17 +14,16 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <!-- Custom styles for this template -->
-    <style>
-        <%@include file="/WEB-INF/css/mainTable.css"%>
-        <%@include file="/WEB-INF/css/offcanvas.css"%>
-    </style>
+
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css" >
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/mainTable.css" >
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
-    <script>
-        <%@include file="/WEB-INF/js/offcanvas.js"%>
-        <%@include file="/WEB-INF/js/accAdmin.js"%>
+    <script src="http://localhost:8081/cstrmo/js/offcanvas.js">
+    </script>
+    <script src="http://localhost:8081/cstrmo/js/accAdmin.js">
     </script>
 </head>
 <body class="d-flex flex-column h-100">
@@ -57,17 +56,21 @@
                 >Уч.записи администраторов</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <a class="dropdown-item active" href="${pageContext.request.contextPath}/openListAdminPage">Просмотр
-                        уч.записей</a>
+                        учетных записей</a>
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/openRegisterAdmins">Добавить
-                        уч.запись</a>
+                        учетных запись</a>
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="btn btn-outline-light align-middle"
-                   href="${pageContext.request.contextPath}/logout"><%=userName%>
-                    (Выйти)</a>
-            </li>
         </ul>
+        <div class="justify-content-end">
+            <a class="btn btn-outline-light align-middle" style="margin-right: 10px;"
+               href="${pageContext.request.contextPath}/myAccount">Личный кабинет</a>
+        </div>
+        <div class="justify-content-end">
+            <a class="btn btn-outline-light align-middle"
+               href="${pageContext.request.contextPath}/logout"><%=userName%>
+                (Выйти)</a>
+        </div>
     </div>
 </nav>
 <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 65px;">
@@ -106,8 +109,8 @@
                 <th class="w-3p5">№</th>
                 <th class="w-60">Имя</th>
                 <th class="w-36p5">Фамилия</th>
-                <th></th>
-                <th></th>
+                <th>Отчество</th>
+                <th>Логин</th>
                 <th></th>
             </tr>
             </thead>
@@ -117,17 +120,8 @@
                     <td id="idAdmin"><c:out value="${admin.id}"/></td>
                     <td><c:out value="${admin.firstName}"/></td>
                     <td><c:out value="${admin.lastName}"/></td>
-                    <td>
-                        <button id="view" class="btn btn-light">Просмотреть</button>
-                    </td>
-                    <td>
-                        <button id="update" class="btn btn-light">Редактировать</button>
-                    </td>
-                    <td>
-                        <button type="button" id="delete" onclick="deleteUserById(<c:out value="${admin.id}"/>)"
-                                class="btn btn-light">Удалить
-                        </button>
-                    </td>
+                    <td><c:out value="${admin.patronymic}"/></td>
+                    <td><c:out value="${admin.login}"/></td>
                 </tr>
             </c:forEach>
             </tbody>

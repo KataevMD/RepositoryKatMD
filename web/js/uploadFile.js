@@ -39,11 +39,11 @@ $(document).ready(function () {
             processData: false,
             success: function (data) {
                 if (data === "success") {
-                    alert(decode_utf8('Файл был успешно загружен!'));
+                    alert('Файл был успешно загружен!');
                     $('#downloadFile').attr('href', 'http://localhost:8081/cstrmo/downloadFile?mapTable_id='+$('#mapTableId').val());
                     $('#file-input').prop('disabled', true);
                 } else if (data === "fail") {
-                    alert(decode_utf8('Файл не был загружен! За данной картой файл уже закреплен!'));
+                    alert('Файл не был загружен! За данной картой файл уже закреплен!');
                 }
 
             }
@@ -62,11 +62,11 @@ function deleteFile() {
         },
         success: function (response) {
             if (response === "success") {
-                alert(decode_utf8('Файл удален!'));
+                alert('Файл удален!');
                 $('#downloadFile').attr('href', '');
                 $('#file-input').prop('disabled', false);
             } else if (response === "fail") {
-                alert(decode_utf8('Файл не обнаружен!'));
+                alert('Файл не обнаружен!');
             }
         }
     });

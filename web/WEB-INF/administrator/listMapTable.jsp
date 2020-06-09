@@ -13,14 +13,13 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <style>
-        <%@include file="/WEB-INF/css/offcanvas.css" %>
-    </style>
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css" >
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous">
     </script>
+    <script src="http://localhost:8081/cstrmo/js/mapTable.js"></script>
 </head>
 <body class="d-flex flex-column h-100">
 <%
@@ -59,15 +58,20 @@
             </li>
         </ul>
         <div class="justify-content-end">
+            <a class="btn btn-outline-light align-middle" style="margin-right: 10px;"
+               href="${pageContext.request.contextPath}/myAccount">Личный кабинет</a>
+        </div>
+        <div class="justify-content-end">
             <a class="btn btn-outline-light align-middle"
                href="${pageContext.request.contextPath}/logout"><%=userName%>
                 (Выйти)</a>
         </div>
     </div>
+
 </nav>
 <%--Всплывающие уведомления--%>
-<div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 55px;">
-    <div class="toast" id="error" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+<div aria-live="polite" aria-atomic="true" class="fixed-top" style="z-index: -20; min-height: 55px;">
+    <div class="toast" id="error" data-delay="10000" style="position: absolute; top: 55px; right: 0;">
         <div class="toast-header">
             <strong class="mr-auto">Внимание!</strong>
             <button type="button" id="closeToast1" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -137,6 +141,13 @@
                                         class="btn btn-light">Удалить
                                 </button>
                             </td>
+                            <td>
+                                <button id="cloneMap" data-toggle="modal"
+                                        onclick="getMapId(<c:out value="${MapTable.mapTable_id}"/>)"
+                                        data-target="#staticBackdropCloneMap" class="btn btn-outline-secondary">
+                                    Дублировать
+                                </button>
+                            </td>
                         </tr>
                         <tr id="map_<c:out value="${MapTable.mapTable_id}"/>" hidden class="table-active">
                             <td>
@@ -199,14 +210,14 @@
             <div class="modal-body">
                 <form id="formCreateMapTable" autocomplete="off" method="post"
                       action="${pageContext.request.contextPath}/addNewMapTable">
-                    <label for="inputNumberMapTable" class="sr-only">Номер карты</label>
+                    <label for="inputNumberMapTable" >Введите номер карты</label>
                     <input id="inputNumberMapTable" onkeyup="checkInputNumberMap()" autocomplete="off"
                            class="form-control" pattern="^[0-9]+$"
                            name="numberMapTable"
                            title="Разрешено использовать цифры"
                            placeholder="Номер карты"
                            required autofocus><br>
-                    <label for="inputNameMapTable" class="sr-only">Название карты</label>
+                    <label for="inputNameMapTable" >Введите название карты</label>
                     <input id="inputNameMapTable" onkeyup="checkInputNameMap()" autocomplete="off" class="form-control"
                            pattern="^[А-Яа-яЁё,\s]+$"
                            name="nameMapTable"
@@ -221,13 +232,44 @@
                     <label>
                         <input name="collection_Id" value="${collection_Id}" hidden>
                     </label>
-                    <button id="createMap" class="btn btn-lg btn-primary btn-block" type="submit">Создать</button>
-                    <br>
-                    <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button>
-                    <br>
+                    <div class="d-flex justify-content-center">
+                        <button id="createMap" style="margin-right: 15px" class="btn btn-lg btn-primary btn-block" type="submit">Создать</button>
+                        <br>
+                        <button type="button" class="btn btn-lg btn-light  btn-block" data-dismiss="modal">Отмена</button>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<%--Модальное окно клонирования карты--%>
+<div class="modal fade" id="staticBackdropCloneMap" data-backdrop="static" data-keyboard="false"
+     tabindex="-1"
+     role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6>Выберите справочник, в который будет клонирована карта</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Название справочника: <label>
+                <input class="form-control" onkeyup="filter(this)" type="text"/>
+            </label>
+                <label>
+                    <input id="mapTable_id" class="form-control" value="" type="text" hidden/>
+                </label>
+                <ul  id="listColl" class="list-group" style="cursor: pointer">
+                    <c:forEach var="CollectionMapTable" items="${CollectionMapTables}">
+                        <li class="list-group-item list-group-item-action"
+                            onclick="cloneMapTable(<c:out value="${CollectionMapTable.collection_id}"/>)">
+                            <c:out value="${CollectionMapTable.nameCollectionMapTable}"/></li>
+                    </c:forEach>
+                </ul>
             </div>
         </div>
     </div>
@@ -242,10 +284,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<script>
-    <%@include file="/WEB-INF/js/offcanvas.js" %>
-    <%@include file="/WEB-INF/js/filters.js" %>
-    <%@include file="/WEB-INF/js/mapTable.js" %>
-</script>
+<script src="http://localhost:8081/cstrmo/js/offcanvas.js"></script>
+<script src="http://localhost:8081/cstrmo/js/filters.js"></script>
 
 </html>

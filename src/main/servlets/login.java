@@ -69,12 +69,19 @@ public class login extends HttpServlet {
                 cId.setMaxAge(60*60*24);
                 response.addCookie(cId);
                 response.addCookie(cUserName);
-
                 httpSession.setAttribute("sessuser", usersAdmins.getLogin());
-                List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
-                request.setAttribute("collectionMapTables", collectionMapTables);
-                getServletContext().getRequestDispatcher("/WEB-INF/administrator/mainAdmins.jsp").forward(request, response);
-
+                if(passw.equals("Passw0rd")){
+                    request.setAttribute("message", "Для продолжения работы в системе требуется изменить пароль.\nЭто можно сделать ниже, в графе изменения пароля! ");
+                    request.setAttribute("login", usersAdmins.getLogin());
+                    request.setAttribute("firstName", usersAdmins.getFirstName());
+                    request.setAttribute("lastName", usersAdmins.getLastName());
+                    request.setAttribute("patronymic", usersAdmins.getPatronymic());
+                    getServletContext().getRequestDispatcher("/WEB-INF/administrator/myAccount.jsp").forward(request, response);
+                }else {
+                    List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
+                    request.setAttribute("collectionMapTables", collectionMapTables);
+                    getServletContext().getRequestDispatcher("/WEB-INF/administrator/mainAdmins.jsp").forward(request, response);
+                }
             }else{
                 request.setAttribute("msg", "Неверен логин или пароль.");
                 getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);

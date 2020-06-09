@@ -15,14 +15,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <!-- Custom styles for this template -->
-    <style>
-        <%@include file="/WEB-INF/css/offcanvas.css"%>
-    </style>
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css" >
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous">
     </script>
+    <script src="http://localhost:8081/cstrmo/js/collectMapTable.js"></script>
 </head>
 <body class="d-flex flex-column h-100">
 <%
@@ -61,6 +60,10 @@
             </li>
         </ul>
         <div class="justify-content-end">
+            <a class="btn btn-outline-light align-middle" style="margin-right: 10px;"
+               href="${pageContext.request.contextPath}/myAccount">Личный кабинет</a>
+        </div>
+        <div class="justify-content-end">
             <a class="btn btn-outline-light align-middle"
                href="${pageContext.request.contextPath}/logout"><%=userName%>
                 (Выйти)</a>
@@ -68,8 +71,8 @@
     </div>
 </nav>
 <%--Всплывающие уведомления--%>
-<div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 65px;">
-    <div class="toast" id="addNewColl" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+<div aria-live="polite" aria-atomic="true" class="fixed-top" style="z-index: -20; min-height: 65px;">
+    <div class="toast" id="addNewColl" data-delay="10000" style="position: absolute; top: 55px; right: 0;">
         <div class="toast-header">
             <strong class="mr-auto">Создание справочника</strong>
             <button type="button" id="closeToast1" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -80,7 +83,7 @@
             Новый справочник успешно создан!
         </div>
     </div>
-    <div class="toast" id="deleteColl" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+    <div class="toast" id="deleteColl" data-delay="10000" style="position: absolute; top: 55px; right: 0;">
         <div class="toast-header">
             <strong class="mr-auto">Удаление справочника</strong>
             <button type="button" id="closeToast3" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -91,7 +94,7 @@
             Справочник удален!
         </div>
     </div>
-    <div class="toast" id="error" data-delay="10000" style="position: absolute; top: 0; right: 0;">
+    <div class="toast" id="error" data-delay="10000" style="position: absolute; top: 55px; right: 0;">
         <div class="toast-header">
             <strong class="mr-auto">ВНИМАНИЕ!</strong>
             <button type="button" id="closeToast4" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -204,17 +207,18 @@
             <div class="modal-body">
                 <form id="createForm" autocomplete="off" method="post"
                       action="${pageContext.request.contextPath}/addNewCollMapTable">
-                    <label for="inputNameCollMapTable" class="sr-only">Название справочника</label>
+                    <label for="inputNameCollMapTable">Введите название справочника</label>
                     <input id="inputNameCollMapTable" onkeyup="checkInputNameColl()" autocomplete="off" class="form-control" pattern="^[А-Яа-яЁё\s]+$"
                            name="nameCollMapTable"
                            title="Разрешено использовать только пробелы, запятые и русские буквы"
                            placeholder="Название справочника"
                            required autofocus><br>
-                    <button id="createColl" class="btn btn-lg btn-primary btn-block" type="submit">Создать</button><br>
-                    <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button><br>
+                    <div class="d-flex justify-content-center">
+                        <button id="createColl" style="margin-right: 15px" class="btn btn-lg btn-primary btn-block" type="submit">Создать</button><br>
+                        <button type="button" class="btn btn-lg btn-light  btn-block" data-dismiss="modal">Отмена</button>
+                    </div>
+
                 </form>
-            </div>
-            <div class="modal-footer">
             </div>
         </div>
     </div>
@@ -229,9 +233,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<script>
-    <%@include file="/WEB-INF/js/collectMapTable.js"%>
-    <%@include file="/WEB-INF/js/offcanvas.js" %>
-    <%@include file="/WEB-INF/js/filters.js" %>
-</script>
+<script src="http://localhost:8081/cstrmo/js/offcanvas.js"></script>
+<script src="http://localhost:8081/cstrmo/js/filters.js"></script>
 </html>

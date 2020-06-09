@@ -1,6 +1,7 @@
 package main.servlets;
 
 import main.dao.admin;
+import main.model.UsersAdmin;
 
 
 import javax.servlet.ServletException;
@@ -109,9 +110,15 @@ public class daoAdmin extends HttpServlet {
         String passw = request.getParameter("password").trim();
         if (ajax) {
             if (login.length() > 0 && firstName.length() > 0 && passw.length() > 0 && lastName.length() > 0) {
-                admin.createAdmin(firstName, lastName, patronymic, passw, login);
-                String answer = "success";
-                response.getWriter().write(answer);
+                Boolean res = admin.findAdminByLogin(login);
+                if(res){
+                    admin.createAdmin(firstName, lastName, patronymic, passw, login);
+                    String answer = "success";
+                    response.getWriter().write(answer);
+                }else {
+                    String answer = "fail";
+                    response.getWriter().write(answer);
+                }
             }
         }
     }

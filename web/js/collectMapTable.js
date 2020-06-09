@@ -1,3 +1,15 @@
+//Функция сбора данных с формы, и их последующая отправка в сервлет, для создания новой записи Справочника
+$(document).on("submit", "#createForm", function (event) {
+    let $form = $(this);
+
+    $.post($form.attr("action"), $form.serialize(), function (response) {
+        $("#divColl").html($(response).find("data").html());
+        $('.close').click();
+        $('#addNewColl').toast('show');
+        $('#createForm')[0].reset();
+    });
+    event.preventDefault(); // Important! Prevents submitting the form.
+});
 //Функция удаления Справочника по его ID
 function deleteCollMapTableById(collection_id) {
     $.ajax({
@@ -15,7 +27,7 @@ function deleteCollMapTableById(collection_id) {
 //Обновление данных справончика по его ID
 function updateColl(collection_id) {
     let name = $('#upColl'+collection_id).val();
-    let str = decode_utf8('^[А-Яа-яЁё\\s]+$');
+    let str = '^[А-Яа-яЁё\\s]+$';
     if(name.length > 0 && name.match(str) ){
         $.ajax({
             method:'post',
@@ -27,12 +39,12 @@ function updateColl(collection_id) {
             success: function (response) {
                 $("#divColl").html($(response).find("data").html());
                 $('#error').toast('show');
-                $('#bodyError').text(decode_utf8('Данные справочника обновлены!'));
+                $('#bodyError').text('Данные справочника обновлены!');
             }
         });
     }else {
         $('#error').toast('show');
-        $('#bodyError').text(decode_utf8('Проверьте введенные данные!'));
+        $('#bodyError').text('Проверьте введенные данные!');
     }
 }
 //Функция отображение блока редактирования Справочника
@@ -43,26 +55,10 @@ function viewUpdate(collection_id) {
 function closeUpdate(collection_id) {
     $("#coll_"+collection_id).attr('hidden',true)
 }
-//Функция перекодирования строки в формат UTF-8
-function decode_utf8(s) {
-    return decodeURIComponent(escape(s));
-}
-//Функция сбора данных с формы, и их последующая отправка в сервлет, для создания новой записи Справочника
-$(document).on("submit", "#createForm", function (event) {
-    let $form = $(this);
-
-    $.post($form.attr("action"), $form.serialize(), function (response) {
-            $("#divColl").html($(response).find("data").html());
-            $('.close').click();
-            $('#addNewColl').toast('show');
-            $('#createForm')[0].reset();
-    });
-    event.preventDefault(); // Important! Prevents submitting the form.
-});
 //Функция проверки введенных данных при редактировании записей Справочника
 function checkNameColl(collection_id){
     let name = $('#upColl'+collection_id).val();
-    let regName = decode_utf8('^[А-Яа-яЁё,\\s]+$');
+    let regName = '^[А-Яа-яЁё,\\s]+$';
     if(!name.match(regName)){
         $('#save'+collection_id).prop('disabled', true);
         $('#upColl'+collection_id).blur().addClass('error');
@@ -74,7 +70,7 @@ function checkNameColl(collection_id){
 //Функция проверки введенных данных при создании Справочника
 function checkInputNameColl(){
     let name = $('#inputNameCollMapTable').val();
-    let regName = decode_utf8('^[А-Яа-яЁё,\\s]+$');
+    let regName = '^[А-Яа-яЁё,\\s]+$';
     if(!name.match(regName)){
         $('#createColl').prop('disabled', true);
         $('#inputNameCollMapTable').blur().addClass('error');

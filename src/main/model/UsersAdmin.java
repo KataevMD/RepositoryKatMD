@@ -30,11 +30,11 @@ public class UsersAdmin {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "dateCreate")
-    private Date dateCreat;
+    @Column(name = "date")
+    private Date date;
 
-    public Date getDateCreat() {
-        return dateCreat;
+    public Date getDate() {
+        return date;
     }
 
     public Long getRole_id() {
@@ -45,8 +45,8 @@ public class UsersAdmin {
         this.role_id = role_id;
     }
 
-    public void setDateCreat(Date dateCreat) {
-        this.dateCreat = dateCreat;
+    public void setDate(Date dateCreat) {
+        this.date = dateCreat;
     }
 
     public Long getId() {

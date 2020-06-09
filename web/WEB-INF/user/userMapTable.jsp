@@ -13,10 +13,9 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <style>
-        <%@include file="/WEB-INF/css/offcanvas.css" %>
-        <%@include file="/WEB-INF/css/modal_signin.css"%>
-    </style>
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css">
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/modal_signin.css">
+
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
@@ -51,11 +50,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="form-signin" autocomplete="off" method="post" action="${pageContext.request.contextPath}/login">
+                <form class="form-signin" autocomplete="off" method="post"
+                      action="${pageContext.request.contextPath}/login">
                     <label for="inputLogin" class="sr-only">Email address</label>
-                    <input  id="inputLogin" autocomplete="off"  class="form-control" name="login" placeholder="Login" required autofocus>
+                    <input id="inputLogin" autocomplete="off" class="form-control" name="login" placeholder="Login"
+                           required autofocus>
                     <label for="inputPassword" class="sr-only">Password</label>
-                    <input type="password" autocomplete="new-password" id="inputPassword"  name="password" class="form-control" placeholder="Password" required>
+                    <input type="password" autocomplete="new-password" id="inputPassword" name="password"
+                           class="form-control" placeholder="Password" required>
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
                     <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button>
                 </form>
@@ -112,9 +114,9 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<script>
-    <%@include file="/WEB-INF/js/offcanvas.js" %>
-    <%@include file="/WEB-INF/js/filters.js" %>
+<script src="http://localhost:8081/cstrmo/js/offcanvas.js">
+</script>
+<script src="http://localhost:8081/cstrmo/js/filters.js">
 </script>
 
 </html>

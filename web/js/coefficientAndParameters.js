@@ -1,8 +1,3 @@
-//Функция перекодирования строки в формат UTF-8
-function decode_utf8(s) {
-    return decodeURIComponent(escape(s));
-}
-
 //Функция получения Значений Коэффициента по id Коэффициента
 function getValueCoeff(coefficient_id) {
     $.ajax({
@@ -26,7 +21,7 @@ $(document).on("submit", "#formCreateParameter", function (event) {
 
     $.post($form.attr("action"), $form.serialize(), function (response) {
         if (response === "fail") {
-            alert(decode_utf8('Параметр не создан!'));
+            alert('Параметр не создан!');
             // $('#error').toast('show');
             // $('#bodyError').text(decode_utf8('Карта не создана, проверьте введенные данные!'));
         } else {
@@ -34,7 +29,7 @@ $(document).on("submit", "#formCreateParameter", function (event) {
             $('.close').click();
             // $('#error').toast('show');
             // $('#bodyError').text(decode_utf8('Карта успешно создана!'));
-            alert(decode_utf8('Параметр создан!'));
+            alert('Параметр создан!');
             $("#staticBackdropParameter").find('#formCreateParameter')[0].reset();
         }
 
@@ -48,7 +43,7 @@ $(document).on("submit", "#formCreateCoefficient", function (event) {
 
     $.post($form.attr("action"), $form.serialize(), function (response) {
         if (response === "fail") {
-            alert(decode_utf8('Коэффициент не создан!'));
+            alert('Коэффициент не создан!');
             // $('#error').toast('show');
             // $('#bodyError').text(decode_utf8('Карта не создана, проверьте введенные данные!'));
         } else {
@@ -56,7 +51,7 @@ $(document).on("submit", "#formCreateCoefficient", function (event) {
             $('.close').click();
             // $('#error').toast('show');
             // $('#bodyError').text(decode_utf8('Карта успешно создана!'));
-            alert(decode_utf8('Коэффициент создан!'));
+            alert('Коэффициент создан!');
             $("#staticBackdropCoefficient").find('#formCreateCoefficient')[0].reset();
         }
 
@@ -70,7 +65,7 @@ $(document).on("submit", "#formCreateValueCoefficient", function (event) {
 
     $.post($form.attr("action"), $form.serialize(), function (response) {
         if (response === "fail") {
-            alert(decode_utf8('Значение не создано!'));
+            alert('Значение не создано!');
             // $('#error').toast('show');
             // $('#bodyError').text(decode_utf8('Карта не создана, проверьте введенные данные!'));
         } else {
@@ -78,7 +73,7 @@ $(document).on("submit", "#formCreateValueCoefficient", function (event) {
             $('.close').click();
             // $('#error').toast('show');
             // $('#bodyError').text(decode_utf8('Карта успешно создана!'));
-            alert(decode_utf8('Значение создано!'));
+            alert('Значение создано!');
             $("#staticBackdropValueCoefficient").find('#formCreateValueCoefficient')[0].reset();
         }
 

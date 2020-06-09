@@ -22,3 +22,16 @@ function filterTable($table) {
         }
     });
 }
+
+function filter(element) {
+    let value = $(element).val();
+
+    $("#listColl > li").each(function() {
+        if ($(this).text().toLowerCase().search(value) > -1) {
+            $(this).show();
+        }
+        else {
+            $(this).hide();
+        }
+    });
+}

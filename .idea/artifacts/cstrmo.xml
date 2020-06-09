@@ -19,6 +19,7 @@
       </element>
       <element id="javaee-facet-resources" facet="CSTRMO/web/Web" />
       <element id="javaee-facet-resources" facet="CSTRMO/javaeeApplication/javaEEApplication" />
+      <element id="dir-copy" path="$PROJECT_DIR$/web/file" />
     </root>
   </artifact>
 </component>

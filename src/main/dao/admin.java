@@ -1,6 +1,7 @@
 package main.dao;
 
 import main.hibernate.HibernateUtil;
+import main.model.MapTable;
 import main.model.UsersAdmin;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.Query;
@@ -15,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class admin {
-    private static List<UsersAdmin> usersAdminList = null;
 
     public static String getHash(String password) {
         return DigestUtils.sha512Hex(password);
@@ -60,7 +60,7 @@ public class admin {
      * Метод возвращает список объектов класса UsersAdmin
      * для дальнейшего вывода информации на страницу
      */
-    public static List<UsersAdmin> FindAdmins(String idUser) {
+    public static List<UsersAdmin> FindAdmins() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
@@ -70,7 +70,7 @@ public class admin {
         criteria.select(root);
 
         session.beginTransaction();
-        usersAdminList = session.createQuery(criteria).getResultList();
+        List<UsersAdmin> usersAdminList = session.createQuery(criteria).getResultList();
         session.getTransaction().commit();
         session.close();
         if (!usersAdminList.isEmpty()) {
@@ -82,10 +82,11 @@ public class admin {
     /**
      * Метод возвращает объект класса UsersAdmin
      * для дальнейшей авторизации пользователя в системе
-     * @param login - логин пользователя
-     * @param passw - пароль пользователя
-     * @param firstName - пароль пользователя
-     * @param lastName - пароль пользователя
+     *
+     * @param login      - логин пользователя
+     * @param passw      - пароль пользователя
+     * @param firstName  - пароль пользователя
+     * @param lastName   - пароль пользователя
      * @param patronymic - пароль пользователя
      * @ - Результатом являются данные добавленные в БД
      */
@@ -99,7 +100,7 @@ public class admin {
         usersAdmin.setPatronymic(patronymic);
         usersAdmin.setPassword(getHash(passw));
         Date date = new Date();
-        usersAdmin.setDateCreat(date);
+        usersAdmin.setDate(date);
 
         session.getTransaction().begin();// Начало транзакции
         session.merge(usersAdmin);// Загрузка объекта usersAdmin класса UsersAdmin в базу данных
@@ -107,9 +108,11 @@ public class admin {
         session.close();
 
     }
+
     /**
      * Метод возвращает объект класса UsersAdmin
      * для дальнейшей авторизации пользователя в системе
+     *
      * @param id - логин пользователя
      * @ - Результатом являются удаленная уч.запись администратора
      */
@@ -123,5 +126,43 @@ public class admin {
         session.getTransaction().commit();
         session.close();
 
+    }
+
+    public static Boolean findAdminByLogin(String login) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        List<UsersAdmin> UsersAdmin;
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<UsersAdmin> criteria = builder.createQuery(UsersAdmin.class);
+        Root<UsersAdmin> root = criteria.from(UsersAdmin.class);
+        criteria.select(root);
+        criteria.where(builder.equal(root.get("mapTable_id"), login));
+
+        session.beginTransaction();
+        UsersAdmin = session.createQuery(criteria).getResultList();
+        session.getTransaction().commit();
+        session.close();
+
+        Iterator<UsersAdmin> it = UsersAdmin.iterator();
+        return it.next() != null;
+    }
+
+    public static UsersAdmin findAdminById(Long id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        List<UsersAdmin> UsersAdmin;
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<UsersAdmin> criteria = builder.createQuery(UsersAdmin.class);
+        Root<UsersAdmin> root = criteria.from(UsersAdmin.class);
+        criteria.select(root);
+        criteria.where(builder.equal(root.get("id"), id));
+
+        session.beginTransaction();
+        UsersAdmin = session.createQuery(criteria).getResultList();
+        session.getTransaction().commit();
+        session.close();
+
+        Iterator<UsersAdmin> it = UsersAdmin.iterator();
+        return it.next();
     }
 }

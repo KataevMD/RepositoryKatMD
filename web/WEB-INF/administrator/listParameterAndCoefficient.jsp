@@ -14,20 +14,16 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <style>
-        <%@include file="/WEB-INF/css/offcanvas.css" %>
         <%--        <%@include file="/WEB-INF/css/uploadFile.css" %>--%>
     </style>
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css" >
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
+    <script src="http://localhost:8081/cstrmo/js/coefficientAndParameters.js"></script>
+    <script src="http://localhost:8081/cstrmo/js/uploadFile.js"></script>
 
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-    <script>
-        <%@include file="/WEB-INF/js/coefficientAndParameters.js" %>
-        <%@include file="/WEB-INF/js/uploadFile.js" %>
-    </script>
 </head>
 <body class="d-flex flex-column h-100">
 <%
@@ -69,6 +65,10 @@
             </li>
         </ul>
         <div class="justify-content-end">
+            <a class="btn btn-outline-light align-middle" style="margin-right: 10px;"
+               href="${pageContext.request.contextPath}/myAccount">Личный кабинет</a>
+        </div>
+        <div class="justify-content-end">
             <a class="btn btn-outline-light align-middle"
                href="${pageContext.request.contextPath}/logout"><%=userName%>
                 (Выйти)</a>
@@ -95,7 +95,7 @@
                 <input id="file-input" type="file" name="file" ${selectFile}>
             </div>
         </form>
-        <a id="downloadFile" href="${downloadFileMap}"
+        <a id="downloadFile" style="margin-right: 10px" href="${downloadFileMap}"
            class="btn btn-light">Скачать файл</a>
         <button class="btn btn-light" onclick="deleteFile()">Удалить файл</button>
     </div>
@@ -174,10 +174,6 @@
                     </table>
                 </data>
             </div>
-<%--            <img src="http://latex.numberempire.com/render?${formulMap}"--%>
-<%--                 alt="Корни квадратного уравнения">--%>
-            <p>
-                $$ ${formulMap} $$
             </p>
         </div>
         <%--        Блок таблицы Коэффициенты--%>
@@ -356,14 +352,14 @@
                       action="${pageContext.request.contextPath}/addNewParameter">
                     <label for="mapTable_id"></label><input id="mapTable_id" name="mapTable_id" value="${mapTable_Id}"
                                                             hidden>
-                    <label for="inputNameParameter" class="sr-only">Название параметра</label>
+                    <label for="inputNameParameter" >Введиет название параметра</label>
                     <input id="inputNameParameter" onkeyup="checkInputNameParameter()" autocomplete="off"
                            class="form-control" pattern="^[А-Яа-яЁёA-Z,\s]+$"
                            name="nameParameter"
                            title="Разрешено использовать заглавные буквы латинского алфавита, все буквы русского и пробел."
                            placeholder="Название параметра"
                            required autofocus><br>
-                    <label for="inputStepParameter" class="sr-only">Название карты</label>
+                    <label for="inputStepParameter">Введите степень</label>
                     <input id="inputStepParameter" onkeyup="checkInputStepParameter()" autocomplete="off"
                            class="form-control"
                            pattern="\d+(\.\d{1,9})?"
@@ -398,7 +394,7 @@
                 <form id="formCreateCoefficient" autocomplete="off" method="post"
                       action="${pageContext.request.contextPath}/addNewCoefficient">
                     <label for="mapId"></label><input id="mapId" name="mapTable_id" value="${mapTable_Id}" hidden>
-                    <label for="inputNameCoefficient" class="sr-only">Название коэффициента</label>
+                    <label for="inputNameCoefficient">Введите название коэффициента</label>
                     <input id="inputNameCoefficient" onkeyup="checkInputNameCoefficient()" autocomplete="off"
                            class="form-control" pattern="^[А-Яа-яЁёA-Z/\s]+$"
                            name="nameCoefficient"
@@ -435,14 +431,14 @@
                     <label>
                         <input id="coeff_id" name="coefficient_id" value="" hidden>
                     </label>
-                    <label for="inputNameCoefficient" class="sr-only">Название коэффициента</label>
+                    <label for="inputNameCoefficient">Введите название коэффициента</label>
                     <input id="inputNameValueCoefficient" onkeyup="checkInputNameValueCoefficient()" autocomplete="off"
                            class="form-control" pattern="^[/А-Яа-яЁёA-Z\s]+$"
                            name="valName"
                            title="Разрешено использовать все буквы русского алфавита, пробел и / (слэш)."
                            placeholder="Название значения"
                            required autofocus><br>
-                    <label for="inputValue" class="sr-only">Название карты</label>
+                    <label for="inputValue">Введите значение</label>
                     <input id="inputValue" onkeyup="checkInputValue()" autocomplete="off"
                            class="form-control"
                            pattern="\d+(\.\d{1,9})?"
@@ -472,8 +468,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<script>
-    <%@include file="/WEB-INF/js/offcanvas.js" %>
-    <%@include file="/WEB-INF/js/filters.js" %>
-</script>
+<script src="http://localhost:8081/cstrmo/js/offcanvas.js"></script>
+<script src="http://localhost:8081/cstrmo/js/filters.js"></script>
 </html>
