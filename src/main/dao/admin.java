@@ -165,4 +165,13 @@ public class admin {
         Iterator<UsersAdmin> it = UsersAdmin.iterator();
         return it.next();
     }
+
+    public static void updatePassword(UsersAdmin user) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.getTransaction().begin();
+        session.update(user);
+        session.getTransaction().commit();
+        session.close();
+    }
 }

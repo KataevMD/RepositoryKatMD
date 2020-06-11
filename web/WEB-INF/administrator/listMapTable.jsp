@@ -56,6 +56,9 @@
                         уч.запись</a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/openImportPage">Импорт карт</a>
+            </li>
         </ul>
         <div class="justify-content-end">
             <a class="btn btn-outline-light align-middle" style="margin-right: 10px;"
@@ -124,16 +127,9 @@
                         <tr id="tr_<c:out value="${MapTable.mapTable_id}"/>" class='table-data'>
                             <td><c:out value="${MapTable.numberTable}"/></td>
                             <td><c:out value="${MapTable.name}"/></td>
-                            <td><c:out value="${MapTable.formul}"/></td>
                             <td>
                                 <a href="${pageContext.request.contextPath}/openListParameterAndCoefficientPage?mapTable_id=<c:out value='${MapTable.mapTable_id}'/>&nameMapTable=<c:out value='${MapTable.name}'/>"
-                                   class="btn btn-light">Просмотреть</a>
-                            </td>
-                            <td>
-                                <button class="btn btn-light " id="viewUpdate"
-                                        onclick="viewUpdateMap(<c:out value="${MapTable.mapTable_id}"/>)">
-                                    Редактировать
-                                </button>
+                                   class="btn btn-light">Редактировать</a>
                             </td>
                             <td>
                                 <button type="button" id="delete"
@@ -148,44 +144,6 @@
                                     Дублировать
                                 </button>
                             </td>
-                        </tr>
-                        <tr id="map_<c:out value="${MapTable.mapTable_id}"/>" hidden class="table-active">
-                            <td>
-                                <label class="w-100">
-                                    <input id="numberMap_<c:out value="${MapTable.mapTable_id}"/>"
-                                           value="<c:out value="${MapTable.numberTable}"/>"
-                                           onkeyup="checkNumberMap(<c:out value="${MapTable.mapTable_id}"/>)"
-                                           title="Разрешено использовать только цифры"
-                                           type="text" class="form-control " required>
-                                </label>
-                            </td>
-                            <td>
-                                <label class="w-100">
-                                    <input id="nameMap_<c:out value="${MapTable.mapTable_id}"/>"
-                                           value="<c:out value="${MapTable.name}"/>"
-                                           onkeyup="checkNameMap(<c:out value="${MapTable.mapTable_id}"/>)"
-                                           title="Разрешено использовать только пробелы и русские буквы"
-                                           type="text" class="form-control " required>
-                                </label>
-                            </td>
-                            <td>
-                                <label class="w-100">
-                                    <input id="formulMap_<c:out value="${MapTable.mapTable_id}"/>"
-                                           value="<c:out value="${MapTable.formul}"/>"
-                                           type="text" class="form-control" required>
-                                </label>
-                            </td>
-                            <td>
-                                <button id="save<c:out value="${MapTable.mapTable_id}"/>" class="btn btn-primary"
-                                        onclick="updateMap(<c:out value="${MapTable.mapTable_id}"/>)">Сохранить
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-secondary"
-                                        onclick="closeUpdateMap(<c:out value="${MapTable.mapTable_id}"/>)">Отмена
-                                </button>
-                            </td>
-                            <td></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -224,11 +182,6 @@
                            title="Разрешено использовать только пробелы и русские буквы"
                            placeholder="Название карты"
                            required autofocus><br>
-                    <label for="inputFormulMapTable" class="sr-only">Формула</label>
-                    <input id="inputFormulMapTable" autocomplete="off" class="form-control"
-                           name="formulMapTable"
-                           placeholder="Формула карты"
-                           autofocus><br>
                     <label>
                         <input name="collection_Id" value="${collection_Id}" hidden>
                     </label>

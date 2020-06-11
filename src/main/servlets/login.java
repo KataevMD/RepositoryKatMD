@@ -72,6 +72,9 @@ public class login extends HttpServlet {
                 httpSession.setAttribute("sessuser", usersAdmins.getLogin());
                 if(passw.equals("Passw0rd")){
                     request.setAttribute("message", "Для продолжения работы в системе требуется изменить пароль.\nЭто можно сделать ниже, в графе изменения пароля! ");
+                    request.setAttribute("hiddenNav", "hidden");
+                    request.setAttribute("mess", 1);
+                    request.setAttribute("disableCancel", "disabled");
                     request.setAttribute("login", usersAdmins.getLogin());
                     request.setAttribute("firstName", usersAdmins.getFirstName());
                     request.setAttribute("lastName", usersAdmins.getLastName());

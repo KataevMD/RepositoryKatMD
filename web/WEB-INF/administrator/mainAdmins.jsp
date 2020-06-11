@@ -49,14 +49,17 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="false"
-                >Уч.записи
+                >Учетные записи
                     администраторов</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown03">
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/openListAdminPage">Просмотр
-                        уч.записей</a>
+                        учетных записей</a>
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/openRegisterAdmins">Добавить
-                        уч.запись</a>
+                        учетных запись</a>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/openImportPage">Импорт карт</a>
             </li>
         </ul>
         <div class="justify-content-end">
@@ -145,7 +148,7 @@
                         <td><c:out value="${collMapTable.collection_id}"/></td>
                         <td><c:out value="${collMapTable.nameCollectionMapTable}"/></td>
                         <td>
-                            <a href="http://localhost:8081/cstrmo/openListMapTablePage?collection_id=<c:out value='${collMapTable.collection_id}'/>&nameCollectionMapTable=<c:out value='${collMapTable.nameCollectionMapTable}'/>"
+                            <a href="http://localhost:8081/cstrmo/openListChapterPage?collection_id=<c:out value='${collMapTable.collection_id}'/>&nameCollectionMapTable=<c:out value='${collMapTable.nameCollectionMapTable}'/>"
                                class="btn btn-light">Просмотреть</a>
                         </td>
                         <td>
@@ -217,7 +220,6 @@
                         <button id="createColl" style="margin-right: 15px" class="btn btn-lg btn-primary btn-block" type="submit">Создать</button><br>
                         <button type="button" class="btn btn-lg btn-light  btn-block" data-dismiss="modal">Отмена</button>
                     </div>
-
                 </form>
             </div>
         </div>

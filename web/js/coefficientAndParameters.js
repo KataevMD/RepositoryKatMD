@@ -91,7 +91,15 @@ function viewUpdateParameter(parameter_id) {
 function closeUpdateParameter(parameter_id) {
     $("#updateParam_" + parameter_id).attr('hidden', true)
 }
+//Функция отображения блока редактирования Формулы
+function viewUpdateFormula(formula_id) {
+    $("#updateFormula_" + formula_id).attr('hidden', false)
+}
 
+// Функция скрытия блока редактирования Формулы
+function closeUpdateFormula(formula_id) {
+    $("#updateFormula_" + formula_id).attr('hidden', true)
+}
 //Функция отображения блока редактирования Коэффициента
 function viewUpdateCoeff(parameter_id) {
     $("#updateCoeff_" + parameter_id).attr('hidden', false)
@@ -209,7 +217,29 @@ function updateParameter(parameter_id) {
         }
     });
 }
-
+function updateFormula(formula_id) {
+    let nFormula = $('#nFormula_' + formula_id).val();
+    let mapTable_id = $('#mapTableId').val();
+    $.ajax({
+        method: 'post',
+        url: 'http://localhost:8081/cstrmo/updateFormula',     // URL - сервлет
+        data: {                 // передаваемые сервлету данные
+            formula_id: formula_id,
+            nFormula: nFormula,
+            mapTable_id: mapTable_id
+        },
+        success: function (response) {
+            if (response === "fail") {
+                // $('#error').toast('show');
+                // $('#bodyError').text(decode_utf8('Проверьте введенные данные!'));
+            } else {
+                // $('#error').toast('show');
+                // $('#bodyError').text(decode_utf8('Данные карты обновлены!'));
+                $("#divTableFormula").html($(response).find("#dataFormula").html());
+            }
+        }
+    });
+}
 function updateCoefficient(coefficient_id) {
     let nameCoefficient = $('#nameCoeff_' + coefficient_id).val();
     let mapTable_id = $('#mapTableId').val();

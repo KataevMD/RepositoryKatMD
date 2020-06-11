@@ -25,33 +25,44 @@ public class MapTable {
     @OneToMany(mappedBy = "mapTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Coefficient> listCoefficient;
 
-    @Column(name = "formulMapTable")
-    private String formul;
+    @OneToMany(mappedBy = "mapTable", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Formula> listFormula;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "collection_id")
-    private CollectionMapTable collectionMapTable;
+    @JoinColumn(name = "section_id")
+    private Section section;
 
     public MapTable() {
 
     }
 
-    public void setItem(CollectionMapTable collectionMapTable)
+    public List<Formula> getListFormula() {
+        return listFormula;
+    }
+
+    public void setListFormula(List<Formula> listFormula) {
+        this.listFormula = listFormula;
+    }
+
+    public void internalAddFormula(Formula formula) {
+        this.listFormula.add(formula);
+    }
+
+    public void internalRemoveFormula(Formula formula) {
+        this.listFormula.remove(formula);
+    }
+
+    public void addFormula(Formula formula) {
+        formula.setItem(this);
+    }
+
+    public void setItem(Section section)
     {
-        if (this.collectionMapTable != null)
-            this.collectionMapTable.internalRemoveMapTable(this);
-        this.collectionMapTable = collectionMapTable;
-        if (collectionMapTable != null)
-            collectionMapTable.internalAddMapTable(this);
-    }
-
-    public String getFormul() {
-        return formul;
-    }
-
-
-    public void setFormul(String formul) {
-        this.formul = formul;
+        if (this.section != null)
+            this.section.internalRemoveMapTable(this);
+        this.section = section;
+        if (section != null)
+            section.internalAddMapTable(this);
     }
 
     public void setMapTable_id(Long mapTable_id) {
@@ -62,8 +73,8 @@ public class MapTable {
         this.listParameter = listParameter;
     }
 
-    public void setCollectionMapTable(CollectionMapTable collectionMapTable) {
-        this.collectionMapTable = collectionMapTable;
+    public void setSection(Section section) {
+        this.section = section;
     }
 
     public Long getMapTable_id() {
@@ -109,8 +120,8 @@ public class MapTable {
         return listParameter;
     }
 
-    public CollectionMapTable getCollectionMapTable() {
-        return collectionMapTable;
+    public Section getSection() {
+        return section;
     }
 
     public List<Coefficient> getListCoefficient() {

@@ -49,5 +49,7 @@
     <orderEntry type="library" name="gson-2.8.5" level="project" />
     <orderEntry type="library" name="commons-fileupload-1.4" level="project" />
     <orderEntry type="library" name="poi-3.17" level="project" />
+    <orderEntry type="library" scope="TEST" name="commons-collections4-4.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="xmlbeans-2.6.0" level="project" />
   </component>
 </module>

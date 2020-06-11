@@ -71,12 +71,11 @@ public class mapTables {
         return false;
     }
 
-    public static boolean rewriteMapTable(String nameMapTable, Long mapTable_id, String numberTable, String formul) {
+    public static boolean rewriteMapTable(String nameMapTable, Long mapTable_id, String numberTable) {
         MapTable mapTable = findMapTableById(mapTable_id);
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         if (mapTable != null) {
-            mapTable.setFormul(formul);
             mapTable.setName(nameMapTable);
             mapTable.setNumberTable(numberTable);
             session.getTransaction().begin();
@@ -93,7 +92,6 @@ public class mapTables {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         MapTable mapTable = new MapTable();
-        mapTable.setFormul(formul);
         mapTable.setName(nameMapTable);
         mapTable.setNumberTable(numberTable);
 
@@ -113,7 +111,7 @@ public class mapTables {
         if (it.hasNext()) {
 
             CollectionMapTable collectionMapTable = it.next();
-            collectionMapTable.addMapTable(mapTable);
+         //   collectionMapTable.addMapTable(mapTable);
             session.beginTransaction();
             session.merge(collectionMapTable);
             session.getTransaction().commit();
@@ -188,7 +186,7 @@ public class mapTables {
 
         }
 
-        mapTable.setCollectionMapTable(collectionMapTable);
+      //  mapTable.setCollectionMapTable(collectionMapTable);
         session.beginTransaction();
         session.merge(mapTable);
         session.getTransaction().commit();

@@ -12,9 +12,6 @@ public class UsersAdmin {
     @Column(name = "id", updatable = false, nullable = false, unique = true)
     private Long id;
 
-    @Column(name = "role_id", unique = true)
-    private Long role_id;
-
     @Column(name = "firstName")
     private String firstName;
 
@@ -35,14 +32,6 @@ public class UsersAdmin {
 
     public Date getDate() {
         return date;
-    }
-
-    public Long getRole_id() {
-        return role_id;
-    }
-
-    public void setRole_id(Long role_id) {
-        this.role_id = role_id;
     }
 
     public void setDate(Date dateCreat) {

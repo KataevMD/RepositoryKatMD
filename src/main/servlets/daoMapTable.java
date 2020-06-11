@@ -2,29 +2,13 @@ package main.servlets;
 
 import main.dao.collMapTable;
 import main.dao.mapTables;
-import main.hibernate.HibernateUtil;
-import main.model.FileMapTable;
 import main.model.MapTable;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.List;
 
 @WebServlet(name = "daoMapTable", urlPatterns = {"/deleteMapTable", "/addNewMapTable", "/updateMapTable", "/deleteFile","/cloneableMapTable"})
@@ -121,12 +105,11 @@ public class daoMapTable extends HttpServlet{
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         String nameMapTable = request.getParameter("nameMapTable").trim();
         String numberTable = request.getParameter("numberTable").trim();
-        String formul = request.getParameter("formul");
         Long collection_id = Long.parseLong(request.getParameter("collection_id"));
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
         if (ajax) {
-            if (nameMapTable.length() > 0 && numberTable.length() > 0 && formul.length() > 0) {
-                boolean res = mapTables.rewriteMapTable(nameMapTable, mapTable_id, numberTable, formul);
+            if (nameMapTable.length() > 0 && numberTable.length() > 0 ) {
+                boolean res = mapTables.rewriteMapTable(nameMapTable, mapTable_id, numberTable);
                 if (res) {
                     List<MapTable> MapTables = collMapTable.findMapByIdColl(collection_id);
                     request.setAttribute("MapTables", MapTables);

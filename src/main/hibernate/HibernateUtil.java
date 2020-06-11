@@ -32,15 +32,17 @@ public class HibernateUtil {
                 /*
                  * Передача конфигуратору классов, который он будет воспринимать как сущности
                  */
+                configuration.addAnnotatedClass(CollectionMapTable.class);
+                configuration.addAnnotatedClass(Chapter.class);
+                configuration.addAnnotatedClass(Section.class);
                 configuration.addAnnotatedClass(MapTable.class);
                 configuration.addAnnotatedClass(Coefficient.class);
                 configuration.addAnnotatedClass(ValueCoefficient.class);
                 configuration.addAnnotatedClass(Parameter.class);
                 configuration.addAnnotatedClass(UsersAdmin.class);
                 configuration.addAnnotatedClass(FileMapTable.class);
-                configuration.addAnnotatedClass(CollectionMapTable.class);
-                configuration.addAnnotatedClass(Role.class);
-                    // Построение сервиса регистрации с заданной конфигурацией
+                configuration.addAnnotatedClass(Formula.class);
+                            // Построение сервиса регистрации с заданной конфигурацией
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();
                 System.out.println("Hibernate Java Config serviceRegistry created");

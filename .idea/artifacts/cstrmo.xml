@@ -15,11 +15,12 @@
           <element id="library" level="project" name="gson-2.8.5" />
           <element id="library" level="project" name="commons-fileupload-1.4" />
           <element id="library" level="project" name="poi-3.17" />
+          <element id="library" level="project" name="commons-collections4-4.1" />
+          <element id="library" level="project" name="xmlbeans-2.6.0" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="CSTRMO/web/Web" />
       <element id="javaee-facet-resources" facet="CSTRMO/javaeeApplication/javaEEApplication" />
-      <element id="dir-copy" path="$PROJECT_DIR$/web/file" />
     </root>
   </artifact>
 </component>

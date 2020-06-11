@@ -61,6 +61,9 @@
                         учетных запись</a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/openImportPage">Импорт карт</a>
+            </li>
         </ul>
         <div class="justify-content-end">
             <a class="btn btn-outline-light align-middle" style="margin-right: 10px;"

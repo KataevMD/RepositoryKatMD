@@ -4,10 +4,7 @@ import main.dao.collMapTable;
 import main.dao.mapTables;
 import main.dao.parameterAndCoefficient;
 import main.hibernate.HibernateUtil;
-import main.model.Coefficient;
-import main.model.MapTable;
-import main.model.Parameter;
-import main.model.ValueCoefficient;
+import main.model.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.mapping.Value;
@@ -21,7 +18,8 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet(name = "daoParameterAndCoefficient", urlPatterns = {"/getValueCoefficient", "/addNewParameter", "/addNewCoefficient",
-        "/addNewValueCoefficient", "/deleteParameter", "/deleteCoefficient", "/deleteValueCoefficient", "/updateParameter", "/updateCoefficient", "/updateValueCoefficient"})
+        "/addNewValueCoefficient", "/deleteParameter", "/deleteCoefficient", "/deleteValueCoefficient", "/updateParameter", "/updateCoefficient",
+        "/updateValueCoefficient","/updateFormula"})
 public class daoParameterAndCoefficient extends HttpServlet {
     @Override
     public void init() throws ServletException {
@@ -50,6 +48,9 @@ public class daoParameterAndCoefficient extends HttpServlet {
                 break;
             case "/updateValueCoefficient":
                 updateValueCoefficient(request, response);
+                break;
+            case "/updateFormula":
+                updateFormula(request, response);
                 break;
             default:
                 doGet(request, response);
@@ -128,7 +129,21 @@ public class daoParameterAndCoefficient extends HttpServlet {
             response.getWriter().write(answer);
         }
     }
+    private void updateFormula(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
+        String formula = request.getParameter("nFormula").trim();
+        Long formula_id = Long.parseLong(request.getParameter("formula_id"));
 
+        boolean res = parameterAndCoefficient.rewriteFormula(formula, formula_id);
+        if (res) {
+            List<Formula> formulas = parameterAndCoefficient.findFormulasByIdMapTable(mapTable_id);
+            request.setAttribute("Formula", formulas);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
+        } else {
+            String answer = "fail";
+            response.getWriter().write(answer);
+        }
+    }
     private void deleteCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
         Long coefficient_id = Long.parseLong(request.getParameter("coefficient_id"));

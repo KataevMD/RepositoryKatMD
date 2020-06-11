@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 
 
-@WebServlet(name = "daoAdmins", urlPatterns = {"/createAccAdmin", "/deleteAccAdminById"})
+@WebServlet(name = "daoAdmins", urlPatterns = {"/createAccAdmin", "/deleteAccAdminById", "/updatePassword", "/updateAccAdmin"})
 public class daoAdmin extends HttpServlet {
 
     @Override
@@ -28,9 +28,12 @@ public class daoAdmin extends HttpServlet {
             case "/createAccAdmin":
                 createAccountAdmin(request, response);
                 break;
-//                case "/update":
-//                    updateUser(request, response);
-//                    break;
+            case "/updateAccAdmin":
+                updateAccAdmin(request, response);
+                break;
+            case "/updatePassword":
+                updatePassword(request, response);
+                break;
             default:
                 doGet(request, response);
                 break;
@@ -61,24 +64,34 @@ public class daoAdmin extends HttpServlet {
 
     }
 
-//    @Override
-//    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        response.setContentType("text/html;charset=utf-8");
-//        response.setCharacterEncoding("UTF-8");
-//        String action = request.getServletPath();
-//
-//        switch (action) {
-//            case "/deleteAccAdminById":
-//                deleteAdmin(request, response);
-//                break;
-////                case "/update":
-////                    updateUser(request, response);
-////                    break;
-////            default:
-////                doGet(request, response);
-////                break;
-//        }
-//    }
+    private void updatePassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String idUser = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("iduser")) {
+                    idUser = cookie.getValue();
+                }
+            }
+        }String answer = null;
+        if(idUser!=null){
+            UsersAdmin user = admin.findAdminById(Long.parseLong(idUser));
+            String oldPassword = request.getParameter("odlPassword").trim();
+            String newPassword = request.getParameter("newPassword").trim();
+            String retNewPassword = request.getParameter("retNewPassword").trim();
+            oldPassword = admin.getHash(oldPassword);
+            if(oldPassword.equals(user.getPassword()) && newPassword.equals(retNewPassword)){
+                String hashPassw = admin.getHash(newPassword);
+                user.setPassword(hashPassw);
+                admin.updatePassword(user);
+                answer = "success";
+            }else{
+                answer = "passNotEquals";
+            }
+        }
+        assert answer != null;
+        response.getWriter().write(answer);
+    }
 
     private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.parseLong(request.getParameter("id"));
@@ -111,11 +124,11 @@ public class daoAdmin extends HttpServlet {
         if (ajax) {
             if (login.length() > 0 && firstName.length() > 0 && passw.length() > 0 && lastName.length() > 0) {
                 Boolean res = admin.findAdminByLogin(login);
-                if(res){
+                if (res) {
                     admin.createAdmin(firstName, lastName, patronymic, passw, login);
                     String answer = "success";
                     response.getWriter().write(answer);
-                }else {
+                } else {
                     String answer = "fail";
                     response.getWriter().write(answer);
                 }
@@ -123,4 +136,6 @@ public class daoAdmin extends HttpServlet {
         }
     }
 
+    private void updateAccAdmin(HttpServletRequest request, HttpServletResponse response) {
+    }
 }

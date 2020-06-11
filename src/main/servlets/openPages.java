@@ -3,6 +3,7 @@ package main.servlets;
 import main.dao.admin;
 import main.dao.collMapTable;
 import main.dao.mapTables;
+import main.dao.chapter;
 import main.dao.parameterAndCoefficient;
 import main.hibernate.HibernateUtil;
 import main.model.*;
@@ -13,9 +14,11 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "ServletOpenPages", urlPatterns = {"/openRegisterAdmins", "/openListAdminPage", "/openMainAdminsPage","/openListMapTablePage","/openListParameterAndCoefficientPage","/myAccount"})
+@WebServlet(name = "ServletOpenPages", urlPatterns = {"/openRegisterAdmins", "/openListAdminPage", "/openMainAdminsPage",
+        "/openListMapTablePage","/openListParameterAndCoefficientPage","/myAccount","/openImportPage", "/openListChapterPage"})
 public class openPages extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -41,17 +44,29 @@ public class openPages extends HttpServlet {
             case "/openListMapTablePage":
                 openListMapTables(request, response);
                 break;
-            case "/openListParameterAndCoefficientPage /myAccount":
+            case "/openListChapterPage":
+                openListChapter(request, response);
+                break;
+            case "/openListParameterAndCoefficientPage":
                 openListParameterAndCoefficient(request, response);
                 break;
             case "/myAccount":
                 openMyAccount(request, response);
                 break;
+            case "/openImportPage":
+                openImportPage(request, response);
+                break;
         }
     }
 
+    private void openListMapTables(HttpServletRequest request, HttpServletResponse response) {
+    }
+
+    private void openImportPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        getServletContext().getRequestDispatcher("/WEB-INF/administrator/importMapTable.jsp").forward(request, response);
+    }
+
     private void openMyAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
         String idUser = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -64,7 +79,10 @@ public class openPages extends HttpServlet {
         if(idUser!=null){
             Long id = Long.parseLong(idUser);
             UsersAdmin usersAdmin = admin.findAdminById(id);
-            request.setAttribute("UserAdmin", usersAdmin);
+            request.setAttribute("login", usersAdmin.getLogin());
+            request.setAttribute("firstName", usersAdmin.getFirstName());
+            request.setAttribute("lastName", usersAdmin.getLastName());
+            request.setAttribute("patronymic", usersAdmin.getPatronymic());
             getServletContext().getRequestDispatcher("/WEB-INF/administrator/myAccount.jsp").forward(request, response);
         }
 
@@ -75,6 +93,7 @@ public class openPages extends HttpServlet {
         String nameMap = request.getParameter("nameMapTable");
         List<Coefficient> coefficients = parameterAndCoefficient.findCoefficientByIdMap(id);
         List<Parameter> parameter = parameterAndCoefficient.findParametersByIdMapTable(id);
+        List<Formula> formulas = parameterAndCoefficient.findFormulasByIdMapTable(id);
         FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(id);
 
         if(fileMapTable != null){
@@ -83,23 +102,35 @@ public class openPages extends HttpServlet {
         }
         request.setAttribute("Parameter", parameter);
         request.setAttribute("Coefficient", coefficients);
+        request.setAttribute("Formula", formulas);
         request.setAttribute("nameMapTable", nameMap);
         request.setAttribute("mapTable_Id", id);
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
     }
 
-    private void openListMapTables(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void openListChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Long id = Long.parseLong(request.getParameter("collection_id"));
         String nameColl = request.getParameter("nameCollectionMapTable");
         CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(id);
-        List<MapTable> MapTables = collectionMapTable.getListMapTable() ;
+        
+        List<Chapter> lChapter = chapter.findChaptersByIdColl(id);
+        List<Section> lSection = new ArrayList<>();
+        assert lChapter != null;
+        for(Chapter chapters : lChapter){
+            List<Section> sectionList = chapter.findSectionByIdChapter(chapters.getChapter_id());
+            assert sectionList != null;
+            lSection.addAll(sectionList);
+        }
+
+
         List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
         request.setAttribute("CollectionMapTables", collectionMapTables);
         request.setAttribute("collection_Id", id);
-        request.setAttribute("MapTables", MapTables);
+        request.setAttribute("Chapter", lChapter);
+        request.setAttribute("Section", lSection);
         request.setAttribute("nameCollMapTable", nameColl);
-        getServletContext().getRequestDispatcher("/WEB-INF/administrator/listMapTable.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/WEB-INF/administrator/TestJSTree.jsp").forward(request, response);
     }
 
     private void openRegisterAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

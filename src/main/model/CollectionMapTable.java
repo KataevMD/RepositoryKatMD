@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "collectionMapTable")
-public class CollectionMapTable implements Cloneable {
+public class CollectionMapTable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,11 +16,7 @@ public class CollectionMapTable implements Cloneable {
     private String nameCollectionMapTable;
 
     @OneToMany(mappedBy = "collectionMapTable", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MapTable> listMapTable;
-
-    public CollectionMapTable clone() throws CloneNotSupportedException{
-        return (CollectionMapTable) super.clone();
-    }
+    private List<Chapter> listChapter;
 
     public Long getCollection_id() {
         return collection_id;
@@ -38,22 +34,22 @@ public class CollectionMapTable implements Cloneable {
         this.nameCollectionMapTable = nameCollectionMapTable;
     }
 
-    public List<MapTable> getListMapTable() {
-        return listMapTable;
+    public List<Chapter> getListChapter() {
+        return listChapter;
     }
 
-    public void setListMapTable(List<MapTable> listMapTable) {
-        this.listMapTable = listMapTable;
+    public void setListChapter(List<Chapter> listChapter) {
+        this.listChapter = listChapter;
     }
-    public void internalAddMapTable(MapTable mapTable) {
-        this.listMapTable.add(mapTable);
-    }
-
-    public void internalRemoveMapTable(MapTable mapTable) {
-        this.listMapTable.remove(mapTable);
+    public void internalAddChapter(Chapter chapter) {
+        this.listChapter.add(chapter);
     }
 
-    public void addMapTable(MapTable mapTable) {
-        mapTable.setItem(this);
+    public void internalRemoveChapter(Chapter chapter) {
+        this.listChapter.remove(chapter);
+    }
+
+    public void addChapter(Chapter chapter) {
+        chapter.setItem(this);
     }
 }

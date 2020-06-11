@@ -13,9 +13,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <style>
-        <%--        <%@include file="/WEB-INF/css/uploadFile.css" %>--%>
-    </style>
+
     <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css" >
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
@@ -62,6 +60,9 @@
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/openRegisterAdmins">Добавить
                         уч.запись</a>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/openImportPage">Импорт карт</a>
             </li>
         </ul>
         <div class="justify-content-end">
@@ -115,6 +116,7 @@
                     <table id="tableParameter" class="table table-hover table-responsive text-left">
                         <thead class="thead-light">
                         <tr>
+                            <th>№</th>
                             <th>Название параметра</th>
                             <th class="w-25">Значение степени</th>
                             <th class="text-center" colspan="2">Управление</th>
@@ -125,6 +127,7 @@
                         <tbody>
                         <c:forEach var="parameter" items="${Parameter}">
                             <tr id="param_<c:out value="${parameter.parameter_id}"/>">
+                                <td><c:out value="${parameter.parameter_id}"/></td>
                                 <td><c:out value="${parameter.nameParametr}"/></td>
                                 <td><c:out value="${parameter.step}"/></td>
                                 <td>
@@ -141,6 +144,7 @@
                                 </td>
                             </tr>
                             <tr id="updateParam_<c:out value="${parameter.parameter_id}"/>" hidden class="table-active">
+                                <td></td>
                                 <td>
                                     <label class="w-100">
                                         <input id="nameParam_<c:out value="${parameter.parameter_id}"/>"
@@ -174,7 +178,61 @@
                     </table>
                 </data>
             </div>
-            </p>
+            <br>
+            <div id="divTableFormula" class="container-fluid w-100">
+                <data id="dataFormula" value="1211">
+                    <table id="tableFormula" class="table table-hover table-responsive text-left">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>№ коэффициента</th>
+                            <th>Формула</th>
+                            <th class="text-center" colspan="2">Управление</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="formula" items="${Formula}">
+                            <tr id="formula_<c:out value="${formula.formula_id}"/>">
+                                <td><c:out value="${formula.coefficient_id}"/></td>
+                                <td><c:out value="${formula.formula}"/></td>
+                                <td>
+                                    <button class="btn btn-light "
+                                            onclick="viewUpdateFormula(<c:out value="${formula.formula_id}"/>)">
+                                        Редактировать
+                                    </button>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr id="updateFormula_<c:out value="${formula.formula_id}"/>" hidden class="table-active">
+                                <td></td>
+                                <td>
+                                    <label class="w-100">
+                                        <input id="nFormula_<c:out value="${formula.formula_id}"/>"
+                                               value="<c:out value="${formula.formula}"/>"
+                                               type="text" class="form-control " required>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary"
+                                            onclick="updateFormula(<c:out value="${formula.formula_id}"/>)">
+                                        Сохранить
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-secondary"
+                                            onclick="closeUpdateFormula(<c:out value="${formula.formula_id}"/>)">
+                                        Отмена
+                                    </button>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </data>
+            </div>
         </div>
         <%--        Блок таблицы Коэффициенты--%>
         <div class="col">

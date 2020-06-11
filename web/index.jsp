@@ -44,7 +44,7 @@
     }
 %>
 <div>
-    <form class="form-signin" autocomplete="off" method="post" action="${pageContext.request.contextPath}/login">
+    <form class="form-signin" autocomplete="off" method="post" action="http://localhost:8081/cstrmo/login">
         <h1 class="h3 mb-3 font-weight-normal">Пожалуйста, войдите в систему</h1>
         <table >
             <tr>
