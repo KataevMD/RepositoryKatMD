@@ -17,11 +17,11 @@ public class collMapTable {
     public collMapTable() {
     }
 
-    public static List<MapTable> findMapByIdColl(Long id) {
+    public static List<MapTable> findMapByIdSection(Long id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        List<MapTable> MapTables = session.createQuery("from MapTable m where m.collectionMapTable.collection_id=" + id).getResultList();
+        List<MapTable> MapTables = session.createQuery("from MapTable m where m.section.section_id=" + id).getResultList();
         session.getTransaction().commit();
         session.close();
         if (!MapTables.isEmpty()) {

@@ -47,21 +47,21 @@ public class uploadPfdFile extends HttpServlet {
         File fileMapTable = null;
         String nameFileMap = null;
         for (Part part : request.getParts()) {
+            InputStream inputStream = part.getInputStream();
+            InputStreamReader isr = new InputStreamReader(inputStream);
             if (part.getName().equals("mapTable_id")) {
-                InputStream inputStream = part.getInputStream();
-                InputStreamReader isr = new InputStreamReader(inputStream);
                 String mapId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
                 log(mapId);
                 mapTable_id = Long.parseLong(mapId);
             }else if(part.getName().equals("fileName")){
-                InputStream inputStream = part.getInputStream();
-                InputStreamReader isr = new InputStreamReader(inputStream);
                 nameFileMap = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
             } else{
 
                 part.write(part.getSubmittedFileName());
                 fileMapTable = new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\cstrmo\\file\\"+part.getSubmittedFileName());
             }
+            inputStream.close();
+            isr.close();
         }
         FileMapTable fileMap = mapTables.findFileMapTableByMapTable_id(mapTable_id);
         assert fileMapTable != null;

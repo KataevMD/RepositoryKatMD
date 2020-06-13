@@ -9,7 +9,6 @@ public class MapTable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column(name = "mapTable_id", updatable = false, nullable = false)
     private Long mapTable_id;
 
@@ -18,6 +17,9 @@ public class MapTable {
 
     @Column(name = "numberMapTable")
     private String numberTable;
+
+    @Column(name = "discharge")
+    private Integer discharge;
 
     @OneToMany(mappedBy = "mapTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Parameter> listParameter;
@@ -32,8 +34,36 @@ public class MapTable {
     @JoinColumn(name = "section_id")
     private Section section;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "typeMap_id")
+    private TypeMapTable typeMapTable;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "typeTime_id")
+    private TypeTime typeTime;
+
     public MapTable() {
 
+    }
+
+    public Integer getDischarge() {
+        return discharge;
+    }
+
+    public void setDischarge(Integer discharge) {
+        this.discharge = discharge;
+    }
+
+    public TypeMapTable getTypeMapTable() {
+        return typeMapTable;
+    }
+
+    public void setTypeMapTable(TypeMapTable typeMapTable) {
+        this.typeMapTable = typeMapTable;
+    }
+
+    public TypeTime getTypeTime() {
+        return typeTime;
     }
 
     public List<Formula> getListFormula() {
@@ -63,6 +93,24 @@ public class MapTable {
         this.section = section;
         if (section != null)
             section.internalAddMapTable(this);
+    }
+
+    public void setTypeMap(TypeMapTable typeMapTable)
+    {
+        if (this.typeMapTable != null)
+            this.typeMapTable.internalRemoveMapTable(this);
+        this.typeMapTable = typeMapTable;
+        if (typeMapTable != null)
+            typeMapTable.internalAddMapTable(this);
+    }
+
+    public void setTypeTime(TypeTime typeTime)
+    {
+        if (this.typeTime != null)
+            this.typeTime.internalRemoveMapTable(this);
+        this.typeTime = typeTime;
+        if (typeTime != null)
+            typeTime.internalAddMapTable(this);
     }
 
     public void setMapTable_id(Long mapTable_id) {

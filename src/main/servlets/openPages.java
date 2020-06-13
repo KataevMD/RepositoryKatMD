@@ -1,14 +1,9 @@
 package main.servlets;
 
-import main.dao.admin;
-import main.dao.collMapTable;
-import main.dao.mapTables;
-import main.dao.chapter;
-import main.dao.parameterAndCoefficient;
-import main.hibernate.HibernateUtil;
+import main.dao.*;
+
 import main.model.*;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ServletOpenPages", urlPatterns = {"/openRegisterAdmins", "/openListAdminPage", "/openMainAdminsPage",
-        "/openListMapTablePage","/openListParameterAndCoefficientPage","/myAccount","/openImportPage", "/openListChapterPage"})
+        "/openListMapTablePage","/openListParameterAndCoefficientPage","/myAccount","/openImportPage", "/openStructureCollectionPage"})
 public class openPages extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -44,7 +39,7 @@ public class openPages extends HttpServlet {
             case "/openListMapTablePage":
                 openListMapTables(request, response);
                 break;
-            case "/openListChapterPage":
+            case "/openStructureCollectionPage":
                 openListChapter(request, response);
                 break;
             case "/openListParameterAndCoefficientPage":
@@ -99,6 +94,9 @@ public class openPages extends HttpServlet {
         if(fileMapTable != null){
             request.setAttribute("downloadFileMap","http://localhost:8081/cstrmo/downloadFile?mapTable_id="+id.toString());
             request.setAttribute("selectFile","disabled");
+        }else{
+            request.setAttribute("disabledDownloadFile","disabled");
+            request.setAttribute("disabledDeleteFile","disabled");
         }
         request.setAttribute("Parameter", parameter);
         request.setAttribute("Coefficient", coefficients);
@@ -112,25 +110,39 @@ public class openPages extends HttpServlet {
 
         Long id = Long.parseLong(request.getParameter("collection_id"));
         String nameColl = request.getParameter("nameCollectionMapTable");
-        CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(id);
+       // CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(id);
         
         List<Chapter> lChapter = chapter.findChaptersByIdColl(id);
         List<Section> lSection = new ArrayList<>();
+        List<MapTable> lMapTable = new ArrayList<>();
         assert lChapter != null;
         for(Chapter chapters : lChapter){
             List<Section> sectionList = chapter.findSectionByIdChapter(chapters.getChapter_id());
-            assert sectionList != null;
-            lSection.addAll(sectionList);
+            if(sectionList!=null){
+                lSection.addAll(sectionList);
+            }
         }
-
-
-        List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
-        request.setAttribute("CollectionMapTables", collectionMapTables);
+        for(Section section : lSection){
+            List<MapTable> mapTableList = collMapTable.findMapByIdSection(section.getSection_id());
+            if(mapTableList!=null){
+                lMapTable.addAll(mapTableList);
+            }
+        }
+        List<TypeTime> typeTimeList = typeTime.findAllTypeTime();
+        List<TypeMapTable> typeMapTableList = typeMapTable.findAllTypeMapTable();
+//        List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
+//        request.setAttribute("CollectionMapTables", collectionMapTables);
+        request.setAttribute("selectFile","disabled");
+        request.setAttribute("disabledDownloadFile","disabled");
+        request.setAttribute("disabledDeleteFile","disabled");
+        request.setAttribute("TypeTime", typeTimeList);
+        request.setAttribute("TypeMapTable", typeMapTableList);
         request.setAttribute("collection_Id", id);
         request.setAttribute("Chapter", lChapter);
         request.setAttribute("Section", lSection);
+        request.setAttribute("MapTable", lMapTable);
         request.setAttribute("nameCollMapTable", nameColl);
-        getServletContext().getRequestDispatcher("/WEB-INF/administrator/TestJSTree.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
     }
 
     private void openRegisterAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

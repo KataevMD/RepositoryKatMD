@@ -69,7 +69,7 @@ public class viewCollMapTable extends HttpServlet {
             throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("collection_id"));
         String nameColl = request.getParameter("nameCollectionMapTable");
-        List<MapTable> MapTables = collMapTable.findMapByIdColl(id);
+        List<MapTable> MapTables = collMapTable.findMapByIdSection(id);
 
         request.setAttribute("MapTables", MapTables);
         request.setAttribute("nameCollMapTable", nameColl);

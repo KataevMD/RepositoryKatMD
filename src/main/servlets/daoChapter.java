@@ -40,7 +40,7 @@ public class daoChapter extends HttpServlet {
             List<Section> sections = chapter.findSectionByIdChapter(id);
 
             request.setAttribute("Section", sections);
-            request.getServletContext().getRequestDispatcher("/WEB-INF/administrator/TestJSTree.jsp").forward(request, response);
+            request.getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
         }
     }
 }

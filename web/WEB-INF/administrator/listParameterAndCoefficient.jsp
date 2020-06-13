@@ -90,8 +90,6 @@
               action="${pageContext.request.contextPath}/uploadFileMapTable">
             <div><label for="map_id"></label>
                 <input id="map_id" name="mapTable_id" value="${mapTable_Id}" hidden>
-                <label for="fileName"></label>
-                <input id="fileName" name="fileName" value="" hidden>
                 <label for="file-input"></label>
                 <input id="file-input" type="file" name="file" ${selectFile}>
             </div>
