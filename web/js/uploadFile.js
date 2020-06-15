@@ -1,11 +1,3 @@
-function locker(it,make){
-    if(make==="on"){
-        $(it).append('<div id="locker" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:auto"></div>') //блочим
-    }
-    if(make==="off"){
-        $(it+">#locker").remove() //разлочиваем
-    }
-}
 
 function selectFile(value) {
     if (value != null) {
@@ -44,11 +36,11 @@ function sendFiles(file) {
             if (data === "success") {
                 alert('Файл был успешно загружен!');
                 $('#downloadFile').attr('href', 'http://localhost:8081/cstrmo/downloadFile?mapTable_id=' + $('#map_id').val()).removeClass('disabled');
-                $('#file-input').prop('disabled', true).val(null);
+                $('#file-input').val(null);
                 $('#deleteFile').prop('disabled', false);
             } else if (data === "fail") {
                 alert('Файл не был загружен! За данной картой файл уже закреплен!');
-                $('#file-input').prop('disabled', true).val(null);
+                $('#file-input').val(null);
             }
 
         }
@@ -68,7 +60,7 @@ function deleteFile() {
             if (response === "success") {
                 alert('Файл удален!');
                 $('#downloadFile').attr('href', '').addClass('disabled');
-                $('#file-input').prop('disabled', false);
+              //  $('#file-input').prop('disabled', false);
                 $('#deleteFile').prop('disabled', true);
             } else if (response === "fail") {
                 alert('Файл не обнаружен!');

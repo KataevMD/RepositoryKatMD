@@ -37,16 +37,16 @@ public class chapter {
         return null;
     }
 
-    public static List<Section> findSectionByListIdChapter(Long chapters_id) {
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        List<Section> sections = session.createQuery("from Section s where s.chapter.chapter_id in " + chapters_id).getResultList();
-        session.getTransaction().commit();
-        session.close();
-        if (!sections.isEmpty()) {
-            return sections;
-        }
-        return null;
-    }
+//    public static List<Section> findSectionByListIdChapter(Long chapters_id) {
+//        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+//        Session session = sessionFactory.openSession();
+//        session.beginTransaction();
+//        List<Section> sections = session.createQuery("from Section s where s.chapter.chapter_id in " + chapters_id).getResultList();
+//        session.getTransaction().commit();
+//        session.close();
+//        if (!sections.isEmpty()) {
+//            return sections;
+//        }
+//        return null;
+//    }
 }

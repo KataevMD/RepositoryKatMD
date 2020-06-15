@@ -69,16 +69,28 @@ public class uploadPfdFile extends HttpServlet {
             saveFile(fileMapTable, mapTable_id, nameFileMap);
             Path fileToDelete = Paths.get(fileMapTable.getAbsolutePath());
             Files.delete(fileToDelete);
-            String answer = "success";
-            response.getWriter().write(answer);
+
         } else {
             Path fileToDelete = Paths.get(fileMapTable.getAbsolutePath());
+            updateFile(fileMap,fileMapTable, nameFileMap);
             Files.delete(fileToDelete);
 
-            String answer = "fail";
-            response.getWriter().write(answer);
         }
+        String answer = "success";
+        response.getWriter().write(answer);
+    }
 
+    private void updateFile(FileMapTable fileMapTable, File file, String nameFileMap) throws IOException {
+        SessionFactory sesFactory = HibernateUtil.getSessionFactory();
+        Session sessia = sesFactory.openSession();
+
+        fileMapTable.setNameFileMapTable(nameFileMap);
+        fileMapTable.setFile(BlobProxy.generateProxy(getFile(file)));
+
+        sessia.getTransaction().begin();
+        sessia.update(fileMapTable);
+        sessia.getTransaction().commit();
+        sessia.close();
     }
 
     public static void saveFile(File file, Long mapTable_id, String nameFileMap) throws IOException {

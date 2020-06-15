@@ -44,6 +44,7 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(Formula.class);
                 configuration.addAnnotatedClass(TypeTime.class);
                 configuration.addAnnotatedClass(TypeMapTable.class);
+                configuration.addAnnotatedClass(Discharge.class);
                             // Построение сервиса регистрации с заданной конфигурацией
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();

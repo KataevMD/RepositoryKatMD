@@ -4,33 +4,35 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "typeTime")
-public class TypeTime {
+@Table(name = "discharge")
+public class Discharge {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "typeTime_id", updatable = false, nullable = false)
-    private Long typeTime_id;
+    @Column(name = "discharge_id", updatable = false, nullable = false)
+    private Long discharge_id;
 
-    @Column(name = "nameTypeTime")
-    private String nameTypeTime;
+    @Column(name = "valueDischarge")
+    private String valueDischarge;
 
-    @OneToMany(mappedBy = "typeMapTable")
+    @OneToMany(mappedBy = "discharge")
     private List<MapTable> listMapTable;
 
-    public Long getTypeTime_id() {
-        return typeTime_id;
+
+    public Long getDischarge_id() {
+        return discharge_id;
     }
 
-    public void setTypeTime_id(Long typeTime_id) {
-        this.typeTime_id = typeTime_id;
+    public void setDischarge_id(Long discharge_id) {
+        this.discharge_id = discharge_id;
     }
 
-    public String getNameTypeTime() {
-        return nameTypeTime;
+    public String getValueDischarge() {
+        return valueDischarge;
     }
 
-    public void setNameTypeTime(String nameTypeTime) {
-        this.nameTypeTime = nameTypeTime;
+    public void setValueDischarge(String valueDischarge) {
+        this.valueDischarge = valueDischarge;
     }
 
     public List<MapTable> getListMapTable() {
@@ -50,7 +52,7 @@ public class TypeTime {
     }
 
     public void addMapTable(MapTable mapTable) {
-        mapTable.setTypeTimes(this);
+        mapTable.setDisch(this);
     }
 
 }

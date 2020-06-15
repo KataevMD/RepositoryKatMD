@@ -18,9 +18,6 @@ public class MapTable {
     @Column(name = "numberMapTable")
     private String numberTable;
 
-    @Column(name = "discharge")
-    private Integer discharge;
-
     @OneToMany(mappedBy = "mapTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Parameter> listParameter;
 
@@ -42,15 +39,19 @@ public class MapTable {
     @JoinColumn(name = "typeTime_id")
     private TypeTime typeTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "discharge_id")
+    private Discharge discharge;
+
     public MapTable() {
 
     }
 
-    public Integer getDischarge() {
+    public Discharge getDischarge() {
         return discharge;
     }
 
-    public void setDischarge(Integer discharge) {
+    public void setDischarge(Discharge discharge) {
         this.discharge = discharge;
     }
 
@@ -60,6 +61,10 @@ public class MapTable {
 
     public void setTypeMapTable(TypeMapTable typeMapTable) {
         this.typeMapTable = typeMapTable;
+    }
+
+    public void setTypeTime(TypeTime typeTime) {
+        this.typeTime = typeTime;
     }
 
     public TypeTime getTypeTime() {
@@ -104,13 +109,22 @@ public class MapTable {
             typeMapTable.internalAddMapTable(this);
     }
 
-    public void setTypeTime(TypeTime typeTime)
+    public void setTypeTimes(TypeTime typeTime)
     {
         if (this.typeTime != null)
             this.typeTime.internalRemoveMapTable(this);
         this.typeTime = typeTime;
         if (typeTime != null)
             typeTime.internalAddMapTable(this);
+    }
+
+    public void setDisch(Discharge discharge)
+    {
+        if (this.discharge != null)
+            this.discharge.internalRemoveMapTable(this);
+        this.discharge = discharge;
+        if (discharge != null)
+            discharge.internalAddMapTable(this);
     }
 
     public void setMapTable_id(Long mapTable_id) {

@@ -104,7 +104,7 @@ public class parameterAndCoefficient {
         session.close();
     }
 
-    private static Coefficient findCoefficientById(Long coefficient_id) {
+    public static Coefficient findCoefficientById(Long coefficient_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         List<Coefficient> coefficientList;
@@ -123,7 +123,7 @@ public class parameterAndCoefficient {
         return it.next();
     }
 
-    private static Parameter findParameterById(Long parameter_id) {
+    public static Parameter findParameterById(Long parameter_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         List<Parameter> parameters;
@@ -142,7 +142,7 @@ public class parameterAndCoefficient {
         return it.next();
     }
 
-    private static ValueCoefficient findValueCoefficientById(Long coeffValue_id) {
+    public static ValueCoefficient findValueCoefficientById(Long coeffValue_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         List<ValueCoefficient> valueCoefficients;
@@ -301,6 +301,25 @@ public class parameterAndCoefficient {
         session.close();
 
         Iterator<Formula> it = formulas.iterator();
+        return it.next();
+    }
+
+    public static Parameter findParametersById(Long parameter_id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        List<Parameter> parameters;
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Parameter> criteria = builder.createQuery(Parameter.class);
+        Root<Parameter> root = criteria.from(Parameter.class);
+        criteria.select(root);
+        criteria.where(builder.equal(root.get("parameter_id"), parameter_id));
+
+        session.beginTransaction();
+        parameters = session.createQuery(criteria).getResultList();
+        session.getTransaction().commit();
+        session.close();
+
+        Iterator<Parameter> it = parameters.iterator();
         return it.next();
     }
 }

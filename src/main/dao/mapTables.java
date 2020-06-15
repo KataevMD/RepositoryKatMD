@@ -71,17 +71,30 @@ public class mapTables {
         return false;
     }
 
-    public static boolean rewriteMapTable(String nameMapTable, Long mapTable_id, String numberTable) {
+    public static boolean rewriteMapTable(String nameMapTable, Long mapTable_id, String numberTable, List<Formula> formulasList, Long type_id, Long discharge_id, Long typeTime_id) {
         MapTable mapTable = findMapTableById(mapTable_id);
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         if (mapTable != null) {
+
+            Discharge discharge = discharges.findDischargeById(discharge_id);
+            TypeTime typeTimes = typeTime.findTypeTimeById(typeTime_id);
+            TypeMapTable typeMapTable = main.dao.typeMapTable.findTypeMapTableById(type_id);
+
             mapTable.setName(nameMapTable);
             mapTable.setNumberTable(numberTable);
+            mapTable.setTypeMapTable(typeMapTable);
+            mapTable.setTypeTime(typeTimes);
+            mapTable.setDischarge(discharge);
+
+
+            mapTable.setListFormula(formulasList);
+
             session.getTransaction().begin();
             session.update(mapTable);
             session.getTransaction().commit();
             session.close();
+
             return true;
         }
         session.close();
@@ -192,4 +205,6 @@ public class mapTables {
         session.getTransaction().commit();
         session.close();
     }
+
+
 }

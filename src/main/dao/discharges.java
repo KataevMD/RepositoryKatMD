@@ -1,9 +1,9 @@
 package main.dao;
 
 import main.hibernate.HibernateUtil;
+import main.model.Discharge;
 import main.model.MapTable;
 import main.model.TypeMapTable;
-import main.model.TypeTime;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -13,41 +13,41 @@ import javax.persistence.criteria.Root;
 import java.util.Iterator;
 import java.util.List;
 
-public class typeMapTable {
+public class discharges {
 
-    public static List<TypeMapTable> findAllTypeMapTable() {
+    public static List<Discharge> findAllDischarge() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<TypeMapTable> criteria = builder.createQuery(TypeMapTable.class);
-        Root<TypeMapTable> root = criteria.from(TypeMapTable.class);
+        CriteriaQuery<Discharge> criteria = builder.createQuery(Discharge.class);
+        Root<Discharge> root = criteria.from(Discharge.class);
         criteria.select(root);
         session.beginTransaction();
-        List<TypeMapTable> listTypeMap = session.createQuery(criteria).getResultList();
+        List<Discharge> dischargeList = session.createQuery(criteria).getResultList();
         session.getTransaction().commit();
         session.close();
-        if (!listTypeMap.isEmpty()) {
-            return listTypeMap;
+        if (!dischargeList.isEmpty()) {
+            return dischargeList;
         }
         return null;
     }
 
-    public static TypeMapTable findTypeMapTableById(Long type_id) {
+    public static Discharge findDischargeById(Long discharge_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
-        List<TypeMapTable> typeMapTables;
+        List<Discharge> dischargeList;
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<TypeMapTable> criteria = builder.createQuery(TypeMapTable.class);
-        Root<TypeMapTable> root = criteria.from(TypeMapTable.class);
+        CriteriaQuery<Discharge> criteria = builder.createQuery(Discharge.class);
+        Root<Discharge> root = criteria.from(Discharge.class);
         criteria.select(root);
-        criteria.where(builder.equal(root.get("type_id"), type_id));
+        criteria.where(builder.equal(root.get("discharge_id"), discharge_id));
 
         session.beginTransaction();
-        typeMapTables = session.createQuery(criteria).getResultList();
+        dischargeList = session.createQuery(criteria).getResultList();
         session.getTransaction().commit();
         session.close();
 
-        Iterator<TypeMapTable> it = typeMapTables.iterator();
+        Iterator<Discharge> it = dischargeList.iterator();
 
 
         return it.next();

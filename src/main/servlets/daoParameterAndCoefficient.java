@@ -19,7 +19,7 @@ import java.util.List;
 
 @WebServlet(name = "daoParameterAndCoefficient", urlPatterns = {"/getValueCoefficient", "/addNewParameter", "/addNewCoefficient",
         "/addNewValueCoefficient", "/deleteParameter", "/deleteCoefficient", "/deleteValueCoefficient", "/updateParameter", "/updateCoefficient",
-        "/updateValueCoefficient","/updateFormula"})
+        "/updateValueCoefficient","/updateFormula", "/getParameter", "/findValueCoefficient"})
 public class daoParameterAndCoefficient extends HttpServlet {
     @Override
     public void init() throws ServletException {
@@ -76,6 +76,32 @@ public class daoParameterAndCoefficient extends HttpServlet {
             case "/deleteCoefficient":
                 deleteCoefficient(request, response);
                 break;
+            case "/getParameter":
+                findParameter(request, response);
+                break;
+            case "/findValueCoefficient":
+                findValueCoefficient(request, response);
+                break;
+        }
+    }
+
+    private void findValueCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if (ajax) {
+            Long coeffValue_id = Long.parseLong(request.getParameter("coeffValue_id"));
+            ValueCoefficient valueCoefficient = parameterAndCoefficient.findValueCoefficientById(coeffValue_id);
+            request.setAttribute("valueCoefficient", valueCoefficient);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
+        }
+    }
+
+    private void findParameter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if (ajax) {
+            Long parameter_id = Long.parseLong(request.getParameter("parameter_id"));
+            Parameter parameter = parameterAndCoefficient.findParametersById(parameter_id);
+            request.setAttribute("params", parameter);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
         }
     }
 
@@ -114,6 +140,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
     }
 
     private void updateParameter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
         String nameParameter = request.getParameter("nameParameter").trim();
         Double step = Double.parseDouble(request.getParameter("step").trim());
@@ -128,6 +155,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
             String answer = "fail";
             response.getWriter().write(answer);
         }
+
     }
     private void updateFormula(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
@@ -239,10 +267,10 @@ public class daoParameterAndCoefficient extends HttpServlet {
     private void getValueCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long coefficient_id = Long.parseLong(request.getParameter("coefficient_id"));
         List<ValueCoefficient> valueCoefficients = parameterAndCoefficient.findValueCoefficientByIdCoefficient(coefficient_id);
+        Coefficient coefficient = parameterAndCoefficient.findCoefficientById(coefficient_id);
         request.setAttribute("ValueCoefficient", valueCoefficients);
+        request.setAttribute("coefficient", coefficient);
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
     }
-    private void updatePageListParameter(){
 
-    }
 }

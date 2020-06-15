@@ -4,7 +4,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "coefficientValue")
-//@SequenceGenerator(name = "mapseq2", sequenceName="mapseq",allocationSize=50)
 public class ValueCoefficient {
 
     @Id

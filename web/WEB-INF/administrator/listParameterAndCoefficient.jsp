@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css" >
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css">
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
@@ -85,311 +85,230 @@
     <label for="mapTableId"></label><input id="mapTableId" name="mapTable_id" value="${mapTable_Id}"
                                            hidden>
     <br>
-    <div class="d-flex justify-content-start">
-        <form id="upload-container" accept-charset='utf-8' enctype="multipart/form-data" method="post"
-              action="${pageContext.request.contextPath}/uploadFileMapTable">
-            <div><label for="map_id"></label>
-                <input id="map_id" name="mapTable_id" value="${mapTable_Id}" hidden>
-                <label for="file-input"></label>
-                <input id="file-input" type="file" name="file" ${selectFile}>
+    <div class="container-fluid">
+        <div class="row" style="min-height: 400px; max-height: 700px;">
+            <div class="col-2 pt-md-3 ">
+                <div class="list-group" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active" id="list-parameter-list" data-toggle="list"
+                       href="#list-parameter" role="tab" aria-controls="home">Параметры</a>
+                    <a class="list-group-item list-group-item-action" id="list-coefficient-list" data-toggle="list"
+                       href="#list-coefficient" role="tab" aria-controls="coefficient">Коэффициенты</a>
+                </div>
             </div>
-        </form>
-        <a id="downloadFile" style="margin-right: 10px" href="${downloadFileMap}"
-           class="btn btn-light">Скачать файл</a>
-        <button class="btn btn-light" onclick="deleteFile()">Удалить файл</button>
-    </div>
-   <br>
-    <div class="row ">
-        <%--        Блок таблицы Параметров--%>
-        <div class="col">
-            <div class="container">
-                <%--Кнопка открытия модального окна создания нового параметра--%>
-                <button id="createNewParameter" data-toggle="modal"
-                        data-target="#staticBackdropParameter" class="btn btn-outline-secondary">Добавить новый параметр
-                </button>
-            </div>
-            <br>
-            <div id="divTableParameter" class="container-fluid w-100">
-                <data id="dataParam" value="1211">
-                    <table id="tableParameter" class="table table-hover table-responsive text-left">
-                        <thead class="thead-light">
-                        <tr>
-                            <th>№</th>
-                            <th>Название параметра</th>
-                            <th class="w-25">Значение степени</th>
-                            <th class="text-center" colspan="2">Управление</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="parameter" items="${Parameter}">
-                            <tr id="param_<c:out value="${parameter.parameter_id}"/>">
-                                <td><c:out value="${parameter.parameter_id}"/></td>
-                                <td><c:out value="${parameter.nameParametr}"/></td>
-                                <td><c:out value="${parameter.step}"/></td>
-                                <td>
-                                    <button class="btn btn-light "
-                                            onclick="viewUpdateParameter(<c:out value="${parameter.parameter_id}"/>)">
-                                        Редактировать
-                                    </button>
-                                </td>
-                                <td>
-                                    <button type="button"
-                                            onclick="deleteParameterById(<c:out value="${parameter.parameter_id}"/>)"
-                                            class="btn btn-light">Удалить
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr id="updateParam_<c:out value="${parameter.parameter_id}"/>" hidden class="table-active">
-                                <td></td>
-                                <td>
-                                    <label class="w-100">
-                                        <input id="nameParam_<c:out value="${parameter.parameter_id}"/>"
-                                               value="<c:out value="${parameter.nameParametr}"/>"
-                                               pattern="^[А-Яа-яЁё\s]+$" type="text" class="form-control " required>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label class="w-100">
-                                        <input id="stepParam_<c:out value="${parameter.parameter_id}"/>"
-                                               value="<c:out value="${parameter.step}"/>"
-                                               type="text" class="form-control " required>
-                                    </label>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary"
-                                            onclick="updateParameter(<c:out value="${parameter.parameter_id}"/>)">
-                                        Сохранить
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-secondary"
-                                            onclick="closeUpdateParameter(<c:out value="${parameter.parameter_id}"/>)">
-                                        Отмена
-                                    </button>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </data>
-            </div>
-            <br>
-            <div id="divTableFormula" class="container-fluid w-100">
-                <data id="dataFormula" value="1211">
-                    <table id="tableFormula" class="table table-hover table-responsive text-left">
-                        <thead class="thead-light">
-                        <tr>
-                            <th>№ коэффициента</th>
-                            <th>Формула</th>
-                            <th class="text-center" colspan="2">Управление</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="formula" items="${Formula}">
-                            <tr id="formula_<c:out value="${formula.formula_id}"/>">
-                                <td><c:out value="${formula.coefficient_id}"/></td>
-                                <td><c:out value="${formula.formula}"/></td>
-                                <td>
-                                    <button class="btn btn-light "
-                                            onclick="viewUpdateFormula(<c:out value="${formula.formula_id}"/>)">
-                                        Редактировать
-                                    </button>
-                                </td>
-                                <td>
-                                </td>
-                            </tr>
-                            <tr id="updateFormula_<c:out value="${formula.formula_id}"/>" hidden class="table-active">
-                                <td></td>
-                                <td>
-                                    <label class="w-100">
-                                        <input id="nFormula_<c:out value="${formula.formula_id}"/>"
-                                               value="<c:out value="${formula.formula}"/>"
-                                               type="text" class="form-control " required>
-                                    </label>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary"
-                                            onclick="updateFormula(<c:out value="${formula.formula_id}"/>)">
-                                        Сохранить
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-secondary"
-                                            onclick="closeUpdateFormula(<c:out value="${formula.formula_id}"/>)">
-                                        Отмена
-                                    </button>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </data>
-            </div>
-        </div>
-        <%--        Блок таблицы Коэффициенты--%>
-        <div class="col">
-            <div class="container">
-                <%--Кнопка открытия модального окна создания нового коэффициента--%>
-                <button id="createNewCoefficient" data-toggle="modal"
-                        data-target="#staticBackdropCoefficient" class="btn btn-outline-secondary">Добавить новый
-                    коэффициент
-                </button>
-            </div>
-            <br>
-            <div id="divTableCoefficient" class="container-fluid w-100">
-                <data id="dataCoeff" value="12133">
-                    <table id="tableCoefficient" class="table table-hover table-responsive text-left">
-                        <thead class="thead-light">
-                        <tr>
-                            <th>№</th>
-                            <th class="w-50">Название коэффициента</th>
-                            <th class="text-center w-25" colspan="2">Управление</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="coefficient" items="${Coefficient}">
-                            <tr id="coeff_<c:out value="${coefficient.coefficient_id}"/>">
-                                <td><c:out value="${coefficient.coefficient_id}"/></td>
-                                <td class="w-50"><c:out value="${coefficient.name}"/></td>
-                                <td>
-                                    <button class="btn btn-light " id="viewValueCoeff"
-                                            onclick="getValueCoeff(<c:out value="${coefficient.coefficient_id}"/>)">
-                                        Просмотреть значения
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-light " id="viewUpdate"
-                                            onclick="viewUpdateCoeff(<c:out value="${coefficient.coefficient_id}"/>)">
-                                        Редактировать
-                                    </button>
-                                </td>
-                                <td>
-                                    <button type="button" id="delete"
-                                            onclick="deleteCoefficientById(<c:out
-                                                    value="${coefficient.coefficient_id}"/>)"
-                                            class="btn btn-light">Удалить
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr id="updateCoeff_<c:out value="${coefficient.coefficient_id}"/>" hidden
-                                class="table-active">
-                                <td></td>
-                                <td>
-                                    <label class="w-100">
-                                        <input id="nameCoeff_<c:out value="${coefficient.coefficient_id}"/>"
-                                               value="<c:out value="${coefficient.name}"/>"
-                                               pattern="^[А-Яа-яЁё\s]+$" type="text" class="form-control " required>
-                                    </label>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary"
-                                            onclick="updateCoefficient(<c:out value="${coefficient.coefficient_id}"/>)">
-                                        Сохранить
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-secondary"
-                                            onclick="closeUpdateCoefficient(<c:out
-                                                    value="${coefficient.coefficient_id}"/>)">Отмена
-                                    </button>
-                                </td>
-                                <td>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </data>
-            </div>
-            <br>
-            <%--Кнопка открытия модального окна создания нового зачения коэффициента--%>
-            <div class="container">
-                <button id="showFormNewValueCoefficient" data-toggle="modal"
-                        data-target="#staticBackdropValueCoefficient" class="btn btn-outline-secondary" disabled>
-                    Добавить значение
-                </button>
-            </div>
-            <br>
-            <label>
-                <input id="coeffId" name="coefficient_id" value="" hidden>
-            </label>
-            <div id="tableValCoeff" class="container-fluid w-100">
-                <data id="dataVal" value="125">
-                    <table id="tableCoefficientValue" class="table table-hover table-responsive text-left">
-                        <thead class="thead-light">
-                        <tr>
-                            <th>Название значения коэффициента</th>
-                            <th>Значение</th>
-                            <th class="text-center" colspan="2">Управление</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="valueCoefficient" items="${ValueCoefficient}">
-                            <tr id="valCoeff_<c:out value="${valueCoefficient.coeffValue_id}"/>">
-                                <td><c:out value="${valueCoefficient.valName}"/></td>
-                                <td><c:out value="${valueCoefficient.value}"/></td>
-                                <td>
-                                    <button class="btn btn-light " id="viewUpdateValueCoeff"
-                                            onclick="viewUpdateValueCoeff(<c:out
-                                                    value="${valueCoefficient.coeffValue_id}"/>)"
-                                    >Редактировать
-                                    </button>
-                                </td>
-                                <td>
-                                    <button type="button" id="deleteValueCoeff"
-                                            onclick="deleteValueCoefficientById(<c:out
-                                                    value="${valueCoefficient.coeffValue_id}"/>)"
-                                            class="btn btn-light">Удалить
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr id="updateValueCoeff_<c:out value="${valueCoefficient.coeffValue_id}"/>" hidden
-                                class="table-active">
-                                <td>
-                                    <label class="w-100">
-                                        <input id="nameValueCoeff_<c:out value="${valueCoefficient.coeffValue_id}"/>"
-                                               value="<c:out value="${valueCoefficient.valName}"/>"
-                                               pattern="^[А-Яа-яЁё\s]+$" type="text" class="form-control " required>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label class="w-100">
-                                        <input id="valValueCoeff_<c:out value="${valueCoefficient.coeffValue_id}"/>"
-                                               value="<c:out value="${valueCoefficient.value}"/>"
-                                               type="text" class="form-control " required>
-                                    </label>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary"
-                                            onclick="updateValueCoefficient(<c:out
-                                                    value="${valueCoefficient.coeffValue_id}"/>)">Сохранить
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-secondary"
-                                            onclick="closeUpdateValueCoeff(<c:out
-                                                    value="${valueCoefficient.coeffValue_id}"/>)">Отмена
-                                    </button>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </data>
-            </div>
+            <div class="col-9 pt-md-3 border border-secondary">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="list-parameter" role="tabpanel"
+                         aria-labelledby="list-parameter-list">
+                        <div class="row">
+                            <div class="col">
+                                <label>Поиск параметра по названию:
+                                    <input class="form-control" onkeyup="filter(this)" type="text"/>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="loadListParam" class="col col-4">
+                                <data id="dataListParam" value="1212">
+                                    <ul id="listColl" class="list-group" style="cursor: pointer">
+                                        <c:forEach var="parameter" items="${Parameter}">
+                                            <li class="list-group-item list-group-item-action"
+                                                onclick="findParameter(<c:out value="${parameter.parameter_id}"/>)">
+                                                <c:out value="${parameter.nameParametr}"/>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </data>
+                            </div>
+                            <div id="loadParameter" class=" col-7">
+                                <data id="dataParameter" value="1212">
+                                    <form method="post" id="formUpdateParameter"
+                                          action="${pageContext.request.contextPath}/updateParameter">
+                                        <div class="row mt-md-3">
+                                            <label for="map_id"></label><input id="map_id" name="mapTable_id" hidden>
+                                            <label for="parameter_id"></label><input id="parameter_id"
+                                                                                     name="parameter_id"
+                                                                                     value="${params.parameter_id}"
+                                                                                     hidden>
+                                            <div class="col-4">
+                                                <label for="nameParametr"> Название параметра:</label>
+                                            </div>
+                                            <div class="col">
+                                                <input id="nameParametr" name="nameParameter"
+                                                       value="${params.nameParametr}"
+                                                       class="form-control" pattern="^[А-Яа-яA-ZЁё,\s]+$"
+                                                       title="Разрешено использовать пробелы, русские буквы, заглавные буквы латинского алфавита и запятые."
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-md-3">
+                                            <div class="col-4">
+                                                <label for="stepParam"> Степень параметра:</label>
+                                            </div>
+                                            <div class="col">
+                                                <input id="stepParam" name="step" value="${params.step}"
+                                                       class="form-control" pattern="\d+(\.\d{1,9})?"
+                                                       title="Разрешено записывать числа только в виде десятичной дроби, через точку."
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-md-3">
+                                            <div class="col-4">
+                                                Управление:
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-primary" id="saveParam" type="submit"
+                                                        disabled>Сохранить
+                                                    изменения
+                                                </button>
+                                            </div>
 
+                                        </div>
+                                    </form>
+                                </data>
+                            </div>
+                        </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-outline-secondary" onclick="deleteParameter()"
+                                    id="deleteParam" disabled>
+                                Удалить параметр
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="tab-pane fade" id="list-coefficient" role="tabpanel"
+                         aria-labelledby="list-coefficient-list">
+                        <div class="row">
+                            <div class="col-4">
+                                <label>Поиск коэффициента по названию:
+                                    <input class="form-control" onkeyup="filterCoeff(this)" type="text"/>
+                                </label>
+                            </div>
+                            <div id="loadCoefficient" class="col pt-2">
+                                <data id="dataLoadCoefficient" value="1212">
+                                    <form id="formUpdateCoefficient" method="post"
+                                          action="${pageContext.request.contextPath}/updateCoefficient">
+                                        <div class="row">
+                                            <label for="map_d"></label><input id="map_d" name="mapTable_id" hidden>
+                                            <label for="coefficient_id"></label><input id="coefficient_id"
+                                                                                       name="coefficient_id"
+                                                                                       value="${coefficient.coefficient_id}"
+                                                                                       hidden>
+                                            <div class="col">
+                                                <label for="nameCoefficient"> Название параметра:</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <input id="nameCoefficient" name="nameCoefficient"
+                                                       value="${coefficient.name}"
+                                                       class="form-control" pattern="^[А-Яа-яЁё/,\s]+$"
+                                                       title="Разрешено использовать пробелы, русские буквы и запятые."
+                                                       required>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-primary" id="saveCoeff" type="submit"
+                                                        disabled>Сохранить
+                                                    изменений
+                                                </button>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-secondary" id="deleteCoeff" disabled>
+                                                    Удалить коэффициент
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                </data>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="loadListCoeff" class="col col-4">
+                                <data id="dataListCoeff" value="1313">
+                                    <ul id="listCoeff" class="list-group" style="cursor: pointer">
+                                        <c:forEach var="coefficient" items="${Coefficient}">
+                                            <li class="list-group-item list-group-item-action"
+                                                onclick="getListValueCoeff(<c:out
+                                                        value="${coefficient.coefficient_id}"/>)">
+                                                <c:out value="${coefficient.name}"/>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </data>
+                            </div>
+                            <div id="loadListValueCoeff" class="col">
+                                <data id="dataListValueCoeff" value="1313">
+                                    <ul class="list-group" style="cursor: pointer">
+                                        <c:forEach var="valueCoefficient" items="${ValueCoefficient}">
+                                            <li class="list-group-item list-group-item-action"
+                                                onclick="findValueCoeff(<c:out
+                                                        value="${valueCoefficient.coeffValue_id}"/>)">
+                                                <c:out value="${valueCoefficient.valName}"/>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </data>
+                            </div>
+                            <div id="loadValueCoeff" class="col">
+                                <data id="dataValueCoeff" value="1212">
+                                    <form method="post" id="formUpdateValueCoeff"
+                                          action="${pageContext.request.contextPath}/updateValueCoefficient">
+                                        <label for="coeff_id"></label><input id="coeff_id" name="coefficient_id"
+                                                                             value="${valueCoefficient.coefficient.coefficient_id}"
+                                                                             hidden>
+                                        <label for="valueCoeff_id"></label><input id="valueCoeff_id"
+                                                                                  name="coeffValue_id"
+                                                                                  value="${valueCoefficient.coeffValue_id}"
+                                                                                  hidden>
+                                        <div class="row mt-md-3">
+                                            <div class="col-4">
+                                                <label for="valName"> Название значения:</label>
+                                            </div>
+                                            <div class="col">
+                                                <input id="valName" name="valName"
+                                                       value="${valueCoefficient.valName}"
+                                                       class="form-control" pattern="^[А-Яа-яЁё/,\s]+$"
+                                                       title="Разрешено использовать пробелы, русские буквы, заглавные буквы латинского алфавита и запятые."
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-md-3">
+                                            <div class="col-4">
+                                                <label for="value"> Значение:</label>
+                                            </div>
+                                            <div class="col">
+                                                <input id="value" name="value" value="${valueCoefficient.value}"
+                                                       class="form-control" pattern="\d+(\.\d{1,9})?"
+                                                       title="Разрешено записывать числа только в виде десятичной дроби, через точку."
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-md-3">
+                                            <div class="col-4">
+                                                Управление:
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-primary" id="saveValueCoeff"
+                                                        type="submit" disabled>Сохранить
+                                                    изменения
+                                                </button>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-secondary" id="deleteValueCoeff"
+                                                        disabled>Удалить значение
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </data>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
 </main>
 <%--Модальное окно создания нового параметра--%>
 <div class="modal fade" id="staticBackdropParameter" data-backdrop="static" data-keyboard="false"
@@ -408,7 +327,7 @@
                       action="${pageContext.request.contextPath}/addNewParameter">
                     <label for="mapTable_id"></label><input id="mapTable_id" name="mapTable_id" value="${mapTable_Id}"
                                                             hidden>
-                    <label for="inputNameParameter" >Введиет название параметра</label>
+                    <label for="inputNameParameter">Введиет название параметра</label>
                     <input id="inputNameParameter" onkeyup="checkInputNameParameter()" autocomplete="off"
                            class="form-control" pattern="^[А-Яа-яЁёA-Z,\s]+$"
                            name="nameParameter"
@@ -418,8 +337,8 @@
                     <label for="inputStepParameter">Введите степень</label>
                     <input id="inputStepParameter" onkeyup="checkInputStepParameter()" autocomplete="off"
                            class="form-control"
-                           pattern="\d+(\.\d{1,9})?"
                            name="stepParameter"
+                           pattern="\d+(\.\d{1,9})?"
                            title="Разрешено записывать числа только в виде десятичной дроби, через точку."
                            placeholder="Степень параметра"
                            required><br>
@@ -485,7 +404,7 @@
                 <form id="formCreateValueCoefficient" autocomplete="off" method="post"
                       action="${pageContext.request.contextPath}/addNewValueCoefficient">
                     <label>
-                        <input id="coeff_id" name="coefficient_id" value="" hidden>
+                        <%--                        <input id="coeff_id" name="coefficient_id" value="" hidden>--%>
                     </label>
                     <label for="inputNameCoefficient">Введите название коэффициента</label>
                     <input id="inputNameValueCoefficient" onkeyup="checkInputNameValueCoefficient()" autocomplete="off"

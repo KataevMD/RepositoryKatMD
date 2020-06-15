@@ -8,19 +8,20 @@ function closeUpdateMap(mapTable_id) {
 }
 
 //Функция сбора данных с формы, и их последующая отправка в сервлет, для создания новой Карты
-$(document).on("submit", "#formCreateMapTable", function (event) {
+$(document).on("submit", "#formUpdateMap", function (event) {
     let $form = $(this);
 
     $.post($form.attr("action"), $form.serialize(), function (response) {
         if (response === "fail") {
-            $('#error').toast('show');
-            $('#bodyError').text('Карта не создана, проверьте введенные данные!');
+            // $('#error').toast('show');
+            // $('#bodyError').text('Карта не создана, проверьте введенные данные!');
+            alert('Данные не обновлены!');
         }
-        $("#tableMap").html($(response).find("data").html());
-        $('.close').click();
-        $('#error').toast('show');
-        $('#bodyError').text('Карта успешно создана!');
-        $('#formCreateMapTable')[0].reset();
+        $("#loadMapTable").html($(response).find("#loadData").html());
+        // $('.close').click();
+        // $('#error').toast('show');
+        // $('#bodyError').text('Карта успешно создана!');
+        alert('Данные обновлены!');
 
     });
     event.preventDefault(); // Important! Prevents submitting the form.
@@ -50,50 +51,51 @@ function deleteMapTableById(mapTable_id) {
     });
 }
 
-//Функция обновления данных карты по ее ID
-function updateMap(mapTable_id) {
-    let name = $('#nameMap_' + mapTable_id).val();
-    let numberMap = $('#numberMap_' + mapTable_id).val();
-    let formulMap = $('#formulMap_' + mapTable_id).val();
-    let coll_id = $('#collection_Id').val();
+// $('#save').click(function () {
+//     let mapTable_id = $('#map_id').val();
+//
+//     let name = $('#nameMap_' + mapTable_id).val();
+//     let numberMap = $('#numberMap_' + mapTable_id).val();
+//     let formulMap = $('#formulMap_' + mapTable_id).val();
+//     let coll_id = $('#collection_Id').val();
+//
+//     $.ajax({
+//         method: 'post',
+//         url: 'http://localhost:8081/cstrmo/updateMapTable',     // URL - сервлет
+//         data: {                 // передаваемые сервлету данные
+//             mapTable_id: mapTable_id,
+//             nameMapTable: name,
+//             numberTable: numberMap,
+//             formul: formulMap,
+//             collection_id: coll_id
+//         },
+//         success: function (response) {
+//             if (response === "fail") {
+//                 $('#error').toast('show');
+//                 $('#bodyError').text('Проверьте введенные данные!');
+//             } else {
+//                 $('#error').toast('show');
+//                 $('#bodyError').text('Данные карты обновлены!');
+//                 $("#tableMap").html($(response).find("data").html());
+//             }
+//         }
+//     });
+// });
 
-        $.ajax({
-            method: 'post',
-            url: 'http://localhost:8081/cstrmo/updateMapTable',     // URL - сервлет
-            data: {                 // передаваемые сервлету данные
-                mapTable_id: mapTable_id,
-                nameMapTable: name,
-                numberTable: numberMap,
-                formul: formulMap,
-                collection_id: coll_id
-            },
-            success: function (response) {
-                if (response === "fail") {
-                    $('#error').toast('show');
-                    $('#bodyError').text('Проверьте введенные данные!');
-                } else {
-                    $('#error').toast('show');
-                    $('#bodyError').text('Данные карты обновлены!');
-                    $("#tableMap").html($(response).find("data").html());
-                }
-            }
-        });
 
-}
-
-//Функции проверки введенных данных при редактировании записей Карт
-function checkNumberMap(mapTable_id) {
-    let $inp = $('#numberMap_' + mapTable_id);
+$('#number').change(function () {
+    let $inp = $('#numberMap');
     let numberMap = $inp.val();
-    let regName = '^[ 0-9]+$';
+    let regName = '^[0-9]+$';
     if (!numberMap.match(regName)) {
-        $('#save' + mapTable_id).prop('disabled', true);
+        $('#save').prop('disabled', true);
         $inp.blur().addClass('error');
     } else {
-        $('#save' + mapTable_id).prop('disabled', false);
+        $('#save').prop('disabled', false);
         $inp.removeClass('error');
     }
-}
+});
+
 
 function checkNameMap(mapTable_id) {
     let name = $('#nameMap_'+mapTable_id).val();

@@ -35,3 +35,15 @@ function filter(element) {
         }
     });
 }
+function filterCoeff(element) {
+    let value = $(element).val();
+
+    $("#listCoeff > li").each(function() {
+        if ($(this).text().toLowerCase().search(value) > -1) {
+            $(this).show();
+        }
+        else {
+            $(this).hide();
+        }
+    });
+}

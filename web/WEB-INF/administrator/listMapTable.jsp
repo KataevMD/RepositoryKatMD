@@ -170,15 +170,17 @@
                       action="${pageContext.request.contextPath}/addNewMapTable">
                     <label for="inputNumberMapTable" >Введите номер карты</label>
                     <input id="inputNumberMapTable" onkeyup="checkInputNumberMap()" autocomplete="off"
-                           class="form-control" pattern="^[0-9]+$"
+                           class="form-control"
                            name="numberMapTable"
+                           pattern="^[0-9]+$"
                            title="Разрешено использовать цифры"
                            placeholder="Номер карты"
                            required autofocus><br>
                     <label for="inputNameMapTable" >Введите название карты</label>
                     <input id="inputNameMapTable" onkeyup="checkInputNameMap()" autocomplete="off" class="form-control"
-                           pattern="^[А-Яа-яЁё,\s]+$"
+
                            name="nameMapTable"
+                           pattern="^[А-Яа-яЁё,\s]+$"
                            title="Разрешено использовать только пробелы и русские буквы"
                            placeholder="Название карты"
                            required autofocus><br>

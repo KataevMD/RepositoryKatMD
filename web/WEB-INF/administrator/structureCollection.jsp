@@ -17,6 +17,7 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css">
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/btn_file_upload.css">
     <link rel="stylesheet" href="http://localhost:8081/cstrmo/dist/themes/default/style.min.css">
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
@@ -29,7 +30,8 @@
 </head>
 <body class="d-flex flex-column h-100">
 <!-- Modal -->
-<div class="modal fade" id="waitAnswer" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="waitAnswer" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="container text-center">
             <div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status">
@@ -98,6 +100,7 @@
         <div class="row" style="min-height: 650px; max-height: 700px;">
             <div class="col mr-md-5 px-md-5 overflow-auto ">
                 <%--Структура справочника--%>
+                <label for="search">Поиск: </label><input style="margin-bottom: 10px;" class="form-control" id="search">
                 <div id="jstree">
                     <!-- in this example the tree is populated from inline HTML -->
                     <ul>
@@ -129,152 +132,134 @@
                 </div>
                 <%--Конец структуры справочника--%>
             </div>
-
+            <label for="Col"></label><input id="Col" value="${collection_Id}"
+                                               hidden>
             <div class="col col-8 mr-md-5 pt-md-5 border border-secondary">
-
-
                 <div id="loadMapTable">
                     <data id="loadData" value="11212">
-                                                <form>
-
                         <div class="container text-center">
                             <p class="h4">Карта "${map.name}"</p>
                         </div>
-                        <br>
                         <div class="row mt-md-3">
                             <div class="col-3">
-                                <label for="numberMap"> Номер карты:</label>
+                                <a id="openParamAndCoeff" class="btn btn-outline-secondary btn-sm ${viewParam}"  href="${showPage}">Просмотр параметров и коэффициентов</a>
                             </div>
                             <div class="col-4">
-                                <input id="numberMap" name="numberMapTable" value="${map.numberTable}"
-                                       class="form-control">
                             </div>
                             <div class="col-6"></div>
                         </div>
-                        <div class="row mt-md-3">
-                            <div class="col-3">
-                                <label for="nameMap"> Название карты:</label>
-                            </div>
-                            <div class="col-4">
-                                <input id="nameMap" name="numberMapTable" value="${map.name}" class="form-control">
-                            </div>
-                            <div class="col-6"></div>
-                        </div>
-                        <div class="row mt-md-3">
-                            <div class="col-3">
-                                <label for="typeTimes"> Тип возвращаемого времени:</label>
-                            </div>
-                            <div class="col-4">
-                                <select id="typeTimes" name="typeTimes" class="form-control">
-                                    <c:forEach var="typeTimeMap" items="${TypeTime}">
-
-                                        <c:if test="${typeTimeMap.typeTime_id == map.typeTime.typeTime_id}">
-
-                                            <option selected>${typeTimeMap.nameTypeTime}</option>
-
-                                        </c:if>
-
-                                        <c:if test="${typeTimeMap.typeTime_id != map.typeTime.typeTime_id}">
-
-                                            <option>${typeTimeMap.nameTypeTime}</option>
-
-                                        </c:if>
-
-
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="col-6"></div>
-
-                        </div>
-
-                        <div class="row mt-md-3">
-                            <div class="col-3">
-                                <label for="discharge">Разряд:</label>
-                            </div>
-                            <div class="col-4">
-                                <select id="discharge" name="discharge" class="form-control">
-                                    <c:if test="${map.discharge == 1}">
-                                        <option selected>1</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge == 2}">
-                                        <option selected>2</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge == 3}">
-                                        <option selected>3</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge == 4}">
-                                        <option selected>4</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge == 5}">
-                                        <option selected>5</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge == 6}">
-                                        <option selected>6</option>
-                                    </c:if>
-
-                                    <c:if test="${map.discharge != 1}">
-                                        <option>1</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge != 2}">
-                                        <option>2</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge != 3}">
-                                        <option>3</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge != 4}">
-                                        <option>4</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge != 5}">
-                                        <option>5</option>
-                                    </c:if>
-                                    <c:if test="${map.discharge != 6}">
-                                        <option>6</option>
-                                    </c:if>
-                                </select>
-                            </div>
-                            <div class="col-6"></div>
-                        </div>
-
-                        <div class="row mt-md-3">
-                            <div class="col-3">
-                                <label for="typeMapTable">Тип карты нормирования:</label>
-                            </div>
-                            <div class="col-4">
-                                <select id="typeMapTable" name="typeMapTable" class="form-control">
-                                    <c:forEach var="typeMap" items="${TypeMapTable}">
-
-                                        <c:if test="${typeMap.type_id == map.typeTime.typeTime_id}">
-
-                                            <option selected>${typeMap.nameType}</option>
-
-                                        </c:if>
-
-                                        <c:if test="${typeMap.type_id != map.typeTime.typeTime_id}">
-
-                                            <option>${typeMap.nameType}</option>
-
-                                        </c:if>
-
-
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="col-6"></div>
-                        </div>
-                        <c:forEach var="formula" items="${Formula}">
+                        <form id="formUpdateMap" method="post"
+                              action="${pageContext.request.contextPath}/updateMapTable">
+                            <label for="id"></label><input id="id" name="mapTable_id" value="${map.mapTable_id}"
+                                                           hidden>
+                            <br><label for="Collid"></label><input id="Collid" name="collection_Id"
+                                                               hidden>
                             <div class="row mt-md-3">
                                 <div class="col-3">
-                                    <label for="formula${formula.formula_id}">Формула:</label>
+                                    <label for="numberMap"> Номер карты:</label>
                                 </div>
                                 <div class="col-4">
-                                    <input id="formula${formula.formula_id}" class="form-control"
-                                           value="${formula.formula}" name="formulaMap${formula.formula_id}">
+                                    <input id="numberMap" name="numberMapTable" value="${map.numberTable}"
+                                           class="form-control" pattern="^[0-9]+$"
+                                           title="Разрешено использовать цифры"  required>
                                 </div>
                                 <div class="col-6"></div>
                             </div>
-                        </c:forEach>
-                                                </form>
+                            <div class="row mt-md-3">
+                                <div class="col-3">
+                                    <label for="nameMap"> Название карты:</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="nameMap" name="nameMapTable" pattern="^[А-Яа-яЁё,\s]+$"
+                                           title="Разрешено использовать только пробелы и русские буквы"
+                                           value="${map.name}" class="form-control"  required>
+                                </div>
+                                <div class="col-6"></div>
+                            </div>
+                            <div class="row mt-md-3">
+                                <div class="col-3">
+                                    <label for="typeTimes"> Тип возвращаемого времени:</label>
+                                </div>
+                                <div class="col-4">
+                                    <select id="typeTimes" name="typeTimes" class="form-control" >
+                                        <c:forEach var="typeTimeMap" items="${TypeTime}">
+                                            <c:if test="${typeTimeMap.typeTime_id == map.typeTime.typeTime_id}">
+                                                <option value="${typeTimeMap.typeTime_id}"
+                                                        selected>${typeTimeMap.nameTypeTime}</option>
+                                            </c:if>
+                                            <c:if test="${typeTimeMap.typeTime_id != map.typeTime.typeTime_id}">
+                                                <option value="${typeTimeMap.typeTime_id}">${typeTimeMap.nameTypeTime}</option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-6"></div>
+
+                            </div>
+
+                            <div class="row mt-md-3">
+                                <div class="col-3">
+                                    <label for="discharge">Разряд:</label>
+                                </div>
+                                <div class="col-4">
+                                    <select id="discharge" name="discharge" class="form-control" >
+                                        <c:forEach var="discharge" items="${Discharge}">
+                                            <c:if test="${discharge.discharge_id == map.discharge.discharge_id}">
+                                                <option value="${discharge.discharge_id}"
+                                                        selected>${discharge.valueDischarge}</option>
+                                            </c:if>
+                                            <c:if test="${discharge.discharge_id != map.discharge.discharge_id}">
+                                                <option value="${discharge.discharge_id}">${discharge.valueDischarge}</option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-6"></div>
+                            </div>
+
+                            <div class="row mt-md-3">
+                                <div class="col-3">
+                                    <label for="typeMapTable">Тип карты нормирования:</label>
+                                </div>
+                                <div class="col-4">
+                                    <select id="typeMapTable" name="typeMapTable" class="form-control" >
+                                        <c:forEach var="typeMap" items="${TypeMapTable}">
+                                            <c:if test="${typeMap.type_id == map.typeMapTable.type_id}">
+                                                <option value="${typeMap.type_id}" selected>${typeMap.nameType}</option>
+                                            </c:if>
+                                            <c:if test="${typeMap.type_id != map.typeMapTable.type_id}">
+                                                <option value="${typeMap.type_id}">${typeMap.nameType}</option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-6"></div>
+                            </div>
+                            <c:forEach var="formula" items="${Formula}">
+                                <div class="row mt-md-3">
+                                    <div class="col-3">
+                                        <label for="formula${formula.formula_id}">Формула:</label>
+                                    </div>
+                                    <div class="col-4">
+                                        <input id="formula${formula.formula_id}" class="form-control"
+                                               value="${formula.formula}" name="formulaMap${formula.formula_id}">
+                                    </div>
+                                    <div class="col-6"></div>
+                                </div>
+                            </c:forEach>
+                            <div class="row mt-md-3">
+                                <div class="col-3">
+                                    <label>Управление</label>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-outline-primary" id="save" type="submit" ${save}>Сохранить
+                                        изменения
+                                    </button>
+                                    <button class="btn btn-outline-secondary" id="deleteMapTable" ${delete}>Удалить карту</button>
+                                </div>
+                                <div class="col-6"></div>
+                            </div>
+                        </form>
                         <div class="row mt-md-3">
                             <div class="col-3">
                                 <label>PDF представление:</label>
@@ -289,14 +274,14 @@
                                     <label for="fileName"></label>
                                     <input id="fileName" name="fileName" value="" hidden>
                                     <label for="file-input"></label>
-                                    <input id="file-input" onchange="selectFile(this.value)"
-                                           style="margin-bottom: 10px;" type="file" name="file" ${selectFile}>
+                                    <span id="spanBtn" class="btn btn-outline-secondary btn-file"> Изменить
+                                         <input id="file-input" onchange="selectFile(this.value)"
+                                         ${selectFile}
+                                                style="margin-bottom: 10px;" type="file" name="file">
+                                    </span>
+                                    <a id="downloadFile" style="margin-right: 10px;" href="${downloadFileMap}"
+                                       class="btn btn-outline-secondary ${disabledDownloadFile} ">Просмотр</a>
                                 </form>
-                                <a id="downloadFile" style="margin-right: 10px;" href="${downloadFileMap}"
-                                   class="btn btn-light ${disabledDownloadFile} ">Скачать файл</a>
-                                <button id="deleteFile" class="btn btn-light"
-                                        onclick="deleteFile()" ${disabledDeleteFile}>Удалить файл
-                                </button>
                             </div>
                             <div class="col-6"></div>
                         </div>
@@ -321,4 +306,5 @@
 <script src="http://localhost:8081/cstrmo/js/offcanvas.js"></script>
 <script src="http://localhost:8081/cstrmo/js/filters.js"></script>
 <script src="http://localhost:8081/cstrmo/js/uploadFile.js"></script>
+<script src="http://localhost:8081/cstrmo/js/mapTable.js"></script>
 </html>

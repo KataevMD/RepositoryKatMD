@@ -1,12 +1,15 @@
 $(function () {
-    // 6 create an instance when the DOM is ready
-    $('#jstree').jstree();
-    // 7 bind to events triggered on the tree
-
-    $('#jstree').on("changed.jstree", function (e, data) {
-        console.log(data.selected);
+    $("#jstree").jstree({
+        "plugins" : [ "search" ]
     });
-
+    let to = false;
+    $('#search').keyup(function () {
+        if(to) { clearTimeout(to); }
+        to = setTimeout(function () {
+            let v = $('#search').val();
+            $('#jstree').jstree(true).search(v);
+        }, 250);
+    });
 });
 function findMapTable(mapTable_id) {
     $.ajax({
@@ -19,7 +22,12 @@ function findMapTable(mapTable_id) {
             if(response != null) {
                 // $('#error').toast('show');
                 // $('#bodyError').text('Данные карты обновлены!');
+
+                // $('#save').removeAttr('disabled');
+                $('#openParamAndCoeff').removeClass('disabled');
+                // $('#deleteMapTable').removeAttr('disabled');
                 $("#loadMapTable").html($(response).find("#loadData").html());
+                // $('#collection_Id').val($('#Col').val());
             }else {
                 alert("Такой карты нет?");
             }
