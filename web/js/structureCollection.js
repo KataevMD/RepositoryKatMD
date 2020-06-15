@@ -20,14 +20,12 @@ function findMapTable(mapTable_id) {
         },
         success: function (response) {
             if(response != null) {
-                // $('#error').toast('show');
-                // $('#bodyError').text('Данные карты обновлены!');
-
-                // $('#save').removeAttr('disabled');
+                $('#blockWithUpdateMapTable').prop('hidden', false);
+               $('#blockWithUpdateStructure').prop('hidden', true);
                 $('#openParamAndCoeff').removeClass('disabled');
-                // $('#deleteMapTable').removeAttr('disabled');
-                $("#loadMapTable").html($(response).find("#loadData").html());
-                // $('#collection_Id').val($('#Col').val());
+
+                $("#blockWithUpdateMapTable").html($(response).find("#loadData").html());
+
             }else {
                 alert("Такой карты нет?");
             }
@@ -35,3 +33,23 @@ function findMapTable(mapTable_id) {
         }
     });
 }
+//Функция сбора данных с формы, и их последующая отправка в сервлет, для обнолвения данных Справчоника
+$(document).on("submit", "#formUpdateCollection", function (event) {
+    let $form = $(this);
+
+    $.post($form.attr("action"), $form.serialize(), function (response) {
+        if (response === "fail") {
+            alert('Название не изменено!');
+
+        } else {
+            $("#loadCollection").html($(response).find("#dataLoadCollection").html());
+
+            alert('Название справочника изменено!');
+        }
+
+
+    });
+    event.preventDefault(); // Important! Prevents submitting the form.
+});
+
+

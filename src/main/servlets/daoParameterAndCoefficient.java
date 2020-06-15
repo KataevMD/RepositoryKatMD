@@ -173,6 +173,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
     private void deleteCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
         Long coefficient_id = Long.parseLong(request.getParameter("coefficient_id"));
         boolean res = parameterAndCoefficient.deleteCoefficientById(coefficient_id);

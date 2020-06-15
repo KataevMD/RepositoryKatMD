@@ -76,10 +76,10 @@ public class daoCollMapTable extends HttpServlet {
         if (ajax) {
             if (nameCollMapTable.length() > 0) {
                 collMapTable.rewriteCollMapTable(nameCollMapTable, collection_id);
+                CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(collection_id);
+                request.setAttribute("collection", collectionMapTable);
 
-                List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
-                request.setAttribute("collectionMapTables", collectionMapTables);
-                getServletContext().getRequestDispatcher("/WEB-INF/administrator/mainAdmins.jsp").forward(request, response);
+                getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
             }
         }
     }

@@ -88,17 +88,13 @@ $(document).on("submit", "#formCreateParameter", function (event) {
     $.post($form.attr("action"), $form.serialize(), function (response) {
         if (response === "fail") {
             alert('Параметр не создан!');
-            // $('#error').toast('show');
-            // $('#bodyError').text(decode_utf8('Карта не создана, проверьте введенные данные!'));
+
         } else {
-            $("#divTableParameter").html($(response).find("#dataParam").html());
-            $('.close').click();
-            // $('#error').toast('show');
-            // $('#bodyError').text(decode_utf8('Карта успешно создана!'));
+            $("#loadListParam").html($(response).find("#dataListParam").html());
+            $('#nameParameter').val(null);
+            $('#stepParameter').val(null);
             alert('Параметр создан!');
         }
-
-
     });
     event.preventDefault(); // Important! Prevents submitting the form.
 });
@@ -109,15 +105,11 @@ $(document).on("submit", "#formCreateCoefficient", function (event) {
     $.post($form.attr("action"), $form.serialize(), function (response) {
         if (response === "fail") {
             alert('Коэффициент не создан!');
-            // $('#error').toast('show');
-            // $('#bodyError').text(decode_utf8('Карта не создана, проверьте введенные данные!'));
+
         } else {
-            $("#divTableCoefficient").html($(response).find("#dataCoeff").html());
-            $('.close').click();
-            // $('#error').toast('show');
-            // $('#bodyError').text(decode_utf8('Карта успешно создана!'));
+            $("#loadListCoeff").html($(response).find("#dataListCoeff").html());
+            $('#nameCoeff').val(null);
             alert('Коэффициент создан!');
-            $("#staticBackdropCoefficient").find('#formCreateCoefficient')[0].reset();
         }
     });
     event.preventDefault(); // Important! Prevents submitting the form.
@@ -149,15 +141,11 @@ $(document).on("submit", "#formCreateValueCoefficient", function (event) {
     $.post($form.attr("action"), $form.serialize(), function (response) {
         if (response === "fail") {
             alert('Значение не создано!');
-            // $('#error').toast('show');
-            // $('#bodyError').text(decode_utf8('Карта не создана, проверьте введенные данные!'));
+
         } else {
-            $("#tableValCoeff").html($(response).find("#dataVal").html());
-            $('.close').click();
-            // $('#error').toast('show');
-            // $('#bodyError').text(decode_utf8('Карта успешно создана!'));
+            $('#nameValueCoeff').val(null);
+            $('#valueCoeff').val(null);
             alert('Значение создано!');
-            $("#staticBackdropValueCoefficient").find('#formCreateValueCoefficient')[0].reset();
         }
 
 
@@ -188,6 +176,8 @@ $(document).on("submit", "#formUpdateValueCoeff", function (event) {
 function deleteParameter() {
     let parameter_id = $("#parameter_id").val();
     let mapTable_id = $('#mapTableId').val();
+    $('#saveParam').prop('disabled', true);
+    $('#deleteParam').prop('disabled', true);
     $.ajax({
         method: 'get',
         url: 'http://localhost:8081/cstrmo/deleteParameter',     // URL - сервлет
@@ -199,7 +189,10 @@ function deleteParameter() {
 
             if (response === "fail") {
                 alert('Параметр не удален!');
+                $('#saveParam').prop('disabled', false);
+                $('#deleteParam').prop('disabled', false);
             } else {
+
                 $("#loadListParam").html($(response).find("#dataListParam").html());
                 $('#stepParam').val(null);
                 $('#nameParametr').val(null);
@@ -208,6 +201,81 @@ function deleteParameter() {
         }
     });
 }
+
+//Функция удаления коэффициента по его ID
+function deleteCoefficientById() {
+    let coefficient_id = $("#coefficient_id").val();
+    let mapTable_id = $('#mapTableId').val();
+    $('#saveCoeff').prop('disabled', true);
+    $('#deleteCoeff').prop('disabled', true);
+    $('#saveValueCoeff').prop('disabled', true);
+    $('#deleteValueCoeff').prop('disabled', true);
+    $.ajax({
+        method: 'get',
+        url: 'http://localhost:8081/cstrmo/deleteCoefficient',     // URL - сервлет
+        data: {                 // передаваемые сервлету данные
+            coefficient_id: coefficient_id,
+            mapTable_id: mapTable_id
+        },
+        success: function (response) {
+
+            if (response === "fail") {
+                alert('Коэффициент не удален!');
+                $('#saveCoeff').prop('disabled', false);
+                $('#deleteCoeff').prop('disabled', false);
+            } else {
+                $('#nameCoefficient').val(null);
+                $('#value').val(null);
+                $('#valName').val(null);
+                $("#listValueCoeff").empty();
+                $("#loadListCoeff").html($(response).find("#dataListCoeff").html());
+                alert('Коэффициент удален!');
+            }
+        }
+    });
+}
+
+//Функция удаления значения коэффициента по его ID
+function deleteValueCoefficientById() {
+
+    let coefficient_id = $('#coeff_id').val();
+    let coeffValue_id = $('#valueCoeff_id').val();
+    $('#saveValueCoeff').prop('disabled', true);
+    $('#deleteValueCoeff').prop('disabled', true);
+    $.ajax({
+        method: 'get',
+        url: 'http://localhost:8081/cstrmo/deleteValueCoefficient',     // URL - сервлет
+        data: {                 // передаваемые сервлету данные
+            coeffValue_id: coeffValue_id,
+            coefficient_id: coefficient_id
+        },
+        success: function (response) {
+
+            if (response === "fail") {
+                $('#saveValueCoeff').prop('disabled', false);
+                $('#deleteValueCoeff').prop('disabled', false);
+                alert('Значение коэффициента не удалено!');
+            } else {
+                $('#value').val(null);
+                $('#valName').val(null);
+                alert('Значение коэффициента удалено!');
+                $("#loadListValueCoeff").html($(response).find("#dataListValueCoeff").html());
+            }
+        }
+    });
+}
+
+$('#new-parameter-list').click(function () {
+    $('#formNewPramMapTableId').val($('#mapTableId').val());
+});
+$('#new-coefficient-list').click(function () {
+    $('#formNewCoeffMapTableId').val($('#mapTableId').val());
+});
+$('#new-valueCoefficient-list').click(function () {
+    $('#formNewValueCoeffMapTableId').val($('#mapTableId').val());
+});
+
+
 //Функция отображения блока редактирования Параметров
 function viewUpdateParameter(parameter_id) {
     $("#updateParam_" + parameter_id).attr('hidden', false)
@@ -244,78 +312,6 @@ function viewUpdateValueCoeff(parameter_id) {
 // Функция скрытия блока редактирования Значения Коэффициента
 function closeUpdateValueCoeff(parameter_id) {
     $("#updateValueCoeff_" + parameter_id).attr('hidden', true)
-}
-
-//Функция удаления параметра по его ID
-function deleteParameterById(parameter_id) {
-    let mapTable_id = $('#mapTableId').val();
-    $.ajax({
-        method: 'get',
-        url: 'http://localhost:8081/cstrmo/deleteParameter',     // URL - сервлет
-        data: {                 // передаваемые сервлету данные
-            parameter_id: parameter_id,
-            mapTable_id: mapTable_id
-        },
-        success: function (response) {
-
-            if (response === "fail") {
-                // $('#error').toast('show');
-                // $('#bodyError').text(decode_utf8('Карта не удалена!'));
-            } else {
-                // $('#error').toast('show');
-                // $('#bodyError').text(decode_utf8('Карта удалена!'));
-                $("#divTableParameter").html($(response).find("#dataParam").html());
-            }
-        }
-    });
-}
-
-//Функция удаления коэффициента по его ID
-function deleteCoefficientById(coefficient_id) {
-    let mapTable_id = $('#mapTableId').val();
-    $.ajax({
-        method: 'get',
-        url: 'http://localhost:8081/cstrmo/deleteCoefficient',     // URL - сервлет
-        data: {                 // передаваемые сервлету данные
-            coefficient_id: coefficient_id,
-            mapTable_id: mapTable_id
-        },
-        success: function (response) {
-
-            if (response === "fail") {
-                // $('#error').toast('show');
-                // $('#bodyError').text(decode_utf8('Карта не удалена!'));
-            } else {
-                // $('#error').toast('show');
-                // $('#bodyError').text(decode_utf8('Карта удалена!'));
-                $("#divTableCoefficient").html($(response).find("#dataCoeff").html());
-            }
-        }
-    });
-}
-
-//Функция удаления значения коэффициента по его ID
-function deleteValueCoefficientById(coeffValue_id) {
-    let coefficient_id = $('#coeffId').val();
-    $.ajax({
-        method: 'get',
-        url: 'http://localhost:8081/cstrmo/deleteValueCoefficient',     // URL - сервлет
-        data: {                 // передаваемые сервлету данные
-            coeffValue_id: coeffValue_id,
-            coefficient_id: coefficient_id
-        },
-        success: function (response) {
-
-            if (response === "fail") {
-                // $('#error').toast('show');
-                // $('#bodyError').text(decode_utf8('Карта не удалена!'));
-            } else {
-                // $('#error').toast('show');
-                // $('#bodyError').text(decode_utf8('Карта удалена!'));
-                $("#tableValCoeff").html($(response).find("#dataVal").html());
-            }
-        }
-    });
 }
 
 function updateParameter(parameter_id) {

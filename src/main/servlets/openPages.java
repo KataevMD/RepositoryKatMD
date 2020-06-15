@@ -113,7 +113,7 @@ public class openPages extends HttpServlet {
 
         Long id = Long.parseLong(request.getParameter("collection_id"));
         String nameColl = request.getParameter("nameCollectionMapTable");
-
+        CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(id);
 
         List<Chapter> lChapter = chapter.findChaptersByIdColl(id);
         List<Section> lSection = new ArrayList<>();
@@ -140,7 +140,7 @@ public class openPages extends HttpServlet {
         request.setAttribute("Chapter", lChapter);
         request.setAttribute("Section", lSection);
         request.setAttribute("MapTable", lMapTable);
-        request.setAttribute("nameCollMapTable", nameColl);
+        request.setAttribute("collection", collectionMapTable);
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
     }
 

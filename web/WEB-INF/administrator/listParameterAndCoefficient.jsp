@@ -90,9 +90,18 @@
             <div class="col-2 pt-md-3 ">
                 <div class="list-group" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action active" id="list-parameter-list" data-toggle="list"
-                       href="#list-parameter" role="tab" aria-controls="home">Параметры</a>
+                       href="#list-parameter" role="tab" aria-controls="parameter">Параметры</a>
                     <a class="list-group-item list-group-item-action" id="list-coefficient-list" data-toggle="list"
                        href="#list-coefficient" role="tab" aria-controls="coefficient">Коэффициенты</a>
+
+                    <a class="list-group-item list-group-item-action" id="new-parameter-list" data-toggle="list"
+                       href="#list-newParameter" role="tab" aria-controls="newParameter">Новый параметр</a>
+                    <a class="list-group-item list-group-item-action" id="new-coefficient-list" data-toggle="list"
+                       href="#list-newCoefficient" role="tab" aria-controls="newCoefficient">Новый коэффициент</a>
+                    <a class="list-group-item list-group-item-action"
+                       id="new-valueCoefficient-list" data-toggle="list"
+                       href="#list-newValueCoefficient" role="tab" aria-controls="newValueCoefficient">Новое значение
+                        коэффициента</a>
                 </div>
             </div>
             <div class="col-9 pt-md-3 border border-secondary">
@@ -161,20 +170,18 @@
                                                     изменения
                                                 </button>
                                             </div>
-
+                                            <div class="col">
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                        onclick="deleteParameter()"
+                                                        id="deleteParam" disabled>
+                                                    Удалить параметр
+                                                </button>
+                                            </div>
                                         </div>
                                     </form>
                                 </data>
                             </div>
                         </div>
-                    <div class="row">
-                        <div class="col">
-                            <button class="btn btn-outline-secondary" onclick="deleteParameter()"
-                                    id="deleteParam" disabled>
-                                Удалить параметр
-                            </button>
-                        </div>
-                    </div>
                     </div>
                     <div class="tab-pane fade" id="list-coefficient" role="tabpanel"
                          aria-labelledby="list-coefficient-list">
@@ -211,7 +218,8 @@
                                                 </button>
                                             </div>
                                             <div class="col">
-                                                <button class="btn btn-outline-secondary" id="deleteCoeff" disabled>
+                                                <button class="btn btn-outline-secondary" type="button" id="deleteCoeff"
+                                                        onclick="deleteCoefficientById()" disabled>
                                                     Удалить коэффициент
                                                 </button>
                                             </div>
@@ -238,7 +246,7 @@
                             </div>
                             <div id="loadListValueCoeff" class="col">
                                 <data id="dataListValueCoeff" value="1313">
-                                    <ul class="list-group" style="cursor: pointer">
+                                    <ul id="listValueCoeff" class="list-group" style="cursor: pointer">
                                         <c:forEach var="valueCoefficient" items="${ValueCoefficient}">
                                             <li class="list-group-item list-group-item-action"
                                                 onclick="findValueCoeff(<c:out
@@ -294,7 +302,9 @@
                                                 </button>
                                             </div>
                                             <div class="col">
-                                                <button class="btn btn-outline-secondary" id="deleteValueCoeff"
+                                                <button class="btn btn-outline-secondary"
+                                                        onclick="deleteValueCoefficientById()" type="button"
+                                                        id="deleteValueCoeff"
                                                         disabled>Удалить значение
                                                 </button>
                                             </div>
@@ -304,135 +314,176 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="list-newParameter" role="tabpanel"
+                         aria-labelledby="list-newParameter-list">
+                        <form method="post" id="formCreateParameter"
+                              action="${pageContext.request.contextPath}/addNewParameter">
+
+                            <label for="formNewPramMapTableId"></label><input id="formNewPramMapTableId"
+                                                                              name="mapTable_id" value="${mapTable_Id}"
+                                                                              hidden>
+                            <div class="container-fluid">
+                                <div class="container text-center">
+                                    <p class="h5 mt-auto">Создание нового параметра</p>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col pb-md-3">
+                                        <label for="nameParameter">Введите название параметра:</label>
+                                    </div>
+                                    <div class="col-4 pb-md-3">
+                                        <input id="nameParameter" name="nameParameter"
+                                               class="form-control" pattern="^[А-Яа-яA-ZЁё,\s]+$"
+                                               title="Разрешено использовать пробелы, русские буквы, заглавные буквы латинского алфавита и запятые."
+                                               required>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col pb-md-3">
+                                        <label for="stepParameter">Введите степень параметра:</label>
+                                    </div>
+                                    <div class="col-4 pb-md-3">
+                                        <input id="stepParameter" name="stepParameter"
+                                               class="form-control" pattern="\d+(\.\d{1,9})?"
+                                               title="Разрешено записывать числа только в виде десятичной дроби, через точку."
+                                               required>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col"></div>
+                                    <div class="col-4 pb-md-3">
+                                        <button class="btn btn-outline-primary" id="createParam" type="submit">
+                                            Создать параметр
+                                        </button>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="list-newCoefficient" role="tabpanel"
+                         aria-labelledby="list-newCoefficient-list">
+                        <form method="post" id="formCreateCoefficient"
+                              action="${pageContext.request.contextPath}/addNewCoefficient">
+
+                            <label for="formNewCoeffMapTableId"></label><input id="formNewCoeffMapTableId"
+                                                                               name="mapTable_id" value="${mapTable_Id}"
+                                                                               hidden>
+                            <div class="container-fluid">
+                                <div class="container text-center">
+                                    <p class="h5 mt-auto">Создание нового коэффициента</p>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col pb-md-3">
+                                        <label for="nameParameter">Введите название коэффициента:</label>
+                                    </div>
+                                    <div class="col-4 pb-md-3">
+                                        <input id="nameCoeff" name="nameCoefficient"
+                                               class="form-control" pattern="^[А-Яа-яЁё/,\s]+$"
+                                               title="Разрешено использовать пробелы, русские буквы, и /."
+                                               required>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col pb-md-3">
+                                    </div>
+                                    <div class="col-4 pb-md-3">
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col"></div>
+                                    <div class="col-4 pb-md-3">
+                                        <button class="btn btn-outline-primary" id="createCoefficient" type="submit">
+                                            Создать коэффициент
+                                        </button>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="list-newValueCoefficient" role="tabpanel"
+                         aria-labelledby="list-newValueCoefficient-list">
+                        <form method="post" id="formCreateValueCoefficient"
+                              action="${pageContext.request.contextPath}/addNewValueCoefficient">
+
+                            <label for="formNewValueCoeffMapTableId"></label><input id="formNewValueCoeffMapTableId"
+                                                                                    name="mapTable_id"
+                                                                                    value="${mapTable_Id}" hidden>
+                            <div class="container-fluid">
+                                <div class="container text-center">
+                                    <p class="h5 mt-auto">Создание нового значения коэффициента</p>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div id="loadCoeff" class="col col-3">
+                                        <data id="dataCoeff" value="1313">
+                                            <select id="listCoef" name="coefficient_id" class="list-group form-control"
+                                                    style="cursor: pointer">
+                                                <c:forEach var="coefficient" items="${Coefficient}">
+                                                    <option
+                                                            value="<c:out value="${coefficient.coefficient_id}"/>">
+                                                        <c:out value="${coefficient.name}"/>
+                                                    </option>
+                                                </c:forEach>
+                                            </select>
+                                        </data>
+                                    </div>
+                                    <div class="col pb-md-3">
+                                        <label for="nameValueCoeff">Введите название значение:</label>
+                                    </div>
+                                    <div class="col-4 pb-md-3">
+                                        <input id="nameValueCoeff" name="valName"
+                                               class="form-control" pattern="^[А-Яа-я/Ёё,\s]+$"
+                                               title="Разрешено использовать пробелы, русские буквы, и запятые."
+                                               required>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col col-3"></div>
+                                    <div class="col pb-md-3">
+                                        <label for="valueCoeff">Введите значение:</label>
+                                    </div>
+                                    <div class="col-4 pb-md-3">
+                                        <input id="valueCoeff" name="value"
+                                               class="form-control" pattern="\d+(\.\d{1,9})?"
+                                               title="Разрешено записывать числа только в виде десятичной дроби, через точку."
+                                               required>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col"></div>
+                                    <div class="col-4 pb-md-3">
+                                        <button class="btn btn-outline-primary" id="createValueCoeff" type="submit">
+                                            Создать значение коэффициента
+                                        </button>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 </main>
-<%--Модальное окно создания нового параметра--%>
-<div class="modal fade" id="staticBackdropParameter" data-backdrop="static" data-keyboard="false"
-     tabindex="-1"
-     role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Создание параметра</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formCreateParameter" autocomplete="off" method="post"
-                      action="${pageContext.request.contextPath}/addNewParameter">
-                    <label for="mapTable_id"></label><input id="mapTable_id" name="mapTable_id" value="${mapTable_Id}"
-                                                            hidden>
-                    <label for="inputNameParameter">Введиет название параметра</label>
-                    <input id="inputNameParameter" onkeyup="checkInputNameParameter()" autocomplete="off"
-                           class="form-control" pattern="^[А-Яа-яЁёA-Z,\s]+$"
-                           name="nameParameter"
-                           title="Разрешено использовать заглавные буквы латинского алфавита, все буквы русского и пробел."
-                           placeholder="Название параметра"
-                           required autofocus><br>
-                    <label for="inputStepParameter">Введите степень</label>
-                    <input id="inputStepParameter" onkeyup="checkInputStepParameter()" autocomplete="off"
-                           class="form-control"
-                           name="stepParameter"
-                           pattern="\d+(\.\d{1,9})?"
-                           title="Разрешено записывать числа только в виде десятичной дроби, через точку."
-                           placeholder="Степень параметра"
-                           required><br>
-                    <button id="createParameter" class="btn btn-lg btn-primary btn-block" type="submit">Создать</button>
-                    <br>
-                    <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button>
-                    <br>
-                </form>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
-</div>
-<%--Модальное окно создания нового коэффициента--%>
-<div class="modal fade" id="staticBackdropCoefficient" data-backdrop="static" data-keyboard="false"
-     tabindex="-1"
-     role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabelCoefficient">Создание коэффициента</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formCreateCoefficient" autocomplete="off" method="post"
-                      action="${pageContext.request.contextPath}/addNewCoefficient">
-                    <label for="mapId"></label><input id="mapId" name="mapTable_id" value="${mapTable_Id}" hidden>
-                    <label for="inputNameCoefficient">Введите название коэффициента</label>
-                    <input id="inputNameCoefficient" onkeyup="checkInputNameCoefficient()" autocomplete="off"
-                           class="form-control" pattern="^[А-Яа-яЁёA-Z/\s]+$"
-                           name="nameCoefficient"
-                           title="Разрешено использовать все буквы русского алфавита, пробел и / (слэш)."
-                           placeholder="Название коэффициента"
-                           required autofocus><br>
-                    <button id="createCoefficient" class="btn btn-lg btn-primary btn-block" type="submit">Создать
-                    </button>
-                    <br>
-                    <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button>
-                    <br>
-                </form>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
-</div>
-<%--Модальное окно создания нового значения коэффициента--%>
-<div class="modal fade" id="staticBackdropValueCoefficient" data-backdrop="static" data-keyboard="false"
-     tabindex="-1"
-     role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabelValueCoefficient">Создание коэффициента</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formCreateValueCoefficient" autocomplete="off" method="post"
-                      action="${pageContext.request.contextPath}/addNewValueCoefficient">
-                    <label>
-                        <%--                        <input id="coeff_id" name="coefficient_id" value="" hidden>--%>
-                    </label>
-                    <label for="inputNameCoefficient">Введите название коэффициента</label>
-                    <input id="inputNameValueCoefficient" onkeyup="checkInputNameValueCoefficient()" autocomplete="off"
-                           class="form-control" pattern="^[/А-Яа-яЁёA-Z\s]+$"
-                           name="valName"
-                           title="Разрешено использовать все буквы русского алфавита, пробел и / (слэш)."
-                           placeholder="Название значения"
-                           required autofocus><br>
-                    <label for="inputValue">Введите значение</label>
-                    <input id="inputValue" onkeyup="checkInputValue()" autocomplete="off"
-                           class="form-control"
-                           pattern="\d+(\.\d{1,9})?"
-                           name="value"
-                           title="Разрешено записывать числа только в виде десятичной дроби, через точку."
-                           placeholder="Значение"
-                           required autofocus><br>
-                    <button id="createValueCoefficient" class="btn btn-lg btn-primary btn-block" type="submit">Создать
-                    </button>
-                    <br>
-                    <button type="button" class="btn-outline-secondary btn-block" data-dismiss="modal">Отмена</button>
-                    <br>
-                </form>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
-</div>
+
 <footer class="footer py-3 mt-auto bg-dark ">
     <div class="container">
         <p class="text-white">&copy; Company 2020-.... </p>
