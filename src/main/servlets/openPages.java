@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ServletOpenPages", urlPatterns = {"/openRegisterAdmins", "/openListAdminPage", "/openMainAdminsPage",
-        "/openListMapTablePage", "/openListParameterAndCoefficientPage", "/myAccount", "/openImportPage", "/openStructureCollectionPage"})
+        "/openListMapTablePage", "/openListParameterAndCoefficientPage", "/myAccount", "/openImportPage", "/openStructureCollectionPage", "/openRewriteStructureCollectionPage"})
 public class openPages extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            doGet(request, response);
+        doGet(request, response);
     }
 
     /**
@@ -24,39 +24,45 @@ public class openPages extends HttpServlet {
      * на которую тот совершил переход
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            response.setContentType("text/html;charset=utf-8");
-            response.setCharacterEncoding("UTF-8");
-            String action = request.getServletPath();
-            switch (action) {
-                case "/openRegisterAdmins":
-                    openRegisterAdmin(request, response);
-                    break;
-                case "/openListAdminPage":
-                    openListAdmins(request, response);
-                    break;
-                case "/openMainAdminsPage":
-                    openCollMapTables(request, response);
-                    break;
-                case "/openListMapTablePage":
-                    openListMapTables(request, response);
-                    break;
-                case "/openStructureCollectionPage":
-                    openListChapter(request, response);
-                    break;
-                case "/openListParameterAndCoefficientPage":
-                    openListParameterAndCoefficient(request, response);
-                    break;
-                case "/myAccount":
-                    openMyAccount(request, response);
-                    break;
-                case "/openImportPage":
-                    openImportPage(request, response);
-                    break;
-            }
+        response.setContentType("text/html;charset=utf-8");
+        response.setCharacterEncoding("UTF-8");
+        String action = request.getServletPath();
+        switch (action) {
+            case "/openRegisterAdmins":
+                openRegisterAdmin(request, response);
+                break;
+            case "/openListAdminPage":
+                openListAdmins(request, response);
+                break;
+            case "/openMainAdminsPage":
+                openCollMapTables(request, response);
+                break;
+            case "/openStructureCollectionPage":
+                openListChapter(request, response);
+                break;
+            case "/openListParameterAndCoefficientPage":
+                openListParameterAndCoefficient(request, response);
+                break;
+            case "/myAccount":
+                openMyAccount(request, response);
+                break;
+            case "/openImportPage":
+                openImportPage(request, response);
+                break;
+            case "/openRewriteStructureCollectionPage":
+                openRewriteStructureCollectionPage(request, response);
+                break;
+        }
 
     }
 
-    private void openListMapTables(HttpServletRequest request, HttpServletResponse response) {
+    private void openRewriteStructureCollectionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long collection_id = Long.parseLong(request.getParameter("collection_id"));
+        CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(collection_id);
+        List<Chapter> lChapter = chapter.findChaptersByIdColl(collection_id);
+        request.setAttribute("Chapter", lChapter);
+        request.setAttribute("collection", collectionMapTable);
+        getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
     }
 
     private void openImportPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -112,25 +118,26 @@ public class openPages extends HttpServlet {
     private void openListChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Long id = Long.parseLong(request.getParameter("collection_id"));
-        String nameColl = request.getParameter("nameCollectionMapTable");
         CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(id);
 
         List<Chapter> lChapter = chapter.findChaptersByIdColl(id);
         List<Section> lSection = new ArrayList<>();
         List<MapTable> lMapTable = new ArrayList<>();
-        assert lChapter != null;
-        for (Chapter chapters : lChapter) {
-            List<Section> sectionList = chapter.findSectionByIdChapter(chapters.getChapter_id());
-            if (sectionList != null) {
-                lSection.addAll(sectionList);
+        if (lChapter != null) {
+            for (Chapter chapters : lChapter) {
+                List<Section> sectionList = chapter.findSectionByIdChapter(chapters.getChapter_id());
+                if (sectionList != null) {
+                    lSection.addAll(sectionList);
+                }
+            }
+            for (Section section : lSection) {
+                List<MapTable> mapTableList = collMapTable.findMapByIdSection(section.getSection_id());
+                if (mapTableList != null) {
+                    lMapTable.addAll(mapTableList);
+                }
             }
         }
-        for (Section section : lSection) {
-            List<MapTable> mapTableList = collMapTable.findMapByIdSection(section.getSection_id());
-            if (mapTableList != null) {
-                lMapTable.addAll(mapTableList);
-            }
-        }
+        request.setAttribute("showPageRewriteStructureCollection", "http://localhost:8081/cstrmo/openRewriteStructureCollectionPage?collection_id=" + id);
         request.setAttribute("viewParam", "disabled");
         request.setAttribute("selectFile", "disabled");
         request.setAttribute("disabledDownloadFile", "disabled");

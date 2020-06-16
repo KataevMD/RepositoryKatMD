@@ -1,5 +1,10 @@
 //Функция получения Значений Коэффициента по id Коэффициента
 function getListValueCoeff(coefficient_id) {
+    $('#loadValueCoeff').find($('#saveValueCoeff').prop('disabled', true));
+
+    $('#deleteValueCoeff').prop('disabled', true);
+    $('#value').val(null);
+    $('#valName').val(null);
     $.ajax({
         method: 'get',
         url: 'http://localhost:8081/cstrmo/getValueCoefficient',     // URL - сервлет
@@ -11,6 +16,8 @@ function getListValueCoeff(coefficient_id) {
             $("#loadCoefficient").html($(response).find("#dataLoadCoefficient").html());
             $('#saveCoeff').prop('disabled', false);
             $('#deleteCoeff').prop('disabled', false);
+
+
             let id = $('#mapTableId').val();
             $('#loadCoefficient').find($('#map_d').val(id));
         }
@@ -62,7 +69,7 @@ function findValueCoeff(coeffValue_id) {
 }
 
 //Функция сбора данных с формы, и их последующая отправка в сервлет, для обновления данных Параметра
-$(document).on("#saveParam", "#formUpdateParameter", function (event) {
+$(document).on("submit", "#formUpdateParameter", function (event) {
     let $form = $(this);
 
     $.post($form.attr("action"), $form.serialize(), function (response) {
@@ -76,6 +83,25 @@ $(document).on("#saveParam", "#formUpdateParameter", function (event) {
             $("#loadParameter").html($(response).find("#dataParameter").html());
             alert('Данные обновлены!');
 
+        }
+    });
+    event.preventDefault(); // Important! Prevents submitting the form.
+});
+
+//Функция сбора данных с формы, и их последующая отправка в сервлет, для обнолвения данных Коэффициента
+$(document).on("submit", "#formUpdateCoefficient", function (event) {
+    let $form = $(this);
+
+    $.post($form.attr("action"), $form.serialize(), function (response) {
+        if (response === "fail") {
+            alert('Данный коэффициента не обновлены!');
+            // $('#error').toast('show');
+            // $('#bodyError').text(decode_utf8('Карта не создана, проверьте введенные данные!'));
+        } else {
+            $("#loadListCoeff").html($(response).find("#dataListCoeff").html());
+            // $('#error').toast('show');
+            // $('#bodyError').text(decode_utf8('Карта успешно создана!'));
+            alert('Данный коэффициента обновлены!');
         }
     });
     event.preventDefault(); // Important! Prevents submitting the form.
@@ -115,24 +141,7 @@ $(document).on("submit", "#formCreateCoefficient", function (event) {
     event.preventDefault(); // Important! Prevents submitting the form.
 });
 
-//Функция сбора данных с формы, и их последующая отправка в сервлет, для обнолвения данных Коэффициента
-$(document).on("submit", "#formUpdateCoefficient", function (event) {
-    let $form = $(this);
 
-    $.post($form.attr("action"), $form.serialize(), function (response) {
-        if (response === "fail") {
-            alert('Данный коэффициента не обновлены!');
-            // $('#error').toast('show');
-            // $('#bodyError').text(decode_utf8('Карта не создана, проверьте введенные данные!'));
-        } else {
-            $("#loadListCoeff").html($(response).find("#dataListCoeff").html());
-            // $('#error').toast('show');
-            // $('#bodyError').text(decode_utf8('Карта успешно создана!'));
-            alert('Данный коэффициента обновлены!');
-        }
-    });
-    event.preventDefault(); // Important! Prevents submitting the form.
-});
 
 //Функция сбора данных с формы, и их последующая отправка в сервлет, для создания нового Значения Коэффициента
 $(document).on("submit", "#formCreateValueCoefficient", function (event) {

@@ -92,8 +92,8 @@
 <%--Контент--%>
 <main role="main" class="flex-shrink-0"><br>
 
-    <div class="row pl-md-3 pb-md-3">
-        <div id="loadCollection" class="col">
+    <div class="row pl-md-3 pb-md-3" >
+        <div id="loadCollection" class="col" style="min-width: 800px;">
             <data id="dataLoadCollection" value="1212">
                 <div class="container text-center">
                     <p class="h4 mt-auto">Справочник "${collection.nameCollectionMapTable}"</p>
@@ -107,26 +107,23 @@
                             <label for="nameCollection">Название справочника:</label>
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-3 mr-2">
                             <input id="nameCollection" name="nameCollMapTable"
                                    value="${collection.nameCollectionMapTable}"
                                    class="form-control">
                         </div>
 
-                        <div class="col-1">
+                        <div class="col-1 mr-2">
                             <button class="btn btn-outline-primary" type="submit" id="updateCollection">
                                 Сохранить изменения
                             </button>
                         </div>
-                        <div class="col-1">
+                        <div class="col-1 mr-2">
                             <button class="btn btn-outline-secondary" type="button" id="deleteCollection">Удалить
                                 справочник
                             </button>
                         </div>
-                        <div class="col-6">
-                            <button class="btn btn-outline-secondary" type="button" id="structure">Структура справочника
-                            </button>
-                        </div>
+
                     </div>
                 </form>
             </data>
@@ -134,45 +131,51 @@
     </div>
     <div class="container-fluid">
         <div class="row" style="min-height: 650px; max-height: 700px;">
-            <div class="col mr-md-5 px-md-5 overflow-auto ">
+            <div id="structureTree" class="col mr-md-5 px-md-5 overflow-auto ">
                 <%--Структура справочника--%>
-                <label for="search">Поиск: </label><input style="margin-bottom: 10px;" autocomplete="off"
-                                                          class="form-control" id="search">
-                <div id="jstree">
-                    <!-- in this example the tree is populated from inline HTML -->
-                    <ul>
-                        <c:forEach var="chapter" items="${Chapter}">
-                            <li id="<c:out value="${chapter.chapter_id}"/>">
-                                <c:out value="${chapter.nameChapter}"/>
-                                <ul>
-                                    <c:forEach var="section" items="${Section}">
-                                        <c:if test="${chapter.chapter_id == section.chapter.chapter_id}">
-                                            <li>
-                                                <c:out value="${section.nameSection}"/>
-                                                <ul>
-                                                    <c:forEach var="mapTable" items="${MapTable}">
-                                                        <c:if test="${section.section_id == mapTable.section.section_id}">
-                                                            <li
-                                                                    onclick="findMapTable(${mapTable.mapTable_id})">
-                                                                <c:out value="${mapTable.name}"/>
-                                                            </li>
-                                                        </c:if>
-                                                    </c:forEach>
-                                                </ul>
-                                            </li>
-                                        </c:if>
-                                    </c:forEach>
-                                </ul>
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </div>
-                <%--Конец структуры справочника--%>
+                    <a class="btn btn-outline-secondary pb-2"
+                            title="Открывает модуль редактирования глав и разделов справочника." type="button"
+                            id="structure" href="${showPageRewriteStructureCollection}">Структура справочника
+                    </a>
+                <p class="pt-2"><label for="search">Поиск: </label><input style="margin-bottom: 10px;" autocomplete="off"
+                                                          class="form-control" id="search"></p>
+                <data id="dataStructureTree" value="1212">
+                    <div id="jstree">
+                        <!-- in this example the tree is populated from inline HTML -->
+                        <ul>
+                            <c:forEach var="chapter" items="${Chapter}">
+                                <li id="<c:out value="${chapter.chapter_id}"/>">
+                                    <c:out value="${chapter.nameChapter}"/>
+                                    <ul>
+                                        <c:forEach var="section" items="${Section}">
+                                            <c:if test="${chapter.chapter_id == section.chapter.chapter_id}">
+                                                <li>
+                                                    <c:out value="${section.nameSection}"/>
+                                                    <ul>
+                                                        <c:forEach var="mapTable" items="${MapTable}">
+                                                            <c:if test="${section.section_id == mapTable.section.section_id}">
+                                                                <li
+                                                                        onclick="findMapTable(${mapTable.mapTable_id})">
+                                                                    <c:out value="${mapTable.name}"/>
+                                                                </li>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </ul>
+                                                </li>
+                                            </c:if>
+                                        </c:forEach>
+                                    </ul>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                    <%--Конец структуры справочника--%>
+                </data>
             </div>
             <label for="Col"></label><input id="Col" value="${collection_Id}"
                                             hidden>
-            <div class="col col-8 mr-md-5 pb-md-3 pt-md-5 border border-secondary" style="min-width: 1000px;">
-                <div id="blockWithUpdateMapTable" hidden>
+            <div class="col col-8 mr-md-5 pb-md-3 pt-md-5 border border-secondary " style="min-width: 950px;">
+                <div id="blockWithUpdateMapTable">
                     <data id="loadData" value="11212">
                         <div class="container text-center">
                             <p class="h4">Карта "${map.name}"</p>
@@ -327,137 +330,7 @@
                         </div>
                     </data>
                 </div>
-                <div id="blockWithUpdateStructure">
 
-                    <div class="row">
-                        <div class="col-4">
-                            <label>Поиск коэффициента по названию:
-                                <input class="form-control" onkeyup="filterCoeff(this)" type="text"/>
-                            </label>
-                        </div>
-                        <div id="loadCoefficient" class="col pt-2">
-                            <data id="dataLoadCoefficient" value="1212">
-                                <form id="formUpdateCoefficient" method="post"
-                                      action="${pageContext.request.contextPath}/updateCoefficient">
-                                    <div class="row">
-                                        <label for="map_d"></label><input id="map_d" name="mapTable_id" hidden>
-                                        <label for="coefficient_id"></label><input id="coefficient_id"
-                                                                                   name="coefficient_id"
-                                                                                   value="${coefficient.coefficient_id}"
-                                                                                   hidden>
-                                        <div class="col">
-                                            <label for="nameCoefficient"> Название параметра:</label>
-                                        </div>
-                                        <div class="col-4">
-                                            <input id="nameCoefficient" name="nameCoefficient"
-                                                   value="${coefficient.name}"
-                                                   class="form-control" pattern="^[А-Яа-яЁё/,\s]+$"
-                                                   title="Разрешено использовать пробелы, русские буквы и запятые."
-                                                   required>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-outline-primary" id="saveCoeff" type="submit"
-                                                    disabled>Сохранить
-                                                изменений
-                                            </button>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-outline-secondary" type="button" id="deleteCoeff"
-                                                    onclick="deleteCoefficientById()" disabled>
-                                                Удалить коэффициент
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <hr>
-                            </data>
-
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div id="loadListCoeff" class="col col-4">
-                            <data id="dataListCoeff" value="1313">
-                                <ul id="listCoeff" class="list-group" style="cursor: pointer">
-                                    <c:forEach var="coefficient" items="${Coefficient}">
-                                        <li class="list-group-item list-group-item-action"
-                                            onclick="getListValueCoeff(<c:out
-                                                    value="${coefficient.coefficient_id}"/>)">
-                                            <c:out value="${coefficient.name}"/>
-                                        </li>
-                                    </c:forEach>
-                                </ul>
-                            </data>
-                        </div>
-                        <div id="loadListValueCoeff" class="col">
-                            <data id="dataListValueCoeff" value="1313">
-                                <ul id="listValueCoeff" class="list-group" style="cursor: pointer">
-                                    <c:forEach var="valueCoefficient" items="${ValueCoefficient}">
-                                        <li class="list-group-item list-group-item-action"
-                                            onclick="findValueCoeff(<c:out
-                                                    value="${valueCoefficient.coeffValue_id}"/>)">
-                                            <c:out value="${valueCoefficient.valName}"/>
-                                        </li>
-                                    </c:forEach>
-                                </ul>
-                            </data>
-                        </div>
-                        <div id="loadValueCoeff" class="col">
-                            <data id="dataValueCoeff" value="1212">
-                                <form method="post" id="formUpdateValueCoeff"
-                                      action="${pageContext.request.contextPath}/updateValueCoefficient">
-                                    <label for="coeff_id"></label><input id="coeff_id" name="coefficient_id"
-                                                                         value="${valueCoefficient.coefficient.coefficient_id}"
-                                                                         hidden>
-                                    <label for="valueCoeff_id"></label><input id="valueCoeff_id"
-                                                                              name="coeffValue_id"
-                                                                              value="${valueCoefficient.coeffValue_id}"
-                                                                              hidden>
-                                    <div class="row mt-md-3">
-                                        <div class="col-4">
-                                            <label for="valName"> Название значения:</label>
-                                        </div>
-                                        <div class="col">
-                                            <input id="valName" name="valName"
-                                                   value="${valueCoefficient.valName}"
-                                                   class="form-control" pattern="^[А-Яа-яЁё/,\s]+$"
-                                                   title="Разрешено использовать пробелы, русские буквы, заглавные буквы латинского алфавита и запятые."
-                                                   required>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-md-3">
-                                        <div class="col-4">
-                                            <label for="value"> Значение:</label>
-                                        </div>
-                                        <div class="col">
-                                            <input id="value" name="value" value="${valueCoefficient.value}"
-                                                   class="form-control" pattern="\d+(\.\d{1,9})?"
-                                                   title="Разрешено записывать числа только в виде десятичной дроби, через точку."
-                                                   required>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-md-3">
-                                        <div class="col-4">
-                                            Управление:
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-outline-primary" id="saveValueCoeff"
-                                                    type="submit" disabled>Сохранить
-                                                изменения
-                                            </button>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-outline-secondary"
-                                                    onclick="deleteValueCoefficientById()" type="button"
-                                                    id="deleteValueCoeff"
-                                                    disabled>Удалить значение
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </data>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>

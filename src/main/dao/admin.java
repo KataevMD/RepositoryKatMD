@@ -136,7 +136,7 @@ public class admin {
         CriteriaQuery<UsersAdmin> criteria = builder.createQuery(UsersAdmin.class);
         Root<UsersAdmin> root = criteria.from(UsersAdmin.class);
         criteria.select(root);
-        criteria.where(builder.equal(root.get("mapTable_id"), login));
+        criteria.where(builder.equal(root.get("login"), login));
 
         session.beginTransaction();
         UsersAdmin = session.createQuery(criteria).getResultList();
@@ -144,7 +144,7 @@ public class admin {
         session.close();
 
         Iterator<UsersAdmin> it = UsersAdmin.iterator();
-        return it.next() != null;
+        return !it.hasNext();
     }
 
     public static UsersAdmin findAdminById(Long id) {

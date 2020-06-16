@@ -1,5 +1,5 @@
 $(document).ready(function (e) {
-    if($('$message').val() === 1) {
+    if($('#message').val() === 1) {
         $('#staticBackdrop').modal('show');
     }
 
@@ -44,7 +44,7 @@ $(document).on("submit", "#updatePassword", function (event) {
     event.preventDefault();
 });
 
-$(document).on("submit", "#updateForm", function (event) {
+$(document).on("submit", "#createForm", function (event) {
     let $form = $(this);
 
     $.post($form.attr("action"), $form.serialize(), function (response) {

@@ -73,24 +73,26 @@ public class daoAdmin extends HttpServlet {
                     idUser = cookie.getValue();
                 }
             }
-        }String answer = null;
-        if(idUser!=null){
+        }
+        String answer = null;
+        if (idUser != null) {
             UsersAdmin user = admin.findAdminById(Long.parseLong(idUser));
             String oldPassword = request.getParameter("odlPassword").trim();
             String newPassword = request.getParameter("newPassword").trim();
             String retNewPassword = request.getParameter("retNewPassword").trim();
             oldPassword = admin.getHash(oldPassword);
-            if(oldPassword.equals(user.getPassword()) && newPassword.equals(retNewPassword)){
+            if (oldPassword.equals(user.getPassword()) && newPassword.equals(retNewPassword)) {
                 String hashPassw = admin.getHash(newPassword);
                 user.setPassword(hashPassw);
                 admin.updatePassword(user);
                 answer = "success";
-            }else{
+            } else {
                 answer = "passNotEquals";
             }
+            response.getWriter().write(answer);
         }
-        assert answer != null;
-        response.getWriter().write(answer);
+
+
     }
 
     private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -125,6 +127,7 @@ public class daoAdmin extends HttpServlet {
             if (login.length() > 0 && firstName.length() > 0 && passw.length() > 0 && lastName.length() > 0) {
                 Boolean res = admin.findAdminByLogin(login);
                 if (res) {
+
                     admin.createAdmin(firstName, lastName, patronymic, passw, login);
                     String answer = "success";
                     response.getWriter().write(answer);

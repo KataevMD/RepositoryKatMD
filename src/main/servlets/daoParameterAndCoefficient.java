@@ -266,6 +266,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
     }
 
     private void getValueCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         Long coefficient_id = Long.parseLong(request.getParameter("coefficient_id"));
         List<ValueCoefficient> valueCoefficients = parameterAndCoefficient.findValueCoefficientByIdCoefficient(coefficient_id);
         Coefficient coefficient = parameterAndCoefficient.findCoefficientById(coefficient_id);

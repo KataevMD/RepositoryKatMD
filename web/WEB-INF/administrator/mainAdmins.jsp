@@ -107,7 +107,7 @@
         <div id="bodyError" class="toast-body">
         </div>
     </div>
-</div>
+</div><br>
 <%--Контент--%>
 <main role="main" class="flex-shrink-0">
     <div class="container text-center">

@@ -47,3 +47,15 @@ function filterCoeff(element) {
         }
     });
 }
+function filterChapter(element) {
+    let value = $(element).val();
+
+    $("#listChapter > li").each(function() {
+        if ($(this).text().toLowerCase().search(value) > -1) {
+            $(this).show();
+        }
+        else {
+            $(this).hide();
+        }
+    });
+}

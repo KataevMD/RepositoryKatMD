@@ -12,6 +12,7 @@ $(function () {
     });
 });
 function findMapTable(mapTable_id) {
+    $("#structure").text("Структура справочника");
     $.ajax({
         method: 'get',
         url: 'http://localhost:8081/cstrmo/findMapTable',     // URL - сервлет
@@ -33,23 +34,3 @@ function findMapTable(mapTable_id) {
         }
     });
 }
-//Функция сбора данных с формы, и их последующая отправка в сервлет, для обнолвения данных Справчоника
-$(document).on("submit", "#formUpdateCollection", function (event) {
-    let $form = $(this);
-
-    $.post($form.attr("action"), $form.serialize(), function (response) {
-        if (response === "fail") {
-            alert('Название не изменено!');
-
-        } else {
-            $("#loadCollection").html($(response).find("#dataLoadCollection").html());
-
-            alert('Название справочника изменено!');
-        }
-
-
-    });
-    event.preventDefault(); // Important! Prevents submitting the form.
-});
-
-

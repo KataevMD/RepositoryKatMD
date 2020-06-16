@@ -91,6 +91,7 @@
                 <div class="list-group" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action active" id="list-parameter-list" data-toggle="list"
                        href="#list-parameter" role="tab" aria-controls="parameter">Параметры</a>
+
                     <a class="list-group-item list-group-item-action" id="list-coefficient-list" data-toggle="list"
                        href="#list-coefficient" role="tab" aria-controls="coefficient">Коэффициенты</a>
 
@@ -104,7 +105,7 @@
                         коэффициента</a>
                 </div>
             </div>
-            <div class="col-9 pt-md-3 border border-secondary">
+            <div class="col-9 pt-md-3 border border-secondary" style="min-width: 1000px;">
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="list-parameter" role="tabpanel"
                          aria-labelledby="list-parameter-list">
