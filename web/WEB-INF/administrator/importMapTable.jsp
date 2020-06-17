@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: katai
@@ -14,8 +15,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css" >
-    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/uploadFile.css" >
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css">
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/uploadFile.css">
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
@@ -80,14 +81,117 @@
         <p class="h4 mt-auto">Импорт карт нормативов технологических операций </p>
     </div>
     <br>
-    <form id="upload-container" enctype="multipart/form-data" method="post" action="${pageContext.request.contextPath}/importMapTable">
-        <img id="upload-image" src="http://localhost:8081/cstrmo/img/uploadFileImg.png" alt="f">
-        <div>
-            <input id="file-input" accept=".xlsm" type="file" name="file" multiple>
-            <label for="file-input">Выберите файл</label>
-            <span>или перетащите его сюда</span>
+    <div class="container container-fluid">
+
+        <p class="h5 mt-auto ml-3">1. Выберите справочник в графе "Справочник".</p>
+        <div class="row pb-3 ml-5">
+            <div class="col  col-4">
+                <label for="findCollection">Поиск справочника по названию:</label><input class="form-control"
+                                                                                         id="findCollection">
+            </div>
+            <div class="col col-6">
+                <label for="collection">Справочник:</label>
+                <select id="collection" onchange="getChapter(this)" name="collection" class="form-control">
+                    <c:forEach var="collection" items="${lCollection}">
+                        <option value="${collection.collection_id}">${collection.nameCollectionMapTable}</option>
+                    </c:forEach>
+                </select>
+            </div>
         </div>
-    </form>
+        <br>
+        <p class="h5 mt-auto ml-3">2. Выберите главу справочника в графе "Глава".</p>
+        <div class="row pb-3 ml-5">
+
+            <div id="listChapter" class="col col-6">
+                <data id="dataListChapter" value="1212">
+                <label for="chapter">Глава: </label>
+
+                    <select class="form-control" onchange="getSection(this)" id="chapter">
+                        <c:forEach var="chapter" items="${lChapter}">
+                            <option value="${chapter.chapter_id}">${chapter.nameChapter}</option>
+                        </c:forEach>
+                    </select>
+                </data>
+            </div>
+        </div>
+        <br>
+
+        <p class="h5 mt-auto ml-3">3. Выберите раздел главы в графе "Раздел".</p>
+        <div class="row pb-3 ml-5">
+
+            <div id="listSection" class="col col-6">
+                <data id="dataListSection" onchange="selectSection(this)" value="1212">
+                <label for="section">Раздел: </label>
+
+                    <select class="form-control" id="section">
+                        <c:forEach var="section" items="${lSections}">
+                            <option value="${section.section_id}">${section.nameSection}</option>
+                        </c:forEach>
+                    </select>
+                </data>
+            </div>
+        </div>
+        <br>
+
+        <p class="h5 mt-auto ml-3">4. Выберите тип импортируемой(ых) карт(ы) в графе "Типы карт."</p>
+        <div class="row pb-3 ml-5">
+
+            <div class="col col-6">
+                <label for="typeMap">Типы карт: </label>
+                <select class="form-control" onchange="selectTypeMap(this)" id="typeMap">
+                    <c:forEach var="typeMap" items="${lTypeMapTables}">
+                        <option value="${typeMap.type_id}">${typeMap.nameType}</option>
+                    </c:forEach>
+                </select>
+            </div>
+        </div>
+        <br>
+
+        <p class="h5 mt-auto ml-3">5. Выберите тип времени для импортируемой(ых) карт(ы) в графе "Типы времени."</p>
+        <div class="row pb-3 ml-5">
+
+            <div class="col col-6">
+                <label for="typeTime">Типы времени: </label>
+                <select class="form-control" onchange="selectTypeTime(this)" id="typeTime">
+                    <c:forEach var="typeTime" items="${lTypeTimes}">
+                        <option value="${typeTime.typeTime_id}">${typeTime.nameTypeTime}</option>
+                    </c:forEach>
+                </select>
+            </div>
+        </div>
+        <br>
+
+        <p class="h5 mt-auto ml-3">6. Выберите разряд для импортируемой(ых) карт(ы) в графе "Разряд."</p>
+        <div class="row pb-3 ml-5">
+
+            <div class="col col-6">
+                <label for="discharge">Разряд: </label>
+                <select class="form-control" onchange="selectDischarge(this)" id="discharge">
+                    <c:forEach var="discharge" items="${lDischarge}">
+                        <option value="${discharge.discharge_id}">${discharge.valueDischarge}</option>
+                    </c:forEach>
+                </select>
+            </div>
+        </div>        <br>
+
+        <p class="h5 mt-auto ml-3">7. Выберите карту(ы) нормирования."</p>
+        <form id="upload-container" enctype="multipart/form-data" method="post"
+              action="${pageContext.request.contextPath}/importMapTable">
+            <label for="typeTime_id"></label><input id="typeTime_id" name="typeTime_id" value="${typeTime_id}" hidden>
+            <label for="typeMapTable_id"></label><input id="typeMapTable_id" name="typeMapTable_id"
+                                                        value="${typeMapTable_id}" hidden>
+            <label for="discharge_id"></label><input id="discharge_id" name="discharge_id" value="${discharge_id}"
+                                                     hidden>
+            <label for="section_id"></label><input id="section_id" name="section_id" value="${section_id}" hidden>
+            <img id="upload-image" src="http://localhost:8081/cstrmo/img/uploadFileImg.png" alt="f">
+            <div>
+                <input id="file-input" accept=".xlsm" type="file" name="file" multiple>
+                <label for="file-input">Выберите файл(ы)</label>
+                <span>или перетащите его(их) сюда</span>
+            </div>
+        </form>
+    </div>
+
 </main>
 <%--Подвал--%>
 <footer class="footer bg-dark py-3 mt-auto text-muted">

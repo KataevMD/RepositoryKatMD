@@ -1,4 +1,3 @@
-
 function viewUpdateMap(mapTable_id) {
     $("#map_" + mapTable_id).attr('hidden', false)
 }
@@ -7,81 +6,32 @@ function closeUpdateMap(mapTable_id) {
     $("#map_" + mapTable_id).attr('hidden', true)
 }
 
-//Функция сбора данных с формы, и их последующая отправка в сервлет, для создания новой Карты
-$(document).on("submit", "#formUpdateMap", function (event) {
-    let $form = $(this);
-
-    $.post($form.attr("action"), $form.serialize(), function (response) {
-        if (response === "fail") {
-            // $('#error').toast('show');
-            // $('#bodyError').text('Карта не создана, проверьте введенные данные!');
-            alert('Данные не обновлены!');
-        }
-        $("#loadMapTable").html($(response).find("#loadData").html());
-        // $('.close').click();
-        // $('#error').toast('show');
-        // $('#bodyError').text('Карта успешно создана!');
-        alert('Данные обновлены!');
-
-    });
-    event.preventDefault(); // Important! Prevents submitting the form.
-});
-
 //Функция удаления карты по ее ID
 function deleteMapTableById(mapTable_id) {
-    let coll_id = $('#collection_Id').val();
-    $.ajax({
-        method: 'get',
-        url: 'http://localhost:8081/cstrmo/deleteMapTable',     // URL - сервлет
-        data: {                 // передаваемые сервлету данные
-            mapTable_id: mapTable_id,
-            collection_id: coll_id
-        },
-        success: function (response) {
+    let res = confirm("Вы точно хотите удалить данную карту нормирования?");
+    if (res) {
+        let coll_id = $('#collection_Id').val();
+        $.ajax({
+            method: 'get',
+            url: 'http://localhost:8081/cstrmo/deleteMapTable',     // URL - сервлет
+            data: {                 // передаваемые сервлету данные
+                mapTable_id: mapTable_id,
+                collection_id: coll_id
+            },
+            success: function (response) {
 
-            if (response === "fail") {
-                $('#error').toast('show');
-                $('#bodyError').text('Карта не удалена!');
-            } else {
-                $('#error').toast('show');
-                $('#bodyError').text('Карта удалена!');
-                $("#tableMap").html($(response).find("data").html());
+                if (response === "fail") {
+                    $('#error').toast('show');
+                    $('#bodyError').text('Карта не удалена!');
+                } else {
+                    $('#error').toast('show');
+                    $('#bodyError').text('Карта удалена!');
+                    $("#tableMap").html($(response).find("data").html());
+                }
             }
-        }
-    });
+        });
+    }
 }
-
-// $('#save').click(function () {
-//     let mapTable_id = $('#map_id').val();
-//
-//     let name = $('#nameMap_' + mapTable_id).val();
-//     let numberMap = $('#numberMap_' + mapTable_id).val();
-//     let formulMap = $('#formulMap_' + mapTable_id).val();
-//     let coll_id = $('#collection_Id').val();
-//
-//     $.ajax({
-//         method: 'post',
-//         url: 'http://localhost:8081/cstrmo/updateMapTable',     // URL - сервлет
-//         data: {                 // передаваемые сервлету данные
-//             mapTable_id: mapTable_id,
-//             nameMapTable: name,
-//             numberTable: numberMap,
-//             formul: formulMap,
-//             collection_id: coll_id
-//         },
-//         success: function (response) {
-//             if (response === "fail") {
-//                 $('#error').toast('show');
-//                 $('#bodyError').text('Проверьте введенные данные!');
-//             } else {
-//                 $('#error').toast('show');
-//                 $('#bodyError').text('Данные карты обновлены!');
-//                 $("#tableMap").html($(response).find("data").html());
-//             }
-//         }
-//     });
-// });
-
 
 $('#number').change(function () {
     let $inp = $('#numberMap');
@@ -98,7 +48,7 @@ $('#number').change(function () {
 
 
 function checkNameMap(mapTable_id) {
-    let name = $('#nameMap_'+mapTable_id).val();
+    let name = $('#nameMap_' + mapTable_id).val();
     let regName = '^[А-Яа-яЁё,\\s]+$';
     if (!name.match(regName)) {
         $('#save' + mapTable_id).prop('disabled', true);
@@ -120,6 +70,7 @@ function checkInputNameMap() {
         $('#inputNameMapTable').removeClass('error');
     }
 }
+
 function checkInputNumberMap() {
     let $inp = $('#inputNumberMapTable');
     let numberMap = $inp.val();
@@ -136,7 +87,7 @@ function checkInputNumberMap() {
 function cloneMapTable(collection_id) {
     let mapTable_id = $('#mapTable_id').val();
     $.ajax({
-        method:'post',
+        method: 'post',
         url: 'http://localhost:8081/cstrmo/cloneableMapTable',     // URL - сервлет
         data: {                 // передаваемые сервлету данные
             collection_id: collection_id,
@@ -148,6 +99,7 @@ function cloneMapTable(collection_id) {
         }
     });
 }
+
 function getMapId(mapTable_id) {
     $('#mapTable_id').val(mapTable_id);
 }

@@ -18,14 +18,14 @@ public class MapTable {
     @Column(name = "numberMapTable")
     private String numberTable;
 
+    @Column(name = "formula")
+    private String formula;
+
     @OneToMany(mappedBy = "mapTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Parameter> listParameter;
 
     @OneToMany(mappedBy = "mapTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Coefficient> listCoefficient;
-
-    @OneToMany(mappedBy = "mapTable", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Formula> listFormula;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id")
@@ -45,6 +45,14 @@ public class MapTable {
 
     public MapTable() {
 
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
     }
 
     public Discharge getDischarge() {
@@ -69,26 +77,6 @@ public class MapTable {
 
     public TypeTime getTypeTime() {
         return typeTime;
-    }
-
-    public List<Formula> getListFormula() {
-        return listFormula;
-    }
-
-    public void setListFormula(List<Formula> listFormula) {
-        this.listFormula = listFormula;
-    }
-
-    public void internalAddFormula(Formula formula) {
-        this.listFormula.add(formula);
-    }
-
-    public void internalRemoveFormula(Formula formula) {
-        this.listFormula.remove(formula);
-    }
-
-    public void addFormula(Formula formula) {
-        formula.setItem(this);
     }
 
     public void setItem(Section section)

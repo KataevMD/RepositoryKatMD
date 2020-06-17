@@ -1,6 +1,7 @@
 function getSection(select) {
     findSectionByIdChapter(select.value)
 }
+
 function findSectionByIdChapter(chapter_id) {
     $.ajax({
         method: 'get',
@@ -11,12 +12,13 @@ function findSectionByIdChapter(chapter_id) {
         },
         success: function (response) {
 
-                $('#lSection').html($(response).find('#lSection').html());
+            $('#lSection').html($(response).find('#lSection').html());
 
 
         }
     });
 }
+
 //Функция получения Параметра по id
 function findChapter(chapter_id) {
     $.ajax({
@@ -59,12 +61,10 @@ function findSection(section_id) {
             $('#saveSection').prop('disabled', false);
             $('#deleteSection').prop('disabled', false);
 
-            // $('#coeff_id').val(coefficient_id);
-            // $('#coeffId').val(coefficient_id);
-            // $('#showFormNewValueCoefficient').prop('disabled', false);
         }
     });
 }
+
 //Функция сбора данных с формы, и их последующая отправка в сервлет, для создания новой Главы
 $(document).on("submit", "#formCreateNewMapTable", function (event) {
     let $form = $(this);
@@ -157,59 +157,64 @@ $(document).on("submit", "#formCreateSection", function (event) {
     event.preventDefault(); // Important! Prevents submitting the form.
 });
 
-function deleteChapterById(){
+function deleteChapterById() {
+    let res = confirm("Вы точно хотите удалить данную главу?");
+    if (res) {
+        let chapter_id = $("#chapter_id").val();
+        let collection_id = $('#collection_Id').val();
+        $('#saveChapter').prop('disabled', true);
+        $('#deleteChapter').prop('disabled', true);
+        $.ajax({
+            method: 'get',
+            url: 'http://localhost:8081/cstrmo/deleteChapter',     // URL - сервлет
+            data: {                 // передаваемые сервлету данные
+                chapter_id: chapter_id,
+                collection_id: collection_id
+            },
+            success: function (response) {
 
-    let chapter_id = $("#chapter_id").val();
-    let collection_id = $('#collection_Id').val();
-    $('#saveChapter').prop('disabled', true);
-    $('#deleteChapter').prop('disabled', true);
-    $.ajax({
-        method: 'get',
-        url: 'http://localhost:8081/cstrmo/deleteChapter',     // URL - сервлет
-        data: {                 // передаваемые сервлету данные
-            chapter_id: chapter_id,
-            collection_id: collection_id
-        },
-        success: function (response) {
+                if (response === "fail") {
+                    alert('Глава не удалена!');
+                    $('#saveChapter').prop('disabled', false);
+                    $('#deleteChapter').prop('disabled', false);
+                } else {
 
-            if (response === "fail") {
-                alert('Глава не удалена!');
-                $('#saveChapter').prop('disabled', false);
-                $('#deleteChapter').prop('disabled', false);
-            } else {
-
-                $("#loadListChapter").html($(response).find("#dataListChapter").html());
-                $('#nameChapter').val(null);
-                alert('Глава удалена');
+                    $("#loadListChapter").html($(response).find("#dataListChapter").html());
+                    $('#nameChapter').val(null);
+                    alert('Глава удалена');
+                }
             }
-        }
-    });
+        });
+    }
 }
+
 // Функция удаления значения коэффициента по его ID
 function deleteSectionById() {
+    let res = confirm("Вы точно хотите удалить данный раздел?");
+    if (res) {
+        let chapter_id = $('#chapters_id').val();
+        let section_id = $('#section_id').val();
+        $('#saveSection').prop('disabled', true);
+        $('#deleteSection').prop('disabled', true);
+        $.ajax({
+            method: 'get',
+            url: 'http://localhost:8081/cstrmo/deleteSection',     // URL - сервлет
+            data: {                 // передаваемые сервлету данные
+                chapter_id: chapter_id,
+                section_id: section_id
+            },
+            success: function (response) {
 
-    let chapter_id = $('#chapters_id').val();
-    let section_id = $('#section_id').val();
-    $('#saveSection').prop('disabled', true);
-    $('#deleteSection').prop('disabled', true);
-    $.ajax({
-        method: 'get',
-        url: 'http://localhost:8081/cstrmo/deleteSection',     // URL - сервлет
-        data: {                 // передаваемые сервлету данные
-            chapter_id: chapter_id,
-            section_id: section_id
-        },
-        success: function (response) {
-
-            if (response === "fail") {
-                $('#saveSection').prop('disabled', false);
-                $('#deleteSection').prop('disabled', false);
-                alert('Раздел не удален!');
-            } else {
-                $('#nameSection').val(null);
-                alert('Раздел удален!');
-                $("#loadListSection").html($(response).find("#dataListSection").html());
+                if (response === "fail") {
+                    $('#saveSection').prop('disabled', false);
+                    $('#deleteSection').prop('disabled', false);
+                    alert('Раздел не удален!');
+                } else {
+                    $('#nameSection').val(null);
+                    alert('Раздел удален!');
+                    $("#loadListSection").html($(response).find("#dataListSection").html());
+                }
             }
-        }
-    });
+        });
+    }
 }

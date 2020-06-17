@@ -41,7 +41,6 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(Parameter.class);
                 configuration.addAnnotatedClass(UsersAdmin.class);
                 configuration.addAnnotatedClass(FileMapTable.class);
-                configuration.addAnnotatedClass(Formula.class);
                 configuration.addAnnotatedClass(TypeTime.class);
                 configuration.addAnnotatedClass(TypeMapTable.class);
                 configuration.addAnnotatedClass(Discharge.class);

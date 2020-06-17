@@ -1,5 +1,6 @@
 package main.servlets;
 
+import main.dao.*;
 import main.hibernate.HibernateUtil;
 import main.model.*;
 import org.apache.poi.ss.usermodel.Cell;
@@ -35,26 +36,50 @@ public class importMapTable extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<File> arrayFile = new ArrayList<>();
-        Long collection_id = null;
+        Long section_id = null;
+        Long typeTime_id = null;
+        Long discharge_id = null;
+        Long typeMapTable_id = null;
         File fileMapTable = null;
         String answer = null;
         for (Part part : request.getParts()) {
-            if (part.getName().equals("collection_id")) {
+            if (part.getName().equals("section_id")) {
                 InputStream inputStream = part.getInputStream();
                 InputStreamReader isr = new InputStreamReader(inputStream);
-                String mapId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
-                log(mapId);
-                collection_id = Long.parseLong(mapId);
+                String sectionId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
+                section_id = Long.parseLong(sectionId);
                 inputStream.close();
-            }else{
+            }if (part.getName().equals("typeTime_id")) {
+                InputStream inputStream = part.getInputStream();
+                InputStreamReader isr = new InputStreamReader(inputStream);
+                String typeTimeId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
+                typeTime_id = Long.parseLong(typeTimeId);
+                inputStream.close();
+            }if (part.getName().equals("discharge_id")) {
+                InputStream inputStream = part.getInputStream();
+                InputStreamReader isr = new InputStreamReader(inputStream);
+                String dischargeId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
+                discharge_id = Long.parseLong(dischargeId);
+                inputStream.close();
+            }if (part.getName().equals("typeMapTable_id")) {
+                InputStream inputStream = part.getInputStream();
+                InputStreamReader isr = new InputStreamReader(inputStream);
+                String typeMapTableId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
+                typeMapTable_id = Long.parseLong(typeMapTableId);
+                inputStream.close();
+            }if (part.getName().equals("file")){
                 part.write(part.getSubmittedFileName());
                 fileMapTable = new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\cstrmo\\file\\"+part.getSubmittedFileName());
                 arrayFile.add(fileMapTable);
             }
         }
+        Section sections = chapter.findSectionById(section_id);
+        TypeTime tTime = typeTime.findTypeTimeById(typeTime_id);
+        TypeMapTable tTable = typeMapTable.findTypeMapTableById(typeMapTable_id);
+        Discharge discharge = discharges.findDischargeById(discharge_id);
         if(!arrayFile.isEmpty()){
             for(File file : arrayFile){
-                imp(file.getPath());
+                imp(file.getPath(), sections,tTable,tTime,discharge);
             }
         }
 
@@ -65,7 +90,7 @@ public class importMapTable extends HttpServlet {
         doPost(req,resp);
     }
 
-    public static void imp(String path) {
+    public static void imp(String path, Section sections, TypeMapTable tTable, TypeTime tTime, Discharge discharge) {
         SessionFactory sesFactory = HibernateUtil.getSessionFactory();
         Session sessia = sesFactory.openSession();
         InputStream in;
@@ -87,15 +112,11 @@ public class importMapTable extends HttpServlet {
 
             ArrayList<Parameter> pList = new ArrayList<>();
             ArrayList<Coefficient> lCoefficients = new ArrayList<>();
-            ArrayList<Formula> lFormula = new ArrayList<>();
+
 
             ValueCoefficient coefficientValue = null;
             Coefficient coefficient = null;
             MapTable mapTable = new MapTable();
-            Formula formula = null;
-
-            String onePartFormula = null;
-            String twoPartFormula = null;
 
             StringBuilder formulaMapTable = new StringBuilder();
 
@@ -147,8 +168,7 @@ public class importMapTable extends HttpServlet {
                     }
                 }
             }
-            onePartFormula = formulaMapTable.toString();
-            formulaMapTable.setLength(0);
+
             //Чтение листа "Коэффициенты"
             int amountSign = 0;
             for (int i = 1; i <= coef.getLastRowNum(); i++) {
@@ -176,15 +196,8 @@ public class importMapTable extends HttpServlet {
                     sessia.save(coefficient);
 
                     formulaMapTable.append(coefficient.getId()).append("Coeff");
-                    twoPartFormula = formulaMapTable.toString();
-                    String setFormula = onePartFormula + twoPartFormula;
-                    formula = new Formula();
-                    formula.setCoefficient_id(coefficient.getId());
-                    formula.setFormula(setFormula);
-                    lFormula.add(formula);
-                    formulaMapTable.setLength(0);
-                    mapTable.setListFormula(lFormula);
-                    mapTable.addFormula(formula);
+
+
                 }
 
                 if (nameCoeffValue != null && !"".equals(nameCoeffValue.getStringCellValue())) {
@@ -228,7 +241,11 @@ public class importMapTable extends HttpServlet {
                 }
 
             }
-
+            mapTable.setFormula(formulaMapTable.toString());
+            mapTable.setSection(sections);
+            mapTable.setTypeMapTable(tTable);
+            mapTable.setTypeTime(tTime);
+            mapTable.setDischarge(discharge);
             sessia.getTransaction().begin();
             sessia.merge(mapTable);
             sessia.getTransaction().commit();

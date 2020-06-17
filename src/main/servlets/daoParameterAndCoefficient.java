@@ -49,9 +49,6 @@ public class daoParameterAndCoefficient extends HttpServlet {
             case "/updateValueCoefficient":
                 updateValueCoefficient(request, response);
                 break;
-            case "/updateFormula":
-                updateFormula(request, response);
-                break;
             default:
                 doGet(request, response);
                 break;
@@ -157,21 +154,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
 
     }
-    private void updateFormula(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
-        String formula = request.getParameter("nFormula").trim();
-        Long formula_id = Long.parseLong(request.getParameter("formula_id"));
 
-        boolean res = parameterAndCoefficient.rewriteFormula(formula, formula_id);
-        if (res) {
-            List<Formula> formulas = parameterAndCoefficient.findFormulasByIdMapTable(mapTable_id);
-            request.setAttribute("Formula", formulas);
-            getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
-        } else {
-            String answer = "fail";
-            response.getWriter().write(answer);
-        }
-    }
     private void deleteCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));

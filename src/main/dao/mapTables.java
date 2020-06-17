@@ -71,7 +71,7 @@ public class mapTables {
         return false;
     }
 
-    public static boolean rewriteMapTable(String nameMapTable, Long mapTable_id, String numberTable, List<Formula> formulasList, Long type_id, Long discharge_id, Long typeTime_id) {
+    public static boolean rewriteMapTable(String nameMapTable, Long mapTable_id, String numberTable, String formulasList, Long type_id, Long discharge_id, Long typeTime_id) {
         MapTable mapTable = findMapTableById(mapTable_id);
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -88,7 +88,7 @@ public class mapTables {
             mapTable.setDischarge(discharge);
 
 
-            mapTable.setListFormula(formulasList);
+            mapTable.setFormula(formulasList);
 
             session.getTransaction().begin();
             session.update(mapTable);

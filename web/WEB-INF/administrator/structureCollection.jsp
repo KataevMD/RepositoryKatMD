@@ -266,18 +266,18 @@
                                 </div>
                                 <div class="col-6"></div>
                             </div>
-                            <c:forEach var="formula" items="${Formula}">
-                                <div class="row mt-md-3">
-                                    <div class="col-3">
-                                        <label for="formula${formula.formula_id}">Формула:</label>
-                                    </div>
-                                    <div class="col-4">
-                                        <input id="formula${formula.formula_id}" class="form-control"
-                                               value="${formula.formula}" name="formulaMap${formula.formula_id}">
-                                    </div>
-                                    <div class="col-6"></div>
+
+                            <div class="row mt-md-3">
+                                <div class="col-3">
+                                    <label for="formula">Формула:</label>
                                 </div>
-                            </c:forEach>
+                                <div class="col-4">
+                                    <input id="formula" class="form-control"
+                                           value="${map.formula}" name="formulaMap">
+                                </div>
+                                <div class="col-6"></div>
+                            </div>
+
                             <div class="row mt-md-3">
                                 <div class="col-3">
                                     <label>Управление</label>
@@ -286,7 +286,8 @@
                                     <button class="btn btn-outline-primary" id="save" type="submit" ${save}>Сохранить
                                         изменения
                                     </button>
-                                    <button class="btn btn-outline-secondary" onclick="deleteMapTableById(${map.mapTable_id})"
+                                    <button class="btn btn-outline-secondary"
+                                            onclick="deleteMapTableById(${map.mapTable_id})"
                                             type="button" id="deleteMapTable" ${delete}>Удалить
                                         карту
                                     </button>

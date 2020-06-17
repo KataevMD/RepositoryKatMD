@@ -69,7 +69,6 @@ public class openPages extends HttpServlet {
 
 
         FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(mapTable.getMapTable_id());
-        List<Formula> lFormula = parameterAndCoefficient.findFormulasByIdMapTable(mapTable.getMapTable_id());
         List<TypeTime> lTypeTime = typeTime.findAllTypeTime();
         List<TypeMapTable> lTypeMapTable = typeMapTable.findAllTypeMapTable();
         List<Discharge> dischargeList = discharges.findAllDischarge();
@@ -98,7 +97,6 @@ public class openPages extends HttpServlet {
         }
 
         request.setAttribute("map", mapTable);
-        request.setAttribute("Formula", lFormula);
         request.setAttribute("TypeMapTable", lTypeMapTable);
         request.setAttribute("TypeTime", lTypeTime);
         request.setAttribute("Discharge", dischargeList);
@@ -134,9 +132,59 @@ public class openPages extends HttpServlet {
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
     }
 
-    private void openImportPage(HttpServletRequest request, HttpServletResponse response) throws
-            ServletException, IOException {
+    private void openImportPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<CollectionMapTable> lCollection = collMapTable.findAllCollectionMapTable();
+        List<Chapter> lChapter = null;
+        List<Section> lSections = null;
+        CollectionMapTable collectionMapTable;
+        Chapter chapters;
+        Section section;
+        TypeMapTable typeMapTables;
+        TypeTime typeTimes;
+        Discharge discharge;
+        Long section_id = null;
+        Long typeTime_id = null;
+        Long typeMapTable_id = null;
+        Long discharge_id = null;
+        if (lCollection != null) {
+            collectionMapTable = lCollection.get(0);
+             lChapter = chapter.findChaptersByIdColl(collectionMapTable.getCollection_id());
+            if (lChapter != null) {
+                chapters = lChapter.get(0);
+                lSections = chapter.findSectionByIdChapter(chapters.getChapter_id());
+                if(lSections != null){
+                    section = lSections.get(0);
+                    section_id = section.getSection_id();
+                }
+            }
+        }
+        List<TypeMapTable> lTypeMapTables = typeMapTable.findAllTypeMapTable();
+        if(lTypeMapTables != null){
+            typeMapTables = lTypeMapTables.get(0);
+            typeMapTable_id = typeMapTables.getType_id();
+        }
+        List<TypeTime> lTypeTimes = typeTime.findAllTypeTime();
+        if(lTypeTimes != null){
+            typeTimes = lTypeTimes.get(0);
+            typeTime_id = typeTimes.getTypeTime_id();
+        }
+        List<Discharge> lDischarge = discharges.findAllDischarge();
+        if(lDischarge != null){
+            discharge = lDischarge.get(0);
+            discharge_id = discharge.getDischarge_id();
+        }
+        request.setAttribute("section_id", section_id);
+        request.setAttribute("typeMapTable_id", typeMapTable_id);
+        request.setAttribute("typeTime_id", typeTime_id);
+        request.setAttribute("discharge_id", discharge_id);
+        request.setAttribute("lCollection", lCollection);
+        request.setAttribute("lChapter", lChapter);
+        request.setAttribute("lSections", lSections);
+        request.setAttribute("lTypeMapTables", lTypeMapTables);
+        request.setAttribute("lTypeTimes", lTypeTimes);
+        request.setAttribute("lDischarge", lDischarge);
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/importMapTable.jsp").forward(request, response);
+
     }
 
     private void openMyAccount(HttpServletRequest request, HttpServletResponse response) throws
@@ -166,7 +214,6 @@ public class openPages extends HttpServlet {
         MapTable mapTable = mapTables.findMapTableById(id);
         List<Coefficient> coefficients = parameterAndCoefficient.findCoefficientByIdMap(id);
         List<Parameter> parameter = parameterAndCoefficient.findParametersByIdMapTable(id);
-        List<Formula> formulas = parameterAndCoefficient.findFormulasByIdMapTable(id);
         FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(id);
 
         if (fileMapTable != null) {
@@ -179,7 +226,6 @@ public class openPages extends HttpServlet {
         request.setAttribute("Parameter", parameter);
         request.setAttribute("collection_id", collection_id);
         request.setAttribute("Coefficient", coefficients);
-        request.setAttribute("Formula", formulas);
         request.setAttribute("mapTable", mapTable);
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
     }
@@ -224,9 +270,9 @@ public class openPages extends HttpServlet {
             request.setAttribute("Discharge", dischargeList);
             request.setAttribute("collection", collectionMapTable);
             getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
-        }else {
+        } else {
             String message = "Страницы с таким справочником не существует. \n Вернитесь на предыдущую страницу, и обновите ее";
-            request.setAttribute("message",message);
+            request.setAttribute("message", message);
             getServletContext().getRequestDispatcher("/WEB-INF/pageException/error404.jsp").forward(request, response);
         }
     }

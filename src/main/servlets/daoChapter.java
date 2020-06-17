@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ServletDaoChapter", urlPatterns = {"/findChapter", "/getListSection", "/findSection", "/updateChapter", "/updateSection",
-        "/addNewChapter","/addNewSection","/deleteChapter", "/deleteSection"})
+        "/addNewChapter","/addNewSection","/deleteChapter", "/deleteSection","/loadListChapter","/loadListSection"})
 public class daoChapter extends HttpServlet {
     @Override
     public void init() throws ServletException {
@@ -62,6 +62,33 @@ public class daoChapter extends HttpServlet {
             case "/deleteSection":
                 deleteSection(request, response);
                 break;
+            case "/loadListChapter":
+                loadListChapter(request, response);
+                break;
+            case "/loadListSection":
+                loadListSection(request, response);
+                break;
+        }
+    }
+
+    private void loadListSection(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if (ajax) {
+            Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
+            List<Section> sections = chapter.findSectionByIdChapter(chapter_id);
+            request.setAttribute("lSections", sections);
+            request.getServletContext().getRequestDispatcher("/WEB-INF/administrator/importMapTable.jsp").forward(request, response);
+        }
+    }
+
+    private void loadListChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if (ajax) {
+            Long collection_id = Long.parseLong(request.getParameter("collection_id"));
+
+            List<Chapter> chapters = chapter.findChaptersByIdColl(collection_id);
+            request.setAttribute("lChapter", chapters);
+            request.getServletContext().getRequestDispatcher("/WEB-INF/administrator/importMapTable.jsp").forward(request, response);
         }
     }
 

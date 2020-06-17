@@ -69,7 +69,6 @@ public class daoMapTable extends HttpServlet {
                 List<TypeMapTable> lTypeMapTable = typeMapTable.findAllTypeMapTable();
                 List<Discharge> dischargeList = discharges.findAllDischarge();
                 FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(mapTable.getMapTable_id());
-                List<Formula> lFormula = parameterAndCoefficient.findFormulasByIdMapTable(mapTable.getMapTable_id());
                 if (fileMapTable != null) {
                     request.setAttribute("downloadFileMap", "http://localhost:8081/cstrmo/downloadFile?mapTable_id=" + mapTable_id.toString());
                 } else {
@@ -77,7 +76,6 @@ public class daoMapTable extends HttpServlet {
                 }
 
                 request.setAttribute("map", mapTable);
-                request.setAttribute("Formula", lFormula);
                 request.setAttribute("TypeMapTable", lTypeMapTable);
                 request.setAttribute("TypeTime", lTypeTime);
                 request.setAttribute("Discharge", dischargeList);
@@ -149,26 +147,17 @@ public class daoMapTable extends HttpServlet {
             Long typeTime_id = Long.parseLong(request.getParameter("typeTimes"));
             Long discharge_id = Long.parseLong(request.getParameter("discharge"));
             Long type_id = Long.parseLong(request.getParameter("typeMapTable"));
-            List<Formula> lFormula = parameterAndCoefficient.findFormulasByIdMapTable(mapTable_id);
-            List<Formula> formulasList = new ArrayList<>();
 
-
-            if (lFormula != null) {
-                for (Formula formula : lFormula) {
-                    formula.setFormula(request.getParameter("formulaMap" + formula.getFormula_id()));
-                    formulasList.add(formula);
-                }
-            }
-
+            String formulasList = request.getParameter("formulaMap" );
             boolean res = mapTables.rewriteMapTable(nameMapTable, mapTable_id, numberTable, formulasList, type_id, discharge_id, typeTime_id);
             if (res) {
                 MapTable mapTable = mapTables.findMapTableById(mapTable_id);
                 List<TypeTime> lTypeTime = typeTime.findAllTypeTime();
                 List<TypeMapTable> lTypeMapTable = typeMapTable.findAllTypeMapTable();
-                List<Formula> lFormulas = parameterAndCoefficient.findFormulasByIdMapTable(mapTable_id);
+
                 List<Discharge> dischargeList = discharges.findAllDischarge();
                 request.setAttribute("map", mapTable);
-                request.setAttribute("Formula", lFormulas);
+
                 request.setAttribute("TypeMapTable", lTypeMapTable);
                 request.setAttribute("TypeTime", lTypeTime);
                 request.setAttribute("Discharge", dischargeList);

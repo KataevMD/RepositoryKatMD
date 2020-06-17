@@ -23,6 +23,97 @@
     <script src="http://localhost:8081/cstrmo/js/rewriteStructureCollection.js"></script>
 </head>
 <body class="d-flex flex-column h-100">
+<%--Модальное окно создания новой главы--%>
+<div class="modal fade" id="createChapter" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Создание новой главы справочника</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="formCreateChapter"
+                      action="${pageContext.request.contextPath}/addNewChapter">
+                    <label for="formNewChapter"></label><input id="formNewChapter"
+                                                               name="collection_id"
+                                                               value="${collection.collection_id}"
+                                                               hidden>
+                    <div class="container-fluid">
+                        <label for="nameChapters">Введите название главы:</label>
+                        <input id="nameChapters" name="nameChapter"
+                               class="form-control" pattern="^[А-Яа-я0-9Ёё,\s]+$"
+                               title="Разрешено использовать пробелы, русские буквы, запятые и цифры."
+                               required>
+                        <div class="mt-3">
+                            <button class="btn btn-outline-primary mr-5 " id="createChapters" type="submit">
+                                Создать новую главу
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%--Модальное окно создания нового раздела--%>
+<div class="modal fade" id="createSection" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabelSection">Создание нового раздела</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="formCreateSection"
+                      action="${pageContext.request.contextPath}/addNewSection">
+
+                    <label for="formNewSection"></label><input id="formNewSection"
+                                                               name="collection_id"
+                                                               value="${collection.collection_id}" hidden>
+                    <div class="container-fluid">
+                        <br>
+                        <div id="loadChapters">
+                            <data id="dataChapters" value="1313">
+                                Выбирите главу, в которую будет добавлен новый раздел
+                                <select id="selectChapter" name="chapter_id" class="list-group form-control"
+                                        style="cursor: pointer">
+                                    <c:forEach var="chapter" items="${Chapter}">
+                                        <option class="list-group-item list-group-item-action"
+                                                value="<c:out value="${chapter.chapter_id}"/>">
+                                            <c:out value="${chapter.nameChapter}"/>
+                                        </option>
+                                    </c:forEach>
+
+                                </select>
+                            </data>
+                        </div>
+                        <div class="mt-3">
+                            <label for="nameSections">Введите название раздела:</label>
+                            <input id="nameSections" name="nameSection"
+                                   class="form-control" pattern="^[А-Яа-я/0-9Ёё,\s]+$"
+                                   title="Разрешено использовать пробелы, русские буквы, запятые и цифры."
+                                   required>
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-outline-primary  mr-5" id="createSections" type="submit">
+                                Создать раздел
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <%
     Cookie[] cookies = request.getCookies();
     String userName = "";
@@ -89,7 +180,9 @@
     <div class="container-fluid">
         <div class="row pb-4">
             <div class="col">
-                <a class="btn btn-outline-secondary" href="http://localhost:8081/cstrmo/openStructureCollectionPage?collection_id=${collection.collection_id}">Вернуться к просмотру карт</a>
+                <a class="btn btn-outline-secondary"
+                   href="http://localhost:8081/cstrmo/openStructureCollectionPage?collection_id=${collection.collection_id}">Вернуться
+                    к просмотру карт</a>
             </div>
         </div>
         <div class="row" style="min-height: 400px; max-height: 700px;">
@@ -97,27 +190,23 @@
                 <div class="list-group" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action active" id="list-chapter-list" data-toggle="list"
                        href="#list-chapter" role="tab" aria-controls="chapter">Главы</a>
-
-                    <a class="list-group-item list-group-item-action" id="new-parameter-list" data-toggle="list"
-                       href="#list-newChapter" role="tab" aria-controls="newParameter">Новая глава</a>
-                    <a class="list-group-item list-group-item-action" id="new-coefficient-list" data-toggle="list"
-                       href="#list-newSection" role="tab" aria-controls="newCoefficient">Новый раздел</a>
                     <a class="list-group-item list-group-item-action" id="new-mapTable-list" data-toggle="list"
                        href="#list-newMapTable" role="tab" aria-controls="newMapTable">Новая карта</a>
                 </div>
             </div>
-            <div class="col-9 pt-md-3 border border-secondary" style="min-width: 1000px;">
+            <div class="col-9 border border-secondary" style="min-width: 1000px;">
                 <div class="tab-content" id="nav-tabContent">
 
                     <div class="tab-pane fade show active  pb-3 mb-3" id="list-chapter" role="tabpanel"
                          aria-labelledby="list-chapter-list">
-                        <div class="row">
-                            <div class="col-4">
+                        <div class="row mt-4">
+                            <div class="col-4  border border-secondary border-top-0 border-bottom-0 border-left-0">
                                 <label>Поиск главы по названию:
                                     <input class="form-control" onkeyup="filterChapter(this)" type="text"/>
                                 </label>
                             </div>
-                            <div id="loadChapter" class=" col-7">
+                            <div id="loadChapter"
+                                 class="col-7 border border-secondary border-bottom-0 border-left-0 border-right-0">
                                 <data id="dataChapter" value="1212">
                                     <form method="post" id="formUpdateChapter"
                                           action="${pageContext.request.contextPath}/updateChapter">
@@ -127,22 +216,17 @@
                                                                                    name="chapter_id"
                                                                                    value="${chapter.chapter_id}"
                                                                                    hidden>
-                                            <div class="col-4">
+                                            <div class="col">
                                                 <label for="nameChapter"> Название главы:</label>
                                             </div>
-                                            <div class="col">
+                                            <div class="col-6">
                                                 <input id="nameChapter" name="nameChapter"
                                                        value="${chapter.nameChapter}"
                                                        class="form-control" pattern="^[А-Яа-я0-9Ёё,\s]+$"
                                                        title="Разрешено использовать пробелы, русские буквы, запятые и цифры."
                                                        required>
                                             </div>
-                                        </div>
-                                        <div class="row mt-md-3">
-                                            <div class="col-4">
-                                                Управление:
-                                            </div>
-                                            <div class="col">
+                                            <div class="col mr-4">
                                                 <button class="btn btn-outline-primary" id="saveChapter" type="submit"
                                                         disabled>Сохранить
                                                     изменения
@@ -155,14 +239,28 @@
                                                     Удалить главу
                                                 </button>
                                             </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-secondary" data-toggle="modal"
+                                                        data-target="#createChapter" type="button">
+                                                    Создать главу
+                                                </button>
+                                            </div>
                                         </div>
                                     </form>
                                 </data>
                             </div>
-                            <hr>
+                            <div class="col border border-secondary border-bottom-0 border-left-0 border-right-0"></div>
                         </div>
                         <div class="row">
-                            <div id="loadListChapter" class="col col-4">
+                            <div class="col col-4 border border-secondary border-top-0 border-bottom-0 border-left-0">
+                                <p class="h5 mt-auto">Список глав</p>
+                            </div>
+                            <div class="col"><p class="h5 mt-auto">Список разделов</p></div>
+                            <div class="col"></div>
+                        </div>
+                        <div class="row">
+                            <div id="loadListChapter"
+                                 class="col col-4  border border-secondary border-top-0 border-bottom-0 border-left-0">
                                 <data id="dataListChapter" value="1212">
                                     <ul id="listChapter" class="list-group" style="cursor: pointer">
                                         <c:forEach var="chapter" items="${Chapter}">
@@ -174,7 +272,8 @@
                                     </ul>
                                 </data>
                             </div>
-                            <div id="loadListSection" class="col">
+                            <div id="loadListSection"
+                                 class="col pb-2 border border-secondary border-left-0 border-top-0 border-right-0">
                                 <data id="dataListSection" value="1313">
                                     <ul id="listSection" class="list-group" style="cursor: pointer">
                                         <c:forEach var="section" items="${Section}">
@@ -187,7 +286,8 @@
                                     </ul>
                                 </data>
                             </div>
-                            <div id="loadSection" class="col">
+                            <div id="loadSection"
+                                 class="col border border-secondary border-left-0 border-top-0 border-right-0">
                                 <data id="dataSection" value="1212">
                                     <form method="post" id="formUpdateSection"
                                           action="${pageContext.request.contextPath}/updateSection">
@@ -198,7 +298,7 @@
                                                                                name="section_id"
                                                                                value="${listSection.section_id}"
                                                                                hidden>
-                                        <div class="row mt-md-3">
+                                        <div class="row">
                                             <div class="col-4">
                                                 <label for="nameSection"> Название раздела:</label>
                                             </div>
@@ -210,7 +310,7 @@
                                                        required>
                                             </div>
                                         </div>
-                                        <div class="row mt-md-3">
+                                        <div class="row mt-md-">
                                             <div class="col-4">
                                                 Управление:
                                             </div>
@@ -228,104 +328,19 @@
                                                 </button>
                                             </div>
                                         </div>
+                                        <div class="row mt-3">
+                                            <div class="col"></div>
+                                            <div class="col ml-5">
+                                                <button class="btn btn-outline-secondary" data-toggle="modal"
+                                                        data-target="#createSection" type="button">
+                                                    Создать раздел
+                                                </button>
+                                            </div>
+                                        </div>
                                     </form>
                                 </data>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade pb-3 mb-3" id="list-newChapter" role="tabpanel"
-                         aria-labelledby="list-newChapter-list">
-                        <form method="post" id="formCreateChapter"
-                              action="${pageContext.request.contextPath}/addNewChapter">
-
-                            <label for="formNewChapter"></label><input id="formNewChapter"
-                                                                       name="collection_id"
-                                                                       value="${collection.collection_id}"
-                                                                       hidden>
-                            <div class="container-fluid">
-                                <div class="container text-center">
-                                    <p class="h5 mt-auto">Создание новой главы</p>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col"></div>
-                                    <div class="col pb-md-3">
-                                        <label for="nameChapters">Введите название главы:</label>
-                                    </div>
-                                    <div class="col-4 pb-md-3">
-                                        <input id="nameChapters" name="nameChapter"
-                                               class="form-control" pattern="^[А-Яа-я0-9Ёё,\s]+$"
-                                               title="Разрешено использовать пробелы, русские буквы, запятые и цифры."
-                                               required>
-                                    </div>
-                                    <div class="col"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col"></div>
-                                    <div class="col"></div>
-                                    <div class="col-4 pb-md-3">
-                                        <button class="btn btn-outline-primary" id="createChapter" type="submit">
-                                            Создать новую главу
-                                        </button>
-                                    </div>
-                                    <div class="col"></div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade pb-3 mb-3" id="list-newSection" role="tabpanel"
-                         aria-labelledby="list-newSection-list">
-                        <form method="post" id="formCreateSection"
-                              action="${pageContext.request.contextPath}/addNewSection">
-
-                            <label for="formNewSection"></label><input id="formNewSection"
-                                                                       name="collection_id"
-                                                                       value="${collection.collection_id}" hidden>
-                            <div class="container-fluid">
-                                <div class="container text-center">
-                                    <p class="h5 mt-auto">Создание нового раздела</p>
-                                </div>
-                                <br>
-                                <div class="row ">
-                                    <div id="loadChapters" class="col col-3">
-                                        <data id="dataChapters" value="1313">
-                                            Выбирите главу, в которую будет добавлен новый раздел
-                                            <select id="selectChapter" name="chapter_id" class="list-group form-control"
-                                                    style="cursor: pointer">
-
-                                                <c:forEach var="chapter" items="${Chapter}">
-                                                    <option class="list-group-item list-group-item-action"
-                                                        value="<c:out value="${chapter.chapter_id}"/>">
-                                                        <c:out value="${chapter.nameChapter}"/>
-                                                    </option>
-                                                </c:forEach>
-
-                                            </select>
-                                        </data>
-                                    </div>
-                                    <div class="col pb-md-3">
-                                        <label for="nameSections">Введите название раздела:</label>
-                                    </div>
-                                    <div class="col-4 pb-md-3">
-                                        <input id="nameSections" name="nameSection"
-                                               class="form-control" pattern="^[А-Яа-я/0-9Ёё,\s]+$"
-                                               title="Разрешено использовать пробелы, русские буквы, запятые и цифры."
-                                               required>
-                                    </div>
-                                    <div class="col"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col"></div>
-                                    <div class="col"></div>
-                                    <div class="col-4 pb-md-3">
-                                        <button class="btn btn-outline-primary" id="createSection" type="submit">
-                                            Создать раздел
-                                        </button>
-                                    </div>
-                                    <div class="col"></div>
-                                </div>
-                            </div>
-                        </form>
                     </div>
                     <div class="tab-pane fade pb-3 mb-3" id="list-newMapTable" role="tabpanel"
                          aria-labelledby="list-newSection-list">
@@ -338,7 +353,8 @@
                                 <div class="col-4" style="min-width: 50%;">
                                     <data id="lChapter" value="1313">
 
-                                        <select id="chapterCollection" onchange="getSection(this)" class="form-control" required>
+                                        <select id="chapterCollection" onchange="getSection(this)" class="form-control"
+                                                required>
                                             <c:forEach var="lChapteCollection" items="${Chapter}">
                                                 <option value="${lChapteCollection.chapter_id}">${lChapteCollection.nameChapter}</option>
                                             </c:forEach>
@@ -348,7 +364,7 @@
                             </div>
                             <div class="row mt-md-3">
                                 <div class="col-4">
-                                    <label for="sectionsChapter">  Раздел:</label>
+                                    <label for="sectionsChapter"> Раздел:</label>
                                 </div>
                                 <div class="col-4" style="min-width: 50%;">
                                     <div id="lSection">

@@ -256,53 +256,7 @@ public class parameterAndCoefficient {
         return false;
     }
 
-    public static List<Formula> findFormulasByIdMapTable(Long mapTable_id) {
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        List<Formula> formulas = session.createQuery("from Formula f where f.mapTable.mapTable_id = " + mapTable_id).getResultList();
-        session.getTransaction().commit();
-        session.close();
-        if (!formulas.isEmpty()) {
-            return formulas;
-        }
-        return null;
-    }
 
-    public static boolean rewriteFormula(String formula, Long formula_id) {
-        Formula formulas = findFormulaById(formula_id);
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        if (formula != null) {
-            formulas.setFormula(formula);
-            session.getTransaction().begin();
-            session.update(formulas);
-            session.getTransaction().commit();
-            session.close();
-            return true;
-        }
-        session.close();
-        return false;
-    }
-
-    private static Formula findFormulaById(Long formula_id) {
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        List<Formula> formulas;
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Formula> criteria = builder.createQuery(Formula.class);
-        Root<Formula> root = criteria.from(Formula.class);
-        criteria.select(root);
-        criteria.where(builder.equal(root.get("formula_id"), formula_id));
-
-        session.beginTransaction();
-        formulas = session.createQuery(criteria).getResultList();
-        session.getTransaction().commit();
-        session.close();
-
-        Iterator<Formula> it = formulas.iterator();
-        return it.next();
-    }
 
     public static Parameter findParametersById(Long parameter_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
