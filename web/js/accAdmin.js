@@ -44,6 +44,18 @@ $(document).on("submit", "#updatePassword", function (event) {
     event.preventDefault();
 });
 
+$(document).on("submit", "#updateForm", function (event) {
+    let $form = $(this);
+
+    $.post($form.attr("action"), $form.serialize(), function (response) {
+        if(response === "success"){
+         alert('Ваши личные данные успешно обновлены');
+        }
+
+    });
+    event.preventDefault();
+});
+
 $(document).on("submit", "#createForm", function (event) {
     let $form = $(this);
 

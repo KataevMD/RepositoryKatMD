@@ -1,10 +1,7 @@
 package main.dao;
 
 import main.hibernate.HibernateUtil;
-import main.model.Chapter;
-import main.model.Coefficient;
-import main.model.MapTable;
-import main.model.Section;
+import main.model.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -105,6 +102,68 @@ public class chapter {
             section.setNameSection(nameSection);
             session.getTransaction().begin();
             session.update(section);
+            session.getTransaction().commit();
+            session.close();
+            return true;
+        }
+        session.close();
+        return false;
+    }
+
+    public static void createChapter(Long collection_id, String nameChapter) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+        CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(collection_id);;
+
+        Chapter chapter = new Chapter();
+        chapter.setNameChapter(nameChapter);
+        chapter.setCollectionMapTable(collectionMapTable);
+
+        session.beginTransaction();
+        session.merge(chapter);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public static void createSection(Long chapter_id, String nameSection) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+        Chapter chapter = main.dao.chapter.findChaptersById(chapter_id);
+
+        Section section = new Section();
+        section.setNameSection(nameSection);
+        section.setChapter(chapter);
+
+        session.beginTransaction();
+        session.merge(section);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public static boolean deleteChapterById(Long chapter_id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        Chapter chapter = findChaptersById(chapter_id);
+        if (chapter != null) {
+            session.getTransaction().begin();
+            session.delete(chapter);
+            session.getTransaction().commit();
+            session.close();
+            return true;
+        }
+        session.close();
+        return false;
+    }
+
+    public static boolean deleteSectionById(Long section_id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        Section section = findSectionById(section_id);
+        if (section != null) {
+            session.getTransaction().begin();
+            session.delete(section);
             session.getTransaction().commit();
             session.close();
             return true;

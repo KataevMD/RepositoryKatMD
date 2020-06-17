@@ -80,12 +80,17 @@
 <main role="main" class="flex-shrink-0">
     <br>
     <div class="container text-center">
-        <p class="h4 mt-auto">Карта "${nameMapTable}"</p>
+        <p class="h4 mt-auto">Карта "${mapTable.name}"</p>
     </div>
-    <label for="mapTableId"></label><input id="mapTableId" name="mapTable_id" value="${mapTable_Id}"
+    <label for="mapTableId"></label><input id="mapTableId" name="mapTable_id" value="${mapTable.mapTable_id}"
                                            hidden>
     <br>
     <div class="container-fluid">
+        <div class="row pb-4">
+            <div class="col">
+                <a class="btn btn-outline-secondary" href="http://localhost:8081/cstrmo/openStructureCollectionPageWithMap?mapTable_id=${mapTable.mapTable_id}&collection_id=${collection_id}">Вернуться к просмотру карт</a>
+            </div>
+        </div>
         <div class="row" style="min-height: 400px; max-height: 700px;">
             <div class="col-2 pt-md-3 ">
                 <div class="list-group" id="list-tab" role="tablist">
@@ -321,7 +326,7 @@
                               action="${pageContext.request.contextPath}/addNewParameter">
 
                             <label for="formNewPramMapTableId"></label><input id="formNewPramMapTableId"
-                                                                              name="mapTable_id" value="${mapTable_Id}"
+                                                                              name="mapTable_id" value="${mapTable.mapTable_id}"
                                                                               hidden>
                             <div class="container-fluid">
                                 <div class="container text-center">
@@ -373,7 +378,7 @@
                               action="${pageContext.request.contextPath}/addNewCoefficient">
 
                             <label for="formNewCoeffMapTableId"></label><input id="formNewCoeffMapTableId"
-                                                                               name="mapTable_id" value="${mapTable_Id}"
+                                                                               name="mapTable_id" value="${mapTable.mapTable_id}"
                                                                                hidden>
                             <div class="container-fluid">
                                 <div class="container text-center">
@@ -421,7 +426,7 @@
 
                             <label for="formNewValueCoeffMapTableId"></label><input id="formNewValueCoeffMapTableId"
                                                                                     name="mapTable_id"
-                                                                                    value="${mapTable_Id}" hidden>
+                                                                                    value="${mapTable.mapTable_id}" hidden>
                             <div class="container-fluid">
                                 <div class="container text-center">
                                     <p class="h5 mt-auto">Создание нового значения коэффициента</p>

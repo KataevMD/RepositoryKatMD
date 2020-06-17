@@ -21,7 +21,7 @@
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous">
     </script>
-    <script src="http://localhost:8081/cstrmo/js/collectMapTable.js"></script>
+
 </head>
 <body class="d-flex flex-column h-100">
 <%
@@ -152,42 +152,11 @@
                                class="btn btn-light">Просмотреть</a>
                         </td>
                         <td>
-                            <button class="btn btn-light " id="viewUpdate"
-                                    onclick="viewUpdate(<c:out value="${collMapTable.collection_id}"/>)">
-                                Редактировать
-                            </button>
-                        </td>
-                        <td>
                             <button type="button" id="delete"
                                     onclick="deleteCollMapTableById(<c:out value="${collMapTable.collection_id}"/>)"
                                     class="btn btn-light">Удалить
                             </button>
                         </td>
-                    </tr>
-                    <tr id="coll_<c:out value="${collMapTable.collection_id}"/>" class="table-active" hidden>
-                        <td>
-                        </td>
-                        <td>
-                            <label class="w-100">
-                                <input id="upColl<c:out value="${collMapTable.collection_id}"/>"
-                                       onkeyup="checkNameColl(<c:out value="${collMapTable.collection_id}"/>)"
-                                       value="<c:out value="${collMapTable.nameCollectionMapTable}"/>"
-                                       title="Разрешено использовать только пробелы, запятые и русские буквы"
-                                       type="text" class="form-control" required>
-                            </label>
-                        </td>
-                        <td>
-                            <button id="save<c:out value="${collMapTable.collection_id}"/>"
-                                    class="btn btn-primary "
-                                    onclick="updateColl(<c:out value="${collMapTable.collection_id}"/>)">Сохранить
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-secondary "
-                                    onclick="closeUpdate(<c:out value="${collMapTable.collection_id}"/>)">Отмена
-                            </button>
-                        </td>
-                        <td></td>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -237,4 +206,5 @@
         crossorigin="anonymous"></script>
 <script src="http://localhost:8081/cstrmo/js/offcanvas.js"></script>
 <script src="http://localhost:8081/cstrmo/js/filters.js"></script>
+<script src="http://localhost:8081/cstrmo/js/collectMapTable.js"></script>
 </html>

@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ServletOpenPages", urlPatterns = {"/openRegisterAdmins", "/openListAdminPage", "/openMainAdminsPage",
-        "/openListMapTablePage", "/openListParameterAndCoefficientPage", "/myAccount", "/openImportPage", "/openStructureCollectionPage", "/openRewriteStructureCollectionPage"})
+        "/openListMapTablePage", "/openListParameterAndCoefficientPage", "/myAccount", "/openImportPage", "/openStructureCollectionPage", "/openRewriteStructureCollectionPage",
+        "/returnBackStructureCollection", "/openStructureCollectionPageWithMap"})
 public class openPages extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -38,10 +39,13 @@ public class openPages extends HttpServlet {
                 openCollMapTables(request, response);
                 break;
             case "/openStructureCollectionPage":
-                openListChapter(request, response);
+                openStructureCollectionPage(request, response);
                 break;
             case "/openListParameterAndCoefficientPage":
                 openListParameterAndCoefficient(request, response);
+                break;
+            case "/openStructureCollectionPageWithMap":
+                openStructureCollectionPageWithMap(request, response);
                 break;
             case "/myAccount":
                 openMyAccount(request, response);
@@ -56,71 +60,26 @@ public class openPages extends HttpServlet {
 
     }
 
-    private void openRewriteStructureCollectionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void openStructureCollectionPageWithMap(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long collection_id = Long.parseLong(request.getParameter("collection_id"));
         CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(collection_id);
-        List<Chapter> lChapter = chapter.findChaptersByIdColl(collection_id);
-        request.setAttribute("Chapter", lChapter);
-        request.setAttribute("collection", collectionMapTable);
-        getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
-    }
 
-    private void openImportPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/WEB-INF/administrator/importMapTable.jsp").forward(request, response);
-    }
+        Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
+        MapTable mapTable = mapTables.findMapTableById(mapTable_id);
 
-    private void openMyAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idUser = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("iduser")) {
-                    idUser = cookie.getValue();
-                }
-            }
-        }
-        if (idUser != null) {
-            Long id = Long.parseLong(idUser);
-            UsersAdmin usersAdmin = admin.findAdminById(id);
-            request.setAttribute("login", usersAdmin.getLogin());
-            request.setAttribute("firstName", usersAdmin.getFirstName());
-            request.setAttribute("lastName", usersAdmin.getLastName());
-            request.setAttribute("patronymic", usersAdmin.getPatronymic());
-            getServletContext().getRequestDispatcher("/WEB-INF/administrator/myAccount.jsp").forward(request, response);
-        }
 
-    }
-
-    private void openListParameterAndCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Long id = Long.parseLong(request.getParameter("mapTable_id"));
-        String nameMap = request.getParameter("nameMapTable");
-
-        List<Coefficient> coefficients = parameterAndCoefficient.findCoefficientByIdMap(id);
-        List<Parameter> parameter = parameterAndCoefficient.findParametersByIdMapTable(id);
-        List<Formula> formulas = parameterAndCoefficient.findFormulasByIdMapTable(id);
-        FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(id);
-
+        FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(mapTable.getMapTable_id());
+        List<Formula> lFormula = parameterAndCoefficient.findFormulasByIdMapTable(mapTable.getMapTable_id());
+        List<TypeTime> lTypeTime = typeTime.findAllTypeTime();
+        List<TypeMapTable> lTypeMapTable = typeMapTable.findAllTypeMapTable();
+        List<Discharge> dischargeList = discharges.findAllDischarge();
         if (fileMapTable != null) {
-            request.setAttribute("downloadFileMap", "http://localhost:8081/cstrmo/downloadFile?mapTable_id=" + id.toString());
-            request.setAttribute("selectFile", "disabled");
+            request.setAttribute("downloadFileMap", "http://localhost:8081/cstrmo/downloadFile?mapTable_id=" + mapTable_id.toString());
         } else {
             request.setAttribute("disabledDownloadFile", "disabled");
-            request.setAttribute("disabledDeleteFile", "disabled");
         }
-        request.setAttribute("Parameter", parameter);
-        request.setAttribute("Coefficient", coefficients);
-        request.setAttribute("Formula", formulas);
-        request.setAttribute("nameMapTable", nameMap);
-        request.setAttribute("mapTable_Id", id);
-        getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
-    }
 
-    private void openListChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        Long id = Long.parseLong(request.getParameter("collection_id"));
-        CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(id);
-
-        List<Chapter> lChapter = chapter.findChaptersByIdColl(id);
+        List<Chapter> lChapter = chapter.findChaptersByIdColl(collection_id);
         List<Section> lSection = new ArrayList<>();
         List<MapTable> lMapTable = new ArrayList<>();
         if (lChapter != null) {
@@ -137,21 +96,143 @@ public class openPages extends HttpServlet {
                 }
             }
         }
-        request.setAttribute("showPageRewriteStructureCollection", "http://localhost:8081/cstrmo/openRewriteStructureCollectionPage?collection_id=" + id);
+
+        request.setAttribute("map", mapTable);
+        request.setAttribute("Formula", lFormula);
+        request.setAttribute("TypeMapTable", lTypeMapTable);
+        request.setAttribute("TypeTime", lTypeTime);
+        request.setAttribute("Discharge", dischargeList);
+        request.setAttribute("showPage", "http://localhost:8081/cstrmo/openListParameterAndCoefficientPage?mapTable_id=" + mapTable_id.toString());
+        request.setAttribute("showPageRewriteStructureCollection", "http://localhost:8081/cstrmo/openRewriteStructureCollectionPage?collection_id=" + collection_id);
         request.setAttribute("viewParam", "disabled");
         request.setAttribute("selectFile", "disabled");
         request.setAttribute("disabledDownloadFile", "disabled");
         request.setAttribute("save", "disabled");
         request.setAttribute("delete", "disabled");
-        request.setAttribute("collection_Id", id);
+
         request.setAttribute("Chapter", lChapter);
         request.setAttribute("Section", lSection);
         request.setAttribute("MapTable", lMapTable);
         request.setAttribute("collection", collectionMapTable);
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
+
     }
 
-    private void openRegisterAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void openRewriteStructureCollectionPage(HttpServletRequest request, HttpServletResponse response) throws
+            ServletException, IOException {
+        Long collection_id = Long.parseLong(request.getParameter("collection_id"));
+        CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(collection_id);
+        List<Chapter> lChapter = chapter.findChaptersByIdColl(collection_id);
+        List<TypeTime> lTypeTime = typeTime.findAllTypeTime();
+        List<TypeMapTable> lTypeMapTable = typeMapTable.findAllTypeMapTable();
+        List<Discharge> dischargeList = discharges.findAllDischarge();
+        request.setAttribute("TypeMapTable", lTypeMapTable);
+        request.setAttribute("TypeTime", lTypeTime);
+        request.setAttribute("Discharge", dischargeList);
+        request.setAttribute("Chapter", lChapter);
+        request.setAttribute("collection", collectionMapTable);
+        getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
+    }
+
+    private void openImportPage(HttpServletRequest request, HttpServletResponse response) throws
+            ServletException, IOException {
+        getServletContext().getRequestDispatcher("/WEB-INF/administrator/importMapTable.jsp").forward(request, response);
+    }
+
+    private void openMyAccount(HttpServletRequest request, HttpServletResponse response) throws
+            ServletException, IOException {
+        String idUser = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("iduser")) {
+                    idUser = cookie.getValue();
+                }
+            }
+        }
+        if (idUser != null) {
+            Long id = Long.parseLong(idUser);
+            UsersAdmin usersAdmin = admin.findAdminById(id);
+            request.setAttribute("usersAdmin", usersAdmin);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/myAccount.jsp").forward(request, response);
+        }
+
+    }
+
+    private void openListParameterAndCoefficient(HttpServletRequest request, HttpServletResponse response) throws
+            ServletException, IOException {
+        Long id = Long.parseLong(request.getParameter("mapTable_id"));
+        Long collection_id = Long.parseLong(request.getParameter("collection_id"));
+        MapTable mapTable = mapTables.findMapTableById(id);
+        List<Coefficient> coefficients = parameterAndCoefficient.findCoefficientByIdMap(id);
+        List<Parameter> parameter = parameterAndCoefficient.findParametersByIdMapTable(id);
+        List<Formula> formulas = parameterAndCoefficient.findFormulasByIdMapTable(id);
+        FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(id);
+
+        if (fileMapTable != null) {
+            request.setAttribute("downloadFileMap", "http://localhost:8081/cstrmo/downloadFile?mapTable_id=" + id.toString());
+            request.setAttribute("selectFile", "disabled");
+        } else {
+            request.setAttribute("disabledDownloadFile", "disabled");
+            request.setAttribute("disabledDeleteFile", "disabled");
+        }
+        request.setAttribute("Parameter", parameter);
+        request.setAttribute("collection_id", collection_id);
+        request.setAttribute("Coefficient", coefficients);
+        request.setAttribute("Formula", formulas);
+        request.setAttribute("mapTable", mapTable);
+        getServletContext().getRequestDispatcher("/WEB-INF/administrator/listParameterAndCoefficient.jsp").forward(request, response);
+    }
+
+    private void openStructureCollectionPage(HttpServletRequest request, HttpServletResponse response) throws
+            ServletException, IOException {
+        Long id = Long.parseLong(request.getParameter("collection_id"));
+        CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(id);
+        if (collectionMapTable != null) {
+            List<TypeTime> lTypeTime = typeTime.findAllTypeTime();
+            List<TypeMapTable> lTypeMapTable = typeMapTable.findAllTypeMapTable();
+            List<Discharge> dischargeList = discharges.findAllDischarge();
+            List<Chapter> lChapter = chapter.findChaptersByIdColl(id);
+            List<Section> lSection = new ArrayList<>();
+            List<MapTable> lMapTable = new ArrayList<>();
+            if (lChapter != null) {
+                for (Chapter chapters : lChapter) {
+                    List<Section> sectionList = chapter.findSectionByIdChapter(chapters.getChapter_id());
+                    if (sectionList != null) {
+                        lSection.addAll(sectionList);
+                    }
+                }
+                for (Section section : lSection) {
+                    List<MapTable> mapTableList = collMapTable.findMapByIdSection(section.getSection_id());
+                    if (mapTableList != null) {
+                        lMapTable.addAll(mapTableList);
+                    }
+                }
+            }
+
+            request.setAttribute("showPageRewriteStructureCollection", "http://localhost:8081/cstrmo/openRewriteStructureCollectionPage?collection_id=" + id);
+            request.setAttribute("viewParam", "disabled");
+            request.setAttribute("selectFile", "disabled");
+            request.setAttribute("disabledDownloadFile", "disabled");
+            request.setAttribute("save", "disabled");
+            request.setAttribute("delete", "disabled");
+            request.setAttribute("Chapter", lChapter);
+            request.setAttribute("Section", lSection);
+            request.setAttribute("MapTable", lMapTable);
+            request.setAttribute("TypeMapTable", lTypeMapTable);
+            request.setAttribute("TypeTime", lTypeTime);
+            request.setAttribute("Discharge", dischargeList);
+            request.setAttribute("collection", collectionMapTable);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
+        }else {
+            String message = "Страницы с таким справочником не существует. \n Вернитесь на предыдущую страницу, и обновите ее";
+            request.setAttribute("message",message);
+            getServletContext().getRequestDispatcher("/WEB-INF/pageException/error404.jsp").forward(request, response);
+        }
+    }
+
+    private void openRegisterAdmin(HttpServletRequest request, HttpServletResponse response) throws
+            ServletException, IOException {
         HttpSession httpSession = request.getSession();
         String user = (String) httpSession.getAttribute("user");
         request.setAttribute("name", user);
@@ -169,7 +250,8 @@ public class openPages extends HttpServlet {
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/listAdmins.jsp").forward(request, response);
     }
 
-    private void openCollMapTables(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void openCollMapTables(HttpServletRequest request, HttpServletResponse response) throws
+            ServletException, IOException {
         HttpSession httpSession = request.getSession();
         String user = (String) httpSession.getAttribute("user");
         request.setAttribute("name", user);

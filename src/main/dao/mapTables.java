@@ -101,37 +101,34 @@ public class mapTables {
         return false;
     }
 
-    public static void createMapTable(String nameMapTable, String formul, String numberTable, Long collection_id) {
+    public static boolean createMapTable(Long section_id, String nameMapTable, String numberTable, Long type_id, Long discharge_id, Long typeTime_id) {
+        Section section = chapter.findSectionById(section_id);
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
-        MapTable mapTable = new MapTable();
-        mapTable.setName(nameMapTable);
-        mapTable.setNumberTable(numberTable);
+        if (section != null) {
 
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<CollectionMapTable> criteria = builder.createQuery(CollectionMapTable.class);
-        Root<CollectionMapTable> root = criteria.from(CollectionMapTable.class);
-        criteria.select(root);
-        criteria.where(builder.equal(root.get("collection_id"), collection_id));
+            Discharge discharge = discharges.findDischargeById(discharge_id);
+            TypeTime typeTimes = typeTime.findTypeTimeById(typeTime_id);
+            TypeMapTable typeMapTable = main.dao.typeMapTable.findTypeMapTableById(type_id);
+            MapTable mapTable = new MapTable();
 
-        session.beginTransaction();
-        List<CollectionMapTable> collectionMapTables = session.createQuery(criteria).getResultList();
-        session.getTransaction().commit();
+            mapTable.setName(nameMapTable);
+            mapTable.setNumberTable(numberTable);
+            mapTable.setTypeMapTable(typeMapTable);
+            mapTable.setTypeTime(typeTimes);
+            mapTable.setDischarge(discharge);
+            mapTable.setSection(section);
 
-
-        Iterator<CollectionMapTable> it = collectionMapTables.iterator();
-
-        if (it.hasNext()) {
-
-            CollectionMapTable collectionMapTable = it.next();
-         //   collectionMapTable.addMapTable(mapTable);
-            session.beginTransaction();
-            session.merge(collectionMapTable);
+            session.getTransaction().begin();
+            session.merge(mapTable);
             session.getTransaction().commit();
             session.close();
-        }
-    }
 
+            return true;
+        }
+        session.close();
+        return false;
+    }
     public static boolean deleteFileByIdMapTable(Long mapTable_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -205,6 +202,7 @@ public class mapTables {
         session.getTransaction().commit();
         session.close();
     }
+
 
 
 }

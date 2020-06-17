@@ -26,20 +26,8 @@
     </script>
     <script src="http://localhost:8081/cstrmo/js/collectMapTable.js"></script>
     <script src="http://localhost:8081/cstrmo/dist/jstree.min.js"></script>
-    <script src="http://localhost:8081/cstrmo/js/structureCollection.js"></script>
 </head>
 <body class="d-flex flex-column h-100">
-<!-- Modal -->
-<div class="modal fade" id="waitAnswer" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
-     aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="container text-center">
-            <div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-    </div>
-</div>
 <%
     Cookie[] cookies = request.getCookies();
     String userName = "";
@@ -92,7 +80,7 @@
 <%--Контент--%>
 <main role="main" class="flex-shrink-0"><br>
 
-    <div class="row pl-md-3 pb-md-3" >
+    <div class="row pl-md-3 pb-md-3" style="min-width: 1050px; ">
         <div id="loadCollection" class="col" style="min-width: 800px;">
             <data id="dataLoadCollection" value="1212">
                 <div class="container text-center">
@@ -100,7 +88,7 @@
                 </div>
                 <form method="post" id="formUpdateCollection"
                       action="${pageContext.request.contextPath}/updateCollMapTable">
-                    <label for="collection_id"></label><input id="collection_id" name="idColl"
+                    <label for="collection_id"></label><input id="collection_id" name="collection_id"
                                                               value="${collection.collection_id}" hidden>
                     <div class="row">
                         <div class="col-1 ml-3">
@@ -119,11 +107,10 @@
                             </button>
                         </div>
                         <div class="col-1 mr-2">
-                            <button class="btn btn-outline-secondary" type="button" id="deleteCollection">Удалить
-                                справочник
-                            </button>
+                            <a class="btn btn-outline-secondary"
+                               href="${pageContext.request.contextPath}/deleteCollMapTable?collection_id=${collection.collection_id}">Удалить
+                                справочник</a>
                         </div>
-
                     </div>
                 </form>
             </data>
@@ -133,14 +120,16 @@
         <div class="row" style="min-height: 650px; max-height: 700px;">
             <div id="structureTree" class="col mr-md-5 px-md-5 overflow-auto ">
                 <%--Структура справочника--%>
-                    <a class="btn btn-outline-secondary pb-2"
-                            title="Открывает модуль редактирования глав и разделов справочника." type="button"
-                            id="structure" href="${showPageRewriteStructureCollection}">Структура справочника
-                    </a>
-                <p class="pt-2"><label for="search">Поиск: </label><input style="margin-bottom: 10px;" autocomplete="off"
-                                                          class="form-control" id="search"></p>
+                <a class="btn btn-outline-secondary pb-2"
+                   title="Открывает модуль редактирования глав и разделов справочника." type="button"
+                   id="structure" href="${showPageRewriteStructureCollection}">Структура справочника
+                </a>
+                <p class="pt-2"><label for="search">Поиск: </label><input style="margin-bottom: 10px;"
+                                                                          autocomplete="off"
+                                                                          class="form-control" id="search"></p>
                 <data id="dataStructureTree" value="1212">
                     <div id="jstree">
+
                         <!-- in this example the tree is populated from inline HTML -->
                         <ul>
                             <c:forEach var="chapter" items="${Chapter}">
@@ -168,11 +157,12 @@
                                 </li>
                             </c:forEach>
                         </ul>
+
                     </div>
                     <%--Конец структуры справочника--%>
                 </data>
             </div>
-            <label for="Col"></label><input id="Col" value="${collection_Id}"
+            <label for="Col"></label><input id="Col" value="${collection.collection_id}"
                                             hidden>
             <div class="col col-8 mr-md-5 pb-md-3 pt-md-5 border border-secondary " style="min-width: 950px;">
                 <div id="blockWithUpdateMapTable">
@@ -296,7 +286,8 @@
                                     <button class="btn btn-outline-primary" id="save" type="submit" ${save}>Сохранить
                                         изменения
                                     </button>
-                                    <button class="btn btn-outline-secondary" id="deleteMapTable" ${delete}>Удалить
+                                    <button class="btn btn-outline-secondary" onclick="deleteMapTableById(${map.mapTable_id})"
+                                            type="button" id="deleteMapTable" ${delete}>Удалить
                                         карту
                                     </button>
                                 </div>
@@ -352,5 +343,5 @@
 <script src="http://localhost:8081/cstrmo/js/offcanvas.js"></script>
 <script src="http://localhost:8081/cstrmo/js/filters.js"></script>
 <script src="http://localhost:8081/cstrmo/js/uploadFile.js"></script>
-<script src="http://localhost:8081/cstrmo/js/mapTable.js"></script>
+<script src="http://localhost:8081/cstrmo/js/structureCollection.js"></script>
 </html>

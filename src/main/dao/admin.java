@@ -174,4 +174,19 @@ public class admin {
         session.getTransaction().commit();
         session.close();
     }
+
+    public static void updateDataAcc(String firstName, String lastName, String patronymic, String login, Long id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        UsersAdmin usersAdmin = findAdminById(id);
+        usersAdmin.setPatronymic(patronymic);
+        usersAdmin.setFirstName(firstName);
+        usersAdmin.setLastName(lastName);
+        usersAdmin.setLogin(login);
+
+        session.getTransaction().begin();
+        session.update(usersAdmin);
+        session.getTransaction().commit();
+        session.close();
+    }
 }

@@ -15,7 +15,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "ServletDaoChapter", urlPatterns = {"/findChapter", "/getListSection", "/findSection", "/updateChapter", "/updateSection"})
+@WebServlet(name = "ServletDaoChapter", urlPatterns = {"/findChapter", "/getListSection", "/findSection", "/updateChapter", "/updateSection",
+        "/addNewChapter","/addNewSection","/deleteChapter", "/deleteSection"})
 public class daoChapter extends HttpServlet {
     @Override
     public void init() throws ServletException {
@@ -33,6 +34,12 @@ public class daoChapter extends HttpServlet {
             case "/updateSection":
                 updateSection(request, response);
                 break;
+            case "/addNewChapter":
+                addNewChapter(request, response);
+                break;
+            case "/addNewSection":
+                addNewSection(request, response);
+                break;
         }
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,6 +56,67 @@ public class daoChapter extends HttpServlet {
             case "/findChapter":
                 findChapter(request, response);
                 break;
+            case "/deleteChapter":
+                deleteChapter(request, response);
+                break;
+            case "/deleteSection":
+                deleteSection(request, response);
+                break;
+        }
+    }
+
+    private void deleteSection(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
+        Long section_id = Long.parseLong(request.getParameter("section_id"));
+        boolean res = chapter.deleteSectionById(section_id);
+        if (res) {
+            List<Section> sections = chapter.findSectionByIdChapter(chapter_id);
+            request.setAttribute("Section", sections);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
+        } else {
+            String answer = "fail";
+            response.getWriter().write(answer);
+        }
+    }
+
+    private void deleteChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
+        Long collection_id = Long.parseLong(request.getParameter("collection_id"));
+        boolean res = chapter.deleteChapterById(chapter_id);
+        if (res) {
+            List<Chapter> chapters = chapter.findChaptersByIdColl(collection_id);
+            request.setAttribute("Chapter", chapters);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
+        } else {
+            String answer = "fail";
+            response.getWriter().write(answer);
+        }
+    }
+
+    private void addNewChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long collection_id = Long.parseLong(request.getParameter("collection_id"));
+        String nameChapter = request.getParameter("nameChapter").trim();
+
+        if (nameChapter.length() > 0) {
+            chapter.createChapter(collection_id, nameChapter);
+            List<Chapter> chapters = chapter.findChaptersByIdColl(collection_id);
+            request.setAttribute("Chapter", chapters);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
+        } else {
+            String answer = "fail";
+            response.getWriter().write(answer);
+        }
+    }
+    private void addNewSection(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
+        String nameSection = request.getParameter("nameSection").trim();
+
+        if (nameSection.length() > 0) {
+            chapter.createSection(chapter_id, nameSection);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
+        } else {
+            String answer = "fail";
+            response.getWriter().write(answer);
         }
     }
     private void updateSection(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

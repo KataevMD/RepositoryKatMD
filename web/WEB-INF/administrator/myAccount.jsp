@@ -100,13 +100,17 @@
                 <form id="updateForm" autocomplete="off"
                       action="${pageContext.request.contextPath}/updateAccAdmin" method="post">
                     <p class="text-center h3">Личные данные</p>
+                    <label for="user_id"></label><input type="text" name="user_id"
+                                                        value="<c:out value="${usersAdmin.id}"/>"
+                                                        id="user_id" required
+                                                        hidden>
                     <br>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputFirstName">Имя</label>
                             <input type="text" name="firstName" autocomplete="off" class="form-control"
-                                   value="<c:out value="${firstName}"/>"
-                                   pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" onkeyup="checkFname()"
+                                   value="<c:out value="${usersAdmin.firstName}"/>"
+                                   pattern="^([А-Я]{1}[а-яё]{2,30}|[A-Z]{1}[a-z]{2,30})$"
                                    title="Разрешено использовать русские и латинские буквы. Имя начинается с заглавной."
                                    id="inputFirstName" required
                                    autofocus>
@@ -115,32 +119,32 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputLastName">Фамилия</label>
-                            <input type="text" name="lastName" autocomplete="off" onkeyup="checkLname()"
-                                   class="form-control" value="<c:out value="${lastName}"/>"
+                            <input type="text" name="lastName" autocomplete="off"
+                                   class="form-control" value="<c:out value="${usersAdmin.lastName}"/>"
                                    title="Разрешено использовать русские и латинские буквы. Фамииля начинается с заглавной."
-                                   pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" id="inputLastName" required>
+                                   pattern="^([А-Я]{1}[а-яё]{2,30}|[A-Z]{1}[a-z]{2,30})$" id="inputLastName" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6 ">
                             <label for="inputPatronymic">Отчество</label>
-                            <input type="text" name="patronymic" autocomplete="off" onkeyup="checkPatron()"
-                                   class="form-control" value="<c:out value="${patronymic}"/>"
+                            <input type="text" name="patronymic" autocomplete="off"
+                                   class="form-control" value="<c:out value="${usersAdmin.patronymic}"/>"
                                    title="Разрешено использовать русские и латинские буквы. Отчество начинается с заглавной."
-                                   pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" id="inputPatronymic">
+                                   pattern="^([А-Я][а-яё]{0,23}|[A-Z][a-z]{0,30})$" id="inputPatronymic">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputLogin">Логин</label>
-                            <input type="text" name="login" autocomplete="off" onkeyup="checkLogin()"
-                                   class="form-control" value="<c:out value="${login}"/>"
+                            <input type="text" name="login" autocomplete="off"
+                                   class="form-control" value="<c:out value="${usersAdmin.login}"/>"
                                    title="Разрешено использовать только латинские буквы, цифры. Длина пароля не менее 6, и не более 20 символов."
                                    pattern="^[a-zA-Z][a-zA-Z0-9]{6,20}$"
                                    id="inputLogin" required>
                         </div>
                     </div>
-                    <button class="btn btn-lg btn-primary" id="createNewAcc" type="submit">Сохранить
+                    <button class="btn btn-lg btn-primary" type="submit">Сохранить
                     </button>
                     <a class="btn btn-lg btn-secondary" href="javascript:history.go(-1);" id="cancel" ${disableCancel}> Отменить</a>
                 </form>

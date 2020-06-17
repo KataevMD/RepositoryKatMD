@@ -139,6 +139,17 @@ public class daoAdmin extends HttpServlet {
         }
     }
 
-    private void updateAccAdmin(HttpServletRequest request, HttpServletResponse response) {
+    private void updateAccAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if (ajax) {
+            String firstName = request.getParameter("firstName").trim();
+            String lastName = request.getParameter("lastName").trim();
+            String patronymic = request.getParameter("patronymic").trim();
+            String login = request.getParameter("login").trim();
+            Long id = Long.parseLong(request.getParameter("user_id"));
+            admin.updateDataAcc(firstName,lastName,patronymic,login,id);
+            String answer = "success";
+            response.getWriter().write(answer);
+        }
     }
 }

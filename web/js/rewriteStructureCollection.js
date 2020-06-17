@@ -1,28 +1,22 @@
-//Функция получения Списка разделов по id Главы
-function getListSection(chapter_id) {
-
-
+function getSection(select) {
+    findSectionByIdChapter(select.value)
+}
+function findSectionByIdChapter(chapter_id) {
     $.ajax({
         method: 'get',
-        url: 'http://localhost:8081/cstrmo/getListSection',     // URL - сервлет
+        url: 'http://localhost:8081/cstrmo/getListSections',     // URL - сервлет
         data: {                 // передаваемые сервлету данные
             chapter_id: chapter_id
+
         },
         success: function (response) {
 
-            $("#loadListSection").html($(response).find("#dataListSection").html());
-            $("#loadChapter").html($(response).find("#dataLoadChapter").html());
-
-            $('#saveChapter').prop('disabled', false);
-            $('#deleteChapter').prop('disabled', false);
+                $('#lSection').html($(response).find('#lSection').html());
 
 
-            let id = $('#collection_id').val();
-            $('#loadChapter').find($('#col_d').val(id));
         }
     });
 }
-
 //Функция получения Параметра по id
 function findChapter(chapter_id) {
     $.ajax({
@@ -71,6 +65,24 @@ function findSection(section_id) {
         }
     });
 }
+//Функция сбора данных с формы, и их последующая отправка в сервлет, для создания новой Главы
+$(document).on("submit", "#formCreateNewMapTable", function (event) {
+    let $form = $(this);
+
+    $.post($form.attr("action"), $form.serialize(), function (response) {
+        if (response === "fail") {
+            alert('Новая карта не создана!');
+
+        } else {
+            $('#numMap').val(null);
+            $('#namMap').val(null);
+
+            alert('Новая карта создана!');
+        }
+    });
+    event.preventDefault(); // Important! Prevents submitting the form.
+});
+
 //Функция сбора данных с формы, и их последующая отправка в сервлет, для обновления данных Главы
 $(document).on("submit", "#formUpdateChapter", function (event) {
     let $form = $(this);
@@ -109,3 +121,95 @@ $(document).on("submit", "#formUpdateSection", function (event) {
     });
     event.preventDefault(); // Important! Prevents submitting the form.
 });
+//Функция сбора данных с формы, и их последующая отправка в сервлет, для создания новой Главы
+$(document).on("submit", "#formCreateChapter", function (event) {
+    let $form = $(this);
+
+    $.post($form.attr("action"), $form.serialize(), function (response) {
+        if (response === "fail") {
+            alert('Новая глава не создана!');
+
+        } else {
+            $("#loadListChapter").html($(response).find("#dataListChapter").html());
+            $("#loadChapters").html($(response).find("#dataChapters").html());
+            $('#nameChapter').val(null);
+
+            alert('Новая глава создана!');
+        }
+    });
+    event.preventDefault(); // Important! Prevents submitting the form.
+});
+//Функция сбора данных с формы, и их последующая отправка в сервлет, для создания новой Главы
+$(document).on("submit", "#formCreateSection", function (event) {
+    let $form = $(this);
+
+    $.post($form.attr("action"), $form.serialize(), function (response) {
+        if (response === "fail") {
+            alert('Новый раздел не создан!');
+
+        } else {
+
+            $('#nameSection').val(null);
+
+            alert('Новый раздел создан!');
+        }
+    });
+    event.preventDefault(); // Important! Prevents submitting the form.
+});
+
+function deleteChapterById(){
+
+    let chapter_id = $("#chapter_id").val();
+    let collection_id = $('#collection_Id').val();
+    $('#saveChapter').prop('disabled', true);
+    $('#deleteChapter').prop('disabled', true);
+    $.ajax({
+        method: 'get',
+        url: 'http://localhost:8081/cstrmo/deleteChapter',     // URL - сервлет
+        data: {                 // передаваемые сервлету данные
+            chapter_id: chapter_id,
+            collection_id: collection_id
+        },
+        success: function (response) {
+
+            if (response === "fail") {
+                alert('Глава не удалена!');
+                $('#saveChapter').prop('disabled', false);
+                $('#deleteChapter').prop('disabled', false);
+            } else {
+
+                $("#loadListChapter").html($(response).find("#dataListChapter").html());
+                $('#nameChapter').val(null);
+                alert('Глава удалена');
+            }
+        }
+    });
+}
+// Функция удаления значения коэффициента по его ID
+function deleteSectionById() {
+
+    let chapter_id = $('#chapters_id').val();
+    let section_id = $('#section_id').val();
+    $('#saveSection').prop('disabled', true);
+    $('#deleteSection').prop('disabled', true);
+    $.ajax({
+        method: 'get',
+        url: 'http://localhost:8081/cstrmo/deleteSection',     // URL - сервлет
+        data: {                 // передаваемые сервлету данные
+            chapter_id: chapter_id,
+            section_id: section_id
+        },
+        success: function (response) {
+
+            if (response === "fail") {
+                $('#saveSection').prop('disabled', false);
+                $('#deleteSection').prop('disabled', false);
+                alert('Раздел не удален!');
+            } else {
+                $('#nameSection').val(null);
+                alert('Раздел удален!');
+                $("#loadListSection").html($(response).find("#dataListSection").html());
+            }
+        }
+    });
+}

@@ -62,13 +62,14 @@ public class daoMapTable extends HttpServlet {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
             Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
+            String collection_id = request.getParameter("collection_id");
             MapTable mapTable = mapTables.findMapTableById(mapTable_id);
             if (mapTable != null) {
                 List<TypeTime> lTypeTime = typeTime.findAllTypeTime();
                 List<TypeMapTable> lTypeMapTable = typeMapTable.findAllTypeMapTable();
+                List<Discharge> dischargeList = discharges.findAllDischarge();
                 FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(mapTable.getMapTable_id());
                 List<Formula> lFormula = parameterAndCoefficient.findFormulasByIdMapTable(mapTable.getMapTable_id());
-                List<Discharge> dischargeList = discharges.findAllDischarge();
                 if (fileMapTable != null) {
                     request.setAttribute("downloadFileMap", "http://localhost:8081/cstrmo/downloadFile?mapTable_id=" + mapTable_id.toString());
                 } else {
@@ -80,7 +81,7 @@ public class daoMapTable extends HttpServlet {
                 request.setAttribute("TypeMapTable", lTypeMapTable);
                 request.setAttribute("TypeTime", lTypeTime);
                 request.setAttribute("Discharge", dischargeList);
-                request.setAttribute("showPage", "http://localhost:8081/cstrmo/openListParameterAndCoefficientPage?mapTable_id=" + mapTable_id.toString()+"&nameMapTable="+mapTable.getName());
+                request.setAttribute("showPage", "http://localhost:8081/cstrmo/openListParameterAndCoefficientPage?mapTable_id=" + mapTable_id.toString()+"&collection_id="+collection_id);
                 getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
             }
         }
@@ -114,18 +115,22 @@ public class daoMapTable extends HttpServlet {
     }
 
     private void addMapTable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
-        String nameMapTable = request.getParameter("nameMapTable").trim();
-        String formulMapTable = request.getParameter("formulMapTable");
-        String numberMapTable = request.getParameter("numberMapTable");
-        Long collection_id = Long.parseLong(request.getParameter("collection_Id").trim());
 
         if (ajax) {
-            if (nameMapTable.length() > 0) {
-                mapTables.createMapTable(nameMapTable, formulMapTable, numberMapTable, collection_id);
-                List<MapTable> MapTables = collMapTable.findMapByIdSection(collection_id);
-                request.setAttribute("MapTables", MapTables);
-                getServletContext().getRequestDispatcher("/WEB-INF/administrator/listMapTable.jsp").forward(request, response);
+            Long section_id = Long.parseLong(request.getParameter("sections"));
+            String numberTable = request.getParameter("numberMapTable").trim();
+            String nameMapTable = request.getParameter("nameMapTable").trim();
+
+
+            Long typeTime_id = Long.parseLong(request.getParameter("typeTimes"));
+            Long discharge_id = Long.parseLong(request.getParameter("discharge"));
+            Long type_id = Long.parseLong(request.getParameter("typeMapTable"));
+
+            boolean res = mapTables.createMapTable(section_id,nameMapTable, numberTable, type_id, discharge_id, typeTime_id);
+            if (res) {
+                getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
             } else {
                 String answer = "fail";
                 response.getWriter().write(answer);
@@ -181,9 +186,46 @@ public class daoMapTable extends HttpServlet {
         Long collection_id = Long.parseLong(request.getParameter("collection_id"));
         boolean res = mapTables.deleteMapTableById(id);
         if (res) {
-            List<MapTable> MapTables = collMapTable.findMapByIdSection(collection_id);
-            request.setAttribute("MapTables", MapTables);
-            getServletContext().getRequestDispatcher("/WEB-INF/administrator/listMapTable.jsp").forward(request, response);
+
+            CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(collection_id);
+            if (collectionMapTable != null) {
+                List<TypeTime> lTypeTime = typeTime.findAllTypeTime();
+                List<TypeMapTable> lTypeMapTable = typeMapTable.findAllTypeMapTable();
+                List<Discharge> dischargeList = discharges.findAllDischarge();
+                List<Chapter> lChapter = chapter.findChaptersByIdColl(collection_id);
+                List<Section> lSection = new ArrayList<>();
+                List<MapTable> lMapTable = new ArrayList<>();
+                if (lChapter != null) {
+                    for (Chapter chapters : lChapter) {
+                        List<Section> sectionList = chapter.findSectionByIdChapter(chapters.getChapter_id());
+                        if (sectionList != null) {
+                            lSection.addAll(sectionList);
+                        }
+                    }
+                    for (Section section : lSection) {
+                        List<MapTable> mapTableList = collMapTable.findMapByIdSection(section.getSection_id());
+                        if (mapTableList != null) {
+                            lMapTable.addAll(mapTableList);
+                        }
+                    }
+                }
+                request.setAttribute("viewParam", "disabled");
+                request.setAttribute("selectFile", "disabled");
+                request.setAttribute("disabledDownloadFile", "disabled");
+                request.setAttribute("save", "disabled");
+                request.setAttribute("delete", "disabled");
+                request.setAttribute("Chapter", lChapter);
+                request.setAttribute("Section", lSection);
+                request.setAttribute("MapTable", lMapTable);
+                request.setAttribute("TypeMapTable", lTypeMapTable);
+                request.setAttribute("TypeTime", lTypeTime);
+                request.setAttribute("Discharge", dischargeList);
+                getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
+            }else {
+                String message = "Страницы с таким справочником не существует. \n Вернитесь на предыдущую страницу, и обновите ее";
+                request.setAttribute("message",message);
+                getServletContext().getRequestDispatcher("/WEB-INF/pageException/error404.jsp").forward(request, response);
+            }
         } else {
             String answer = "fail";
             response.getWriter().write(answer);
