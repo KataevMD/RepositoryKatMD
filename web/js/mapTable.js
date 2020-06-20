@@ -1,10 +1,3 @@
-function viewUpdateMap(mapTable_id) {
-    $("#map_" + mapTable_id).attr('hidden', false)
-}
-
-function closeUpdateMap(mapTable_id) {
-    $("#map_" + mapTable_id).attr('hidden', true)
-}
 
 //Функция удаления карты по ее ID
 function deleteMapTableById(mapTable_id) {
@@ -45,44 +38,6 @@ $('#number').change(function () {
         $inp.removeClass('error');
     }
 });
-
-
-function checkNameMap(mapTable_id) {
-    let name = $('#nameMap_' + mapTable_id).val();
-    let regName = '^[А-Яа-яЁё,\\s]+$';
-    if (!name.match(regName)) {
-        $('#save' + mapTable_id).prop('disabled', true);
-        $('#nameMap_' + mapTable_id).blur().addClass('error');
-    } else {
-        $('#save' + mapTable_id).prop('disabled', false);
-        $('#nameMap_' + mapTable_id).removeClass('error');
-    }
-}
-
-function checkInputNameMap() {
-    let name = $('#inputNameMapTable').val();
-    let regName = '^[А-Яа-яЁё,\\s]+$';
-    if (!name.match(regName)) {
-        $('#createMap').prop('disabled', true);
-        $('#inputNameMapTable').addClass('error');
-    } else {
-        $('#createMap').prop('disabled', false);
-        $('#inputNameMapTable').removeClass('error');
-    }
-}
-
-function checkInputNumberMap() {
-    let $inp = $('#inputNumberMapTable');
-    let numberMap = $inp.val();
-    let regName = '^[0-9]+$';
-    if (!numberMap.match(regName)) {
-        $('#createMap').prop('disabled', true);
-        $inp.addClass('error');
-    } else {
-        $('#createMap').prop('disabled', false);
-        $inp.removeClass('error');
-    }
-}
 
 function cloneMapTable(collection_id) {
     let mapTable_id = $('#mapTable_id').val();

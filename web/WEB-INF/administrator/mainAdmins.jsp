@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <title>Единая база нормативов технологических операций</title>
-
+    <link rel="shortcut icon" href="http://localhost:8081/cstrmo/img/favicon.png" type="image/png">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -180,7 +180,7 @@
                 <form id="createForm" autocomplete="off" method="post"
                       action="${pageContext.request.contextPath}/addNewCollMapTable">
                     <label for="inputNameCollMapTable">Введите название справочника</label>
-                    <input id="inputNameCollMapTable" onkeyup="checkInputNameColl()" autocomplete="off" class="form-control" pattern="^[А-Яа-яЁё\s]+$"
+                    <input id="inputNameCollMapTable" autocomplete="off" class="form-control" pattern="^[А-Яа-яЁё\s]+$"
                            name="nameCollMapTable"
                            title="Разрешено использовать только пробелы, запятые и русские буквы"
                            placeholder="Название справочника"

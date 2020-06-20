@@ -31,13 +31,14 @@ $(document).on("submit", "#updatePassword", function (event) {
     let $form = $(this);
 
     $.post($form.attr("action"), $form.serialize(), function (response) {
+
         if (response === "passNotEquals") {
-            $('#error').toast('show');
-            $('#bodyError').text('Введенные пароли не совпадают!!');
+            alert('Введенные пароли не совпадаю!')
         } else if(response === "success"){
-            $('#updatePass').toast('show');
-            $('#updateSuccess').text('Введенные пароли не совпадают!!');
+            alert('Пароль успешно обновлен');
             $('#updatePassword')[0].reset();
+        } else if(response === "notValid"){
+            alert('Текущий пароль не верен!');
         }
 
     });

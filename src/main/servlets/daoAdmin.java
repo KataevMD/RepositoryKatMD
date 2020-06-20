@@ -81,12 +81,19 @@ public class daoAdmin extends HttpServlet {
             String newPassword = request.getParameter("newPassword").trim();
             String retNewPassword = request.getParameter("retNewPassword").trim();
             oldPassword = admin.getHash(oldPassword);
-            if (oldPassword.equals(user.getPassword()) && newPassword.equals(retNewPassword)) {
-                String hashPassw = admin.getHash(newPassword);
-                user.setPassword(hashPassw);
-                admin.updatePassword(user);
-                answer = "success";
-            } else {
+
+            if(newPassword.equals(retNewPassword)){
+                if (oldPassword.equals(user.getPassword()) ) {
+
+                    String hashPassw = admin.getHash(newPassword);
+                    user.setPassword(hashPassw);
+                    admin.updatePassword(user);
+                    answer = "success";
+                }else {
+                    answer = "notValid";
+                }
+            }
+             else {
                 answer = "passNotEquals";
             }
             response.getWriter().write(answer);

@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,27 +52,31 @@ public class importMapTable extends HttpServlet {
                 String sectionId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
                 section_id = Long.parseLong(sectionId);
                 inputStream.close();
-            }if (part.getName().equals("typeTime_id")) {
+            }
+            if (part.getName().equals("typeTime_id")) {
                 InputStream inputStream = part.getInputStream();
                 InputStreamReader isr = new InputStreamReader(inputStream);
                 String typeTimeId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
                 typeTime_id = Long.parseLong(typeTimeId);
                 inputStream.close();
-            }if (part.getName().equals("discharge_id")) {
+            }
+            if (part.getName().equals("discharge_id")) {
                 InputStream inputStream = part.getInputStream();
                 InputStreamReader isr = new InputStreamReader(inputStream);
                 String dischargeId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
                 discharge_id = Long.parseLong(dischargeId);
                 inputStream.close();
-            }if (part.getName().equals("typeMapTable_id")) {
+            }
+            if (part.getName().equals("typeMapTable_id")) {
                 InputStream inputStream = part.getInputStream();
                 InputStreamReader isr = new InputStreamReader(inputStream);
                 String typeMapTableId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
                 typeMapTable_id = Long.parseLong(typeMapTableId);
                 inputStream.close();
-            }if (part.getName().equals("file")){
+            }
+            if (part.getName().equals("file")) {
                 part.write(part.getSubmittedFileName());
-                fileMapTable = new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\cstrmo\\file\\"+part.getSubmittedFileName());
+                fileMapTable = new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\cstrmo\\file\\" + part.getSubmittedFileName());
                 arrayFile.add(fileMapTable);
             }
         }
@@ -77,9 +84,11 @@ public class importMapTable extends HttpServlet {
         TypeTime tTime = typeTime.findTypeTimeById(typeTime_id);
         TypeMapTable tTable = typeMapTable.findTypeMapTableById(typeMapTable_id);
         Discharge discharge = discharges.findDischargeById(discharge_id);
-        if(!arrayFile.isEmpty()){
-            for(File file : arrayFile){
-                imp(file.getPath(), sections,tTable,tTime,discharge);
+        if (!arrayFile.isEmpty()) {
+            for (File file : arrayFile) {
+                Path fileToDelete = Paths.get(file.getAbsolutePath());
+                imp(file.getPath(), sections, tTable, tTime, discharge);
+                Files.delete(fileToDelete);
             }
         }
 
@@ -87,13 +96,13 @@ public class importMapTable extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req,resp);
+        doPost(req, resp);
     }
 
-    public static void imp(String path, Section sections, TypeMapTable tTable, TypeTime tTime, Discharge discharge) {
+    public static void imp(String path, Section sections, TypeMapTable tTable, TypeTime tTime, Discharge discharge) throws IOException {
         SessionFactory sesFactory = HibernateUtil.getSessionFactory();
         Session sessia = sesFactory.openSession();
-        InputStream in;
+        InputStream in = null;
         XSSFWorkbook wb = null;
         try {
 
@@ -252,9 +261,10 @@ public class importMapTable extends HttpServlet {
             sessia.close();
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+        in.close();
+        wb.close();
     }
 }

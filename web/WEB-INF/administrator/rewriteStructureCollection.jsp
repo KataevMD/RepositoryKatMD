@@ -10,6 +10,7 @@
 <html lang="en">
 <head>
     <title>Единая база нормативов технологических операций</title>
+    <link rel="shortcut icon" href="http://localhost:8081/cstrmo/img/favicon.png" type="image/png">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -451,7 +452,7 @@
                                 <div class="col-4" style="min-width: 50%;">
                                     <button class="btn btn-outline-primary" id="createMap" type="submit">Создать карту
                                     </button>
-                                    <button class="btn btn-outline-secondary" data-dismiss="modal" id="cancel">Отмена
+                                    <button class="btn btn-outline-secondary" type="reset">Отмена
                                     </button>
                                 </div>
                             </div>

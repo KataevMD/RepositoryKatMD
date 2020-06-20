@@ -59,3 +59,15 @@ function filterChapter(element) {
         }
     });
 }
+function filterColl(element) {
+    let value = $(element).val();
+
+    $("#collection > option").each(function() {
+        if ($(this).text().toLowerCase().search(value) > -1) {
+            $(this).show();
+        }
+        else {
+            $(this).hide();
+        }
+    });
+}

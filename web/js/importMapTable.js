@@ -1,6 +1,13 @@
 $(document).ready(function () {
     let dropZone = $('#upload-container');
 
+    $('#chapter').prop('disabled', true);
+    $('#section').prop('disabled', true);
+    $('#typeMap').prop('disabled', true);
+    $('#typeTime').prop('disabled', true);
+    $('#discharge').prop('disabled', true);
+    $('#blockImport').prop('disabled', true);
+
     $('#file-input').focus(function () {
         $('label').addClass('focus');
     })
@@ -32,22 +39,27 @@ $(document).ready(function () {
     });
 
     function sendFiles(files) {
+        let res = confirm("Импортировать выбранные файлы?");
+        if (res) {
+            $('#waitingUpload').modal('show');
+            let Data = new FormData($('#upload-container')[0]);
+            // $(files).each(function (index, file) {
+            //     Data.append('file', file);
+            // });
 
-        let Data = new FormData($('#upload-container')[0]);
-        $(files).each(function (index, file) {
-            Data.append('file', file);
-        });
+            $.ajax({
+                url: 'http://localhost:8081/cstrmo/importMapTable',
+                type: 'post',
+                data: Data,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    alert('Файлы были успешно загружены!');
+                    $('#close').click();
+                }
 
-        $.ajax({
-            url: 'http://localhost:8081/cstrmo/importMapTable',
-            type: 'post',
-            data: Data,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                alert('Файлы были успешно загружены!');
-            }
-        });
+            });
+        }
     }
 
     $('#file-input').change(function () {
@@ -58,7 +70,9 @@ $(document).ready(function () {
 });
 
 function getChapter(select) {
-    findChapterByIdColl(select.value)
+    $('#blockColl').prop('disabled', true);
+    findChapterByIdColl(select.value);
+    $('#chapter').prop('disabled', false);
 }
 
 function findChapterByIdColl(collection_id) {
@@ -67,19 +81,17 @@ function findChapterByIdColl(collection_id) {
         url: 'http://localhost:8081/cstrmo/loadListChapter',     // URL - сервлет
         data: {                 // передаваемые сервлету данные
             collection_id: collection_id
-
         },
         success: function (response) {
-
             $('#listChapter').html($(response).find('#dataListChapter').html());
-
-
         }
     });
 }
 
 function getSection(select) {
-    findSectionByIdChapter(select.value)
+    $('#blockChapter').prop('disabled', true);
+    findSectionByIdChapter(select.value);
+    $('#section').prop('disabled', false);
 }
 
 function findSectionByIdChapter(chapter_id) {
@@ -93,24 +105,34 @@ function findSectionByIdChapter(chapter_id) {
         success: function (response) {
 
             $('#listSection').html($(response).find('#dataListSection').html());
-
-
         }
     });
 }
 
 function selectDischarge(select) {
-    $('#discharge_id').val(select.value);
+    $('#blockDisch').prop('disabled', true);
+    $('#upload-container').find($('#discharge_id').val(null));
+    $('#upload-container').find($('#discharge_id').val(select.value));
+    $('#upload-container').prop('hidden', false);
 }
 
 function selectTypeMap(select) {
-    $('#typeMapTable_id').val(select.value);
+    $('#typeTime').prop('disabled', false);
+    $('#blockTypeMap').prop('disabled', true);
+    $('#upload-container').find($('#typeMapTable_id').val(null));
+    $('#upload-container').find($('#typeMapTable_id').val(select.value));
 }
 
 function selectTypeTime(select) {
-    $('#typeTime_id').val(select.value);
+    $('#discharge').prop('disabled', false);
+    $('#blockTypeTime').prop('disabled', true);
+    $('#upload-container').find($('#typeTime_id').val(null));
+    $('#upload-container').find($('#typeTime_id').val(select.value));
 }
 
 function selectSection(select) {
-    $('#section_id').val(select.value);
+    $('#typeMap').prop('disabled', false);
+    $('#blockSection').prop('disabled', true);
+    $('#upload-container').find($('#section_id').val(null));
+    $('#upload-container').find($('#section_id').val(select.value));
 }

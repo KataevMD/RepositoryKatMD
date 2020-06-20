@@ -10,13 +10,14 @@
 <html lang="en">
 <head>
     <title>Единая база нормативов технологических операций</title>
-
+    <link rel="shortcut icon" href="http://localhost:8081/cstrmo/img/favicon.png" type="image/png">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/offcanvas.css">
     <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/uploadFile.css">
+    <link rel="stylesheet" href="http://localhost:8081/cstrmo/css/importMapTable.css">
     <script
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
@@ -25,6 +26,22 @@
     <script src="http://localhost:8081/cstrmo/js/importMapTable.js"></script>
 </head>
 <body class="d-flex flex-column h-100">
+<!-- Vertically centered modal -->
+<div class="modal fade" id="waitingUpload" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="container">
+            <div class="cssload-thecube">
+                <div class="cssload-cube cssload-c1"></div>
+                <div class="cssload-cube cssload-c2"></div>
+                <div class="cssload-cube cssload-c4"></div>
+                <div class="cssload-cube cssload-c3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<button data-toggle="modal" id="close"
+        data-target="#waitingUpload" hidden></button>
 <%
     Cookie[] cookies = request.getCookies();
     String userName = "";
@@ -86,12 +103,13 @@
         <p class="h5 mt-auto ml-3">1. Выберите справочник в графе "Справочник".</p>
         <div class="row pb-3 ml-5">
             <div class="col  col-4">
-                <label for="findCollection">Поиск справочника по названию:</label><input class="form-control"
+                <label for="findCollection">Поиск справочника по названию:</label><input onkeyup="filterColl(this)" class="form-control"
                                                                                          id="findCollection">
             </div>
             <div class="col col-6">
                 <label for="collection">Справочник:</label>
                 <select id="collection" onchange="getChapter(this)" name="collection" class="form-control">
+                    <option id="blockColl">Выберите справочник</option>
                     <c:forEach var="collection" items="${lCollection}">
                         <option value="${collection.collection_id}">${collection.nameCollectionMapTable}</option>
                     </c:forEach>
@@ -104,9 +122,10 @@
 
             <div id="listChapter" class="col col-6">
                 <data id="dataListChapter" value="1212">
-                <label for="chapter">Глава: </label>
+                    <label for="chapter">Глава: </label>
 
                     <select class="form-control" onchange="getSection(this)" id="chapter">
+                        <option id="blockChapter">Выберите главу</option>
                         <c:forEach var="chapter" items="${lChapter}">
                             <option value="${chapter.chapter_id}">${chapter.nameChapter}</option>
                         </c:forEach>
@@ -121,9 +140,10 @@
 
             <div id="listSection" class="col col-6">
                 <data id="dataListSection" onchange="selectSection(this)" value="1212">
-                <label for="section">Раздел: </label>
+                    <label for="section">Раздел: </label>
 
-                    <select class="form-control" id="section">
+                    <select class="form-control" onchange="selectSection(this)" id="section">
+                        <option id="blockSection">Выберите раздел</option>
                         <c:forEach var="section" items="${lSections}">
                             <option value="${section.section_id}">${section.nameSection}</option>
                         </c:forEach>
@@ -139,6 +159,7 @@
             <div class="col col-6">
                 <label for="typeMap">Типы карт: </label>
                 <select class="form-control" onchange="selectTypeMap(this)" id="typeMap">
+                    <option id="blockTypeMap">Выберите тип карт</option>
                     <c:forEach var="typeMap" items="${lTypeMapTables}">
                         <option value="${typeMap.type_id}">${typeMap.nameType}</option>
                     </c:forEach>
@@ -153,6 +174,7 @@
             <div class="col col-6">
                 <label for="typeTime">Типы времени: </label>
                 <select class="form-control" onchange="selectTypeTime(this)" id="typeTime">
+                    <option id="blockTypeTime">Выберите тип времени</option>
                     <c:forEach var="typeTime" items="${lTypeTimes}">
                         <option value="${typeTime.typeTime_id}">${typeTime.nameTypeTime}</option>
                     </c:forEach>
@@ -167,29 +189,35 @@
             <div class="col col-6">
                 <label for="discharge">Разряд: </label>
                 <select class="form-control" onchange="selectDischarge(this)" id="discharge">
+                    <option id="blockDisch">Выберите разряд</option>
                     <c:forEach var="discharge" items="${lDischarge}">
                         <option value="${discharge.discharge_id}">${discharge.valueDischarge}</option>
                     </c:forEach>
                 </select>
             </div>
-        </div>        <br>
+        </div>
+        <br>
 
         <p class="h5 mt-auto ml-3">7. Выберите карту(ы) нормирования."</p>
-        <form id="upload-container" enctype="multipart/form-data" method="post"
-              action="${pageContext.request.contextPath}/importMapTable">
-            <label for="typeTime_id"></label><input id="typeTime_id" name="typeTime_id" value="${typeTime_id}" hidden>
-            <label for="typeMapTable_id"></label><input id="typeMapTable_id" name="typeMapTable_id"
-                                                        value="${typeMapTable_id}" hidden>
-            <label for="discharge_id"></label><input id="discharge_id" name="discharge_id" value="${discharge_id}"
-                                                     hidden>
-            <label for="section_id"></label><input id="section_id" name="section_id" value="${section_id}" hidden>
-            <img id="upload-image" src="http://localhost:8081/cstrmo/img/uploadFileImg.png" alt="f">
-            <div>
-                <input id="file-input" accept=".xlsm" type="file" name="file" multiple>
-                <label for="file-input">Выберите файл(ы)</label>
-                <span>или перетащите его(их) сюда</span>
-            </div>
-        </form>
+        <div class="row pb-3 ml-5 pl-5  ">
+            <form id="upload-container" enctype="multipart/form-data" method="post" hidden
+                  action="${pageContext.request.contextPath}/importMapTable">
+
+                <label for="typeTime_id"></label><input id="typeTime_id" name="typeTime_id" required hidden>
+                <label for="typeMapTable_id"></label><input id="typeMapTable_id" name="typeMapTable_id"
+                                                            required hidden>
+                <label for="discharge_id"></label><input id="discharge_id" name="discharge_id"
+                                                         required hidden>
+                <label for="section_id"></label><input id="section_id" name="section_id" required hidden>
+                <img id="upload-image" src="http://localhost:8081/cstrmo/img/uploadFileImg.png" alt="f">
+                <div>
+                    <input id="file-input" accept=".xlsm" type="file" name="file" multiple>
+                    <label for="file-input">Выберите файл(ы)</label>
+                    <span>или перетащите его(их) сюда</span>
+                </div>
+
+            </form>
+        </div>
     </div>
 
 </main>

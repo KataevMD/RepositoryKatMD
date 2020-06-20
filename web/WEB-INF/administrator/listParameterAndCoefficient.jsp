@@ -10,6 +10,7 @@
 <html lang="en">
 <head>
     <title>Единая база нормативов технологических операций</title>
+    <link rel="shortcut icon" href="http://localhost:8081/cstrmo/img/favicon.png" type="image/png">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -116,7 +117,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabelSection">Создание нового раздела</h5>
+                <h5 class="modal-title" id="staticBackdropLabelSection">Создание нового значения коэффициента</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -134,6 +135,7 @@
                         <br>
                         <div id="loadCoeff">
                             <data id="dataCoeff" value="1313">
+                                Выберите коэффициент, в который будет добавлено новое значение коэффициента:
                                 <select id="listCoef" name="coefficient_id" class="list-group form-control"
                                         style="cursor: pointer">
                                     <c:forEach var="coefficient" items="${Coefficient}">
@@ -146,7 +148,7 @@
                             </data>
                         </div>
                         <div class="mt-3">
-                            <label for="nameValueCoeff">Введите название значение:</label>
+                            <label for="nameValueCoeff">Введите название значения:</label>
                             <input id="nameValueCoeff" name="valName"
                                    class="form-control" pattern="^[А-Яа-я/Ёё,\s]+$"
                                    title="Разрешено использовать пробелы, русские буквы, и запятые."

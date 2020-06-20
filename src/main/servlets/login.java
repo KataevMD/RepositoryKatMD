@@ -75,10 +75,7 @@ public class login extends HttpServlet {
                     request.setAttribute("hiddenNav", "hidden");
                     request.setAttribute("mess", 1);
                     request.setAttribute("disableCancel", "disabled");
-                    request.setAttribute("login", usersAdmins.getLogin());
-                    request.setAttribute("firstName", usersAdmins.getFirstName());
-                    request.setAttribute("lastName", usersAdmins.getLastName());
-                    request.setAttribute("patronymic", usersAdmins.getPatronymic());
+                    request.setAttribute("usersAdmin", usersAdmins);
                     getServletContext().getRequestDispatcher("/WEB-INF/administrator/myAccount.jsp").forward(request, response);
                 }else {
                     List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();

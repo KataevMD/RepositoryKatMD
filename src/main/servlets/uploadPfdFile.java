@@ -3,10 +3,6 @@ package main.servlets;
 import main.dao.mapTables;
 import main.hibernate.HibernateUtil;
 import main.model.FileMapTable;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.jdbc.BlobProxy;
@@ -20,8 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "uploadFile", urlPatterns = {"/uploadFileMapTable"})

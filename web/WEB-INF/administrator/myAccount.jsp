@@ -10,6 +10,7 @@
 <html lang="en">
 <head>
     <title>Единая база нормативов технологических операций</title>
+    <link rel="shortcut icon" href="http://localhost:8081/cstrmo/img/favicon.png" type="image/png">
     <meta charset="utf-8">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -37,7 +38,7 @@
     }
 %>
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Единая база нормативов технологических операций</a>
+    <a class="navbar-brand" href="${pageContext.request.contextPath}/openMainAdminsPage">Единая база нормативов технологических операций</a>
 
     <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
         <span class="navbar-toggler-icon"></span>
@@ -94,6 +95,7 @@
 </div>
 
 <main role="main" class="flex-shrink-0">
+    <p class="text-center h3">${message}</p><br>
     <div class="container border border-secondary" style="width: 100%; max-width: 500px">
         <div class="row">
             <div class="col" >
@@ -199,7 +201,6 @@
                 <label>
                     <input id="message" type="checkbox" value="${mess}" hidden>
                 </label>
-                <p class="text-center h6">${message}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-primary">Понятно!</button>

@@ -11,7 +11,7 @@
 <html lang="en">
 <head>
     <title>Единая база нормативов технологических операций</title>
-
+    <link rel="shortcut icon" href="http://localhost:8081/cstrmo/img/favicon.png" type="image/png">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -118,7 +118,7 @@
     </div>
     <div class="container-fluid">
         <div class="row" style="min-height: 650px; max-height: 700px;">
-            <div id="structureTree" class="col mr-md-5 px-md-5 overflow-auto ">
+            <div id="structureTree" class="col mr-md-5 px-md-5 overflow-auto " style="min-height: 650px; max-height: 700px;">
                 <%--Структура справочника--%>
                 <a class="btn btn-outline-secondary pb-2"
                    title="Открывает модуль редактирования глав и разделов справочника." type="button"
@@ -283,8 +283,10 @@
                                     <label>Управление</label>
                                 </div>
                                 <div class="col-4">
-                                    <button class="btn btn-outline-primary" id="save" type="submit" ${save}>Сохранить
+                                    <button class="btn btn-outline-primary mb-2" id="save" type="submit" ${save}>Сохранить
                                         изменения
+                                    </button>
+                                    <button class="btn btn-outline-primary mb-2" id="clone" type="button" ${save}>Клонировать
                                     </button>
                                     <button class="btn btn-outline-secondary"
                                             onclick="deleteMapTableById(${map.mapTable_id})"

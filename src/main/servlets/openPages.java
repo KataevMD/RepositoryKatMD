@@ -142,41 +142,22 @@ public class openPages extends HttpServlet {
         TypeMapTable typeMapTables;
         TypeTime typeTimes;
         Discharge discharge;
-        Long section_id = null;
-        Long typeTime_id = null;
-        Long typeMapTable_id = null;
-        Long discharge_id = null;
+
         if (lCollection != null) {
             collectionMapTable = lCollection.get(0);
              lChapter = chapter.findChaptersByIdColl(collectionMapTable.getCollection_id());
             if (lChapter != null) {
                 chapters = lChapter.get(0);
                 lSections = chapter.findSectionByIdChapter(chapters.getChapter_id());
-                if(lSections != null){
-                    section = lSections.get(0);
-                    section_id = section.getSection_id();
-                }
             }
         }
         List<TypeMapTable> lTypeMapTables = typeMapTable.findAllTypeMapTable();
-        if(lTypeMapTables != null){
-            typeMapTables = lTypeMapTables.get(0);
-            typeMapTable_id = typeMapTables.getType_id();
-        }
+
         List<TypeTime> lTypeTimes = typeTime.findAllTypeTime();
-        if(lTypeTimes != null){
-            typeTimes = lTypeTimes.get(0);
-            typeTime_id = typeTimes.getTypeTime_id();
-        }
+
         List<Discharge> lDischarge = discharges.findAllDischarge();
-        if(lDischarge != null){
-            discharge = lDischarge.get(0);
-            discharge_id = discharge.getDischarge_id();
-        }
-        request.setAttribute("section_id", section_id);
-        request.setAttribute("typeMapTable_id", typeMapTable_id);
-        request.setAttribute("typeTime_id", typeTime_id);
-        request.setAttribute("discharge_id", discharge_id);
+
+
         request.setAttribute("lCollection", lCollection);
         request.setAttribute("lChapter", lChapter);
         request.setAttribute("lSections", lSections);
