@@ -58,6 +58,7 @@ public class daoMapTable extends HttpServlet {
         }
     }
 
+    //    Поиск карты трудового нормирования по ее идентификатору
     private void findMap(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
@@ -74,29 +75,30 @@ public class daoMapTable extends HttpServlet {
                 } else {
                     request.setAttribute("disabledDownloadFile", "disabled");
                 }
-
+                request.setAttribute("collection_id", collection_id);
                 request.setAttribute("map", mapTable);
                 request.setAttribute("TypeMapTable", lTypeMapTable);
                 request.setAttribute("TypeTime", lTypeTime);
                 request.setAttribute("Discharge", dischargeList);
-                request.setAttribute("showPage", "http://localhost:8081/cstrmo/openListParameterAndCoefficientPage?mapTable_id=" + mapTable_id.toString()+"&collection_id="+collection_id);
+                request.setAttribute("showPage", "http://localhost:8081/cstrmo/openListParameterAndCoefficientPage?mapTable_id=" + mapTable_id.toString() + "&collection_id=" + collection_id);
                 getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
             }
         }
     }
 
+    //Клонирование карты трудового нормирования
     private void cloneMap(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
             Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
-            Long collection_id = Long.parseLong(request.getParameter("collection_id"));
-            mapTables.cloneableMapTable(mapTable_id, collection_id);
-            List<MapTable> MapTables = collMapTable.findMapByIdSection(collection_id);
-            request.setAttribute("MapTables", MapTables);
-            getServletContext().getRequestDispatcher("/WEB-INF/administrator/listMapTable.jsp").forward(request, response);
+            Long section_id = Long.parseLong(request.getParameter("section_id"));
+            mapTables.cloneableMapTable(mapTable_id, section_id);
+            String answer = "success";
+            response.getWriter().write(answer);
         }
     }
 
+    //Удаление бумажного представления карты трудового нормирования
     private void deleteFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
@@ -112,6 +114,7 @@ public class daoMapTable extends HttpServlet {
         }
     }
 
+    //Создание новой карты трудового нормирования
     private void addMapTable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
@@ -126,7 +129,7 @@ public class daoMapTable extends HttpServlet {
             Long discharge_id = Long.parseLong(request.getParameter("discharge"));
             Long type_id = Long.parseLong(request.getParameter("typeMapTable"));
 
-            boolean res = mapTables.createMapTable(section_id,nameMapTable, numberTable, type_id, discharge_id, typeTime_id);
+            boolean res = mapTables.createMapTable(section_id, nameMapTable, numberTable, type_id, discharge_id, typeTime_id);
             if (res) {
                 getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
             } else {
@@ -136,6 +139,7 @@ public class daoMapTable extends HttpServlet {
         }
     }
 
+    //Обновление данных карты трудового нормирования
     private void upMapTable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
 
@@ -144,24 +148,30 @@ public class daoMapTable extends HttpServlet {
             String numberTable = request.getParameter("numberMapTable").trim();
 
             Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
+            Long collection_id = Long.parseLong(request.getParameter("collection_Id"));
             Long typeTime_id = Long.parseLong(request.getParameter("typeTimes"));
             Long discharge_id = Long.parseLong(request.getParameter("discharge"));
             Long type_id = Long.parseLong(request.getParameter("typeMapTable"));
 
-            String formulasList = request.getParameter("formulaMap" );
+            String formulasList = request.getParameter("formulaMap");
             boolean res = mapTables.rewriteMapTable(nameMapTable, mapTable_id, numberTable, formulasList, type_id, discharge_id, typeTime_id);
             if (res) {
                 MapTable mapTable = mapTables.findMapTableById(mapTable_id);
                 List<TypeTime> lTypeTime = typeTime.findAllTypeTime();
                 List<TypeMapTable> lTypeMapTable = typeMapTable.findAllTypeMapTable();
-
+                FileMapTable fileMapTable = mapTables.findFileMapTableByMapTable_id(mapTable.getMapTable_id());
+                if (fileMapTable != null) {
+                    request.setAttribute("downloadFileMap", "http://localhost:8081/cstrmo/downloadFile?mapTable_id=" + mapTable_id.toString());
+                } else {
+                    request.setAttribute("disabledDownloadFile", "disabled");
+                }
                 List<Discharge> dischargeList = discharges.findAllDischarge();
                 request.setAttribute("map", mapTable);
 
                 request.setAttribute("TypeMapTable", lTypeMapTable);
                 request.setAttribute("TypeTime", lTypeTime);
                 request.setAttribute("Discharge", dischargeList);
-                request.setAttribute("showPage", "http://localhost:8081/cstrmo/openListParameterAndCoefficientPage?mapTable_id=" + mapTable_id.toString()+"&nameMapTable="+mapTable.getName());
+                request.setAttribute("showPage", "http://localhost:8081/cstrmo/openListParameterAndCoefficientPage?mapTable_id=" + mapTable_id.toString() + "&collection_id=" + collection_id);
                 getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
             } else {
                 String answer = "fail";
@@ -170,6 +180,7 @@ public class daoMapTable extends HttpServlet {
         }
     }
 
+    //Удаление карты трудового нормирования
     private void deleteMap(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Long id = Long.parseLong(request.getParameter("mapTable_id"));
         Long collection_id = Long.parseLong(request.getParameter("collection_id"));
@@ -210,9 +221,9 @@ public class daoMapTable extends HttpServlet {
                 request.setAttribute("TypeTime", lTypeTime);
                 request.setAttribute("Discharge", dischargeList);
                 getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
-            }else {
+            } else {
                 String message = "Страницы с таким справочником не существует. \n Вернитесь на предыдущую страницу, и обновите ее";
-                request.setAttribute("message",message);
+                request.setAttribute("message", message);
                 getServletContext().getRequestDispatcher("/WEB-INF/pageException/error404.jsp").forward(request, response);
             }
         } else {

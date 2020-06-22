@@ -52,7 +52,7 @@ public class mapTables {
         Iterator<MapTable> it = MapTables.iterator();
 
 
-            return it.next();
+        return it.next();
 
     }
 
@@ -129,11 +129,12 @@ public class mapTables {
         session.close();
         return false;
     }
+
     public static boolean deleteFileByIdMapTable(Long mapTable_id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         FileMapTable fileMapTable = findFileMapTableByMapTable_id(mapTable_id);
-        if(fileMapTable!=null){
+        if (fileMapTable != null) {
             session.beginTransaction();
             session.delete(fileMapTable);
             session.getTransaction().commit();
@@ -143,12 +144,13 @@ public class mapTables {
         return false;
     }
 
-    public static void cloneableMapTable(Long mapTable_id, Long collection_id) {
+    public static void cloneableMapTable(Long mapTable_id, Long section_id) {
+
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         MapTable mapTable = mapTables.findMapTableById(mapTable_id);
-        CollectionMapTable collectionMapTable = collMapTable.findCollectionMapTableById(collection_id);
 
+        Section section = chapter.findSectionById(section_id);
         List<Coefficient> newListCoefficient = new ArrayList<>();
         List<Coefficient> coefficients = parameterAndCoefficient.findCoefficientByIdMap(mapTable.getMapTable_id());
 
@@ -158,51 +160,50 @@ public class mapTables {
         mapTable.setMapTable_id(null);
         mapTable.setListCoefficient(null);
 
-        assert listParameter != null;
-        for (Parameter param: listParameter) {
-            Parameter newParam = new Parameter();
-            newParam.setNameParametr(param.getNameParametr());
-            newParam.setStep(param.getStep());
+        if (listParameter != null) {
+            for (Parameter param : listParameter) {
+                Parameter newParam = new Parameter();
+                newParam.setNameParametr(param.getNameParametr());
+                newParam.setStep(param.getStep());
 
-            newListParameter.add(newParam);
-            mapTable.setListParameter(newListParameter);
-            mapTable.addParametr(newParam);
-        }
-
-        assert coefficients != null;
-
-        for (Coefficient newCoefff : coefficients) {
-
-            Coefficient newCoeff = new Coefficient();
-            newCoeff.setName(newCoefff.getName());
-
-            List<ValueCoefficient> newListValueCoefficient = new ArrayList<>();
-            List<ValueCoefficient> listValueCoefficient = parameterAndCoefficient.findValueCoefficientByIdCoefficient(newCoefff.getId());
-
-            assert listValueCoefficient != null;
-            for (ValueCoefficient valCoeff: listValueCoefficient){
-                ValueCoefficient newValCoeff = new ValueCoefficient();
-                newValCoeff.setValName(valCoeff.getValName());
-                newValCoeff.setValue(valCoeff.getValue());
-
-                newListValueCoefficient.add(newValCoeff);
-                newCoeff.setCoefficientValue(newListValueCoefficient);
-                newCoeff.addCoeffValue(newValCoeff);
+                newListParameter.add(newParam);
+                mapTable.setListParameter(newListParameter);
+                mapTable.addParametr(newParam);
             }
-
-            newListCoefficient.add(newCoeff);
-            mapTable.setListCoefficient(newListCoefficient);
-            mapTable.addCoefficient(newCoeff);
-
         }
 
-      //  mapTable.setCollectionMapTable(collectionMapTable);
+        if (coefficients != null) {
+            for (Coefficient newCoefff : coefficients) {
+
+                Coefficient newCoeff = new Coefficient();
+                newCoeff.setName(newCoefff.getName());
+
+                List<ValueCoefficient> newListValueCoefficient = new ArrayList<>();
+                List<ValueCoefficient> listValueCoefficient = parameterAndCoefficient.findValueCoefficientByIdCoefficient(newCoefff.getId());
+
+                if (listValueCoefficient != null) {
+                    for (ValueCoefficient valCoeff : listValueCoefficient) {
+                        ValueCoefficient newValCoeff = new ValueCoefficient();
+                        newValCoeff.setValName(valCoeff.getValName());
+                        newValCoeff.setValue(valCoeff.getValue());
+
+                        newListValueCoefficient.add(newValCoeff);
+                        newCoeff.setCoefficientValue(newListValueCoefficient);
+                        newCoeff.addCoeffValue(newValCoeff);
+                    }
+                }
+                newListCoefficient.add(newCoeff);
+                mapTable.setListCoefficient(newListCoefficient);
+                mapTable.addCoefficient(newCoeff);
+
+            }
+        }
+        mapTable.setSection(section);
         session.beginTransaction();
         session.merge(mapTable);
         session.getTransaction().commit();
         session.close();
     }
-
 
 
 }

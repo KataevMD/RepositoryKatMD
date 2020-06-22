@@ -189,4 +189,16 @@ public class admin {
         session.getTransaction().commit();
         session.close();
     }
+
+    public static void breakPassword(Long id) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        UsersAdmin usersAdmin = admin.findAdminById(id);
+        String standardPassw = "Passw0rd";
+        usersAdmin.setPassword(getHash(standardPassw));
+        session.getTransaction().begin();
+        session.update(usersAdmin);
+        session.getTransaction().commit();
+        session.close();
+    }
 }

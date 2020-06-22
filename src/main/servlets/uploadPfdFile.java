@@ -32,9 +32,10 @@ public class uploadPfdFile extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req,resp);
+        doPost(req, resp);
     }
 
+    //Загрузчик бумажных представлений карт в виде файлов формата PDF
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long mapTable_id = null;
@@ -47,12 +48,12 @@ public class uploadPfdFile extends HttpServlet {
                 String mapId = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
                 log(mapId);
                 mapTable_id = Long.parseLong(mapId);
-            }else if(part.getName().equals("fileName")){
+            } else if (part.getName().equals("fileName")) {
                 nameFileMap = new BufferedReader(isr).lines().collect(Collectors.joining("\n"));
-            } else{
+            } else {
 
                 part.write(part.getSubmittedFileName());
-                fileMapTable = new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\cstrmo\\file\\"+part.getSubmittedFileName());
+                fileMapTable = new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\cstrmo\\file\\" + part.getSubmittedFileName());
             }
             inputStream.close();
             isr.close();
@@ -66,7 +67,7 @@ public class uploadPfdFile extends HttpServlet {
 
         } else {
             Path fileToDelete = Paths.get(fileMapTable.getAbsolutePath());
-            updateFile(fileMap,fileMapTable, nameFileMap);
+            updateFile(fileMap, fileMapTable, nameFileMap);
             Files.delete(fileToDelete);
 
         }

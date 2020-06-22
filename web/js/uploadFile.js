@@ -1,7 +1,7 @@
 
 function selectFile(value) {
     if (value != null) {
-        alert('Файл был выбран!');
+
         let file = value.file;
         let deletePart = '.pdf';
         let splittedFakePath = value.split('\\');
@@ -11,9 +11,8 @@ function selectFile(value) {
         $('#waitAnswer').modal('show');
         $('#fileName').val(newNameMap + numberMap);
         sendFiles(file);
-    } else {
-        alert('Ты не выбрал файл!');
     }
+
 }
 
 

@@ -103,7 +103,7 @@ function checkLname(){
 function checkPatron(){
     let $inp = $('#inputPatronymic');
     let patr = $inp.val();
-    let regName = '^([А-Я]{0}[а-яё]{0,30}|[A-Z]{0}[a-z]{0,30})$';
+    let regName = '^([А-Я]{1}[а-яё]{2,30}|[A-Z]{1}[a-z]{1,30})$';
     if(!patr.match(regName)){
         $('#createNewAcc').prop('disabled', true);
         $inp.addClass('error');
@@ -125,4 +125,24 @@ function checkLogin(){
         $inp.removeClass('error');
     }
 }
+function breakPassword(admin_id) {
+    let res = confirm("Вы точно хотите сбросить пароль?");
+    if (res) {
 
+        $.ajax({
+            method: 'get',
+            url: 'http://localhost:8081/cstrmo/breakPassword',     // URL - сервлет
+            data: {                 // передаваемые сервлету данные
+                admin_id: admin_id,
+            },
+            success: function (response) {
+                if(response === "yoursAcc"){
+                    alert('Вы не можете сбросить пароль своей учетной записи! Для изменения пароля перейдите в Личный кабинет!');
+                }
+                if (response === "success") {
+                    alert('Пароль пользователя успешно сброшен!');
+                }
+            }
+        });
+    }
+}

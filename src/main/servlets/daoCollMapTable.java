@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "daoCollMapTables", urlPatterns = {"/deleteCollMapTable", "/addNewCollMapTable", "/updateCollMapTable", "/getListChapter", "/getListSections"})
+@WebServlet(name = "daoCollMapTables", urlPatterns = {"/deleteCollMapTable", "/addNewCollMapTable", "/updateCollMapTable", "/findAllCollection", "/getListChapter", "/getListSections"})
 public class daoCollMapTable extends HttpServlet {
     @Override
     public void init() throws ServletException {
@@ -58,41 +58,69 @@ public class daoCollMapTable extends HttpServlet {
             case "/getListSections":
                 getListSection(request, response);
                 break;
+            case "/findAllCollection":
+                loadListCollectionForCloneableMap(request, response);
+                break;
         }
     }
 
+    //    Сервлет "Загрузка предыдущей страницы"
+    private void loadListCollectionForCloneableMap(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if (ajax) {
+            List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
+            String path = request.getParameter("path");
+            if (collectionMapTables != null) {
+                request.setAttribute("lCollection", collectionMapTables);
+                if (path.equals("structureCollectionPage")) {
+                    getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
+                }
+            }
+        }
+    }
+
+    //    Сервлет "Получение списка разделов"
     private void getListSection(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
-
-        Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
         if (ajax) {
+            Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
             List<Section> lSection = chapter.findSectionByIdChapter(chapter_id);
+            String path = request.getParameter("path");
             if (lSection != null) {
-                request.setAttribute("listSectionChapter", lSection);
-                getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
+                request.setAttribute("lSection", lSection);
+                if (path.equals("structureCollectionPage")) {
+                    getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
+                } else if (path.equals("rewriteStructureCollectionPage")) {
+                    getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
+                }
             }
 
         }
-
-
     }
 
-    private void getListChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    //    Сервлет "Получение списка глав"
+    private void getListChapter(HttpServletRequest request, HttpServletResponse response) throws
+            ServletException, IOException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
 
-        Long collection_id = Long.parseLong(request.getParameter("collection_id"));
 
+        if (ajax) {
+            Long collection_id = Long.parseLong(request.getParameter("collection_id"));
+            String path = request.getParameter("path");
 
             List<Chapter> lChapter = chapter.findChaptersByIdColl(collection_id);
             if (lChapter != null) {
-                request.setAttribute("listChapterCollection", lChapter);
-                getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
+                request.setAttribute("lChapter", lChapter);
+                if (path.equals("structureCollectionPage")) {
+                    getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
+                }
             }
-            getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
-
-
+        }
     }
 
-    private void addCollMapTable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    //    Сервлет "Добавление нового справочника"
+    private void addCollMapTable(HttpServletRequest request, HttpServletResponse response) throws
+            IOException, ServletException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         String nameCollMapTable = request.getParameter("nameCollMapTable").trim();
 
@@ -106,7 +134,9 @@ public class daoCollMapTable extends HttpServlet {
         }
     }
 
-    private void upCollMapTable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    //    Сервлет "обнолвение данных справочника"
+    private void upCollMapTable(HttpServletRequest request, HttpServletResponse response) throws
+            IOException, ServletException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
 
         String nameCollMapTable = request.getParameter("nameCollMapTable").trim();
@@ -123,11 +153,19 @@ public class daoCollMapTable extends HttpServlet {
         }
     }
 
-    private void deleteColl(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    //    Сервлет "Удаление справочника"
+    private void deleteColl(HttpServletRequest request, HttpServletResponse response) throws
+            IOException, ServletException {
+        boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         Long id = Long.parseLong(request.getParameter("collection_id"));
         collMapTable.deleteCollMapTableById(id);
-        List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
-        request.setAttribute("collectionMapTables", collectionMapTables);
-        getServletContext().getRequestDispatcher("/WEB-INF/administrator/mainAdmins.jsp").forward(request, response);
+        if (ajax) {
+
+            List<CollectionMapTable> collectionMapTables = collMapTable.findAllCollectionMapTable();
+            request.setAttribute("collectionMapTables", collectionMapTables);
+            getServletContext().getRequestDispatcher("/WEB-INF/administrator/mainAdmins.jsp").forward(request, response);
+        }
+
+
     }
 }

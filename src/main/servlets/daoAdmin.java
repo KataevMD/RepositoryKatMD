@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 
 
-@WebServlet(name = "daoAdmins", urlPatterns = {"/createAccAdmin", "/deleteAccAdminById", "/updatePassword", "/updateAccAdmin"})
+@WebServlet(name = "daoAdmins", urlPatterns = {"/createAccAdmin", "/deleteAccAdminById", "/updatePassword", "/updateAccAdmin", "/breakPassword"})
 public class daoAdmin extends HttpServlet {
 
     @Override
@@ -51,19 +51,36 @@ public class daoAdmin extends HttpServlet {
             case "/deleteAccAdminById":
                 deleteAdmin(request, response);
                 break;
-//                case "/edit":
-//                    showEditForm(request, response);
-//                    break;
-//                case "/update":
-//                    updateUser(request, response);
-//                    break;
-//                default:
-//                    listUser(request, response);
-//                    break;
+            case "/breakPassword":
+                breakPassword(request, response);
+                break;
         }
 
     }
 
+    //Сервлет "Сброс пароля администратора"
+    private void breakPassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long id = Long.parseLong(request.getParameter("admin_id"));
+        String answer;
+        String idUser = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("iduser")) {
+                    idUser = cookie.getValue();
+                }
+            }
+        }
+        if (id.toString().equals(idUser)) {
+            answer = "yoursAcc";
+        } else {
+            answer = "success";
+            admin.breakPassword(id);
+        }
+        response.getWriter().write(answer);
+    }
+
+    //Сервлет "Обнолвение пароля администратора"
     private void updatePassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idUser = null;
         Cookie[] cookies = request.getCookies();
@@ -82,18 +99,17 @@ public class daoAdmin extends HttpServlet {
             String retNewPassword = request.getParameter("retNewPassword").trim();
             oldPassword = admin.getHash(oldPassword);
 
-            if(newPassword.equals(retNewPassword)){
-                if (oldPassword.equals(user.getPassword()) ) {
+            if (newPassword.equals(retNewPassword)) {
+                if (oldPassword.equals(user.getPassword())) {
 
                     String hashPassw = admin.getHash(newPassword);
                     user.setPassword(hashPassw);
                     admin.updatePassword(user);
                     answer = "success";
-                }else {
+                } else {
                     answer = "notValid";
                 }
-            }
-             else {
+            } else {
                 answer = "passNotEquals";
             }
             response.getWriter().write(answer);
@@ -102,6 +118,7 @@ public class daoAdmin extends HttpServlet {
 
     }
 
+    //    Сервлет "Удаление учетной записи администратора по его ID"
     private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.parseLong(request.getParameter("id"));
         String answer;
@@ -123,6 +140,7 @@ public class daoAdmin extends HttpServlet {
         response.getWriter().write(answer);
     }
 
+    //    Севрлет "Создание новой учетной записи администраторов"
     private void createAccountAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         String firstName = request.getParameter("firstName").trim();
@@ -146,6 +164,7 @@ public class daoAdmin extends HttpServlet {
         }
     }
 
+    //    Сервлет "Обновление данных учетной записи администратора"
     private void updateAccAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
@@ -154,7 +173,7 @@ public class daoAdmin extends HttpServlet {
             String patronymic = request.getParameter("patronymic").trim();
             String login = request.getParameter("login").trim();
             Long id = Long.parseLong(request.getParameter("user_id"));
-            admin.updateDataAcc(firstName,lastName,patronymic,login,id);
+            admin.updateDataAcc(firstName, lastName, patronymic, login, id);
             String answer = "success";
             response.getWriter().write(answer);
         }

@@ -22,6 +22,7 @@
             crossorigin="anonymous"></script>
     <script src="http://localhost:8081/cstrmo/js/coefficientAndParameters.js"></script>
     <script src="http://localhost:8081/cstrmo/js/uploadFile.js"></script>
+    <script src="http://localhost:8081/cstrmo/js/jquery.maskedinput.js"></script>
 
 </head>
 <body class="d-flex flex-column h-100">
@@ -94,8 +95,9 @@
 
                         <div class="mt-3">
                             <label for="stepParameter">Введите степень параметра:</label>
-                            <input id="stepParameter" name="stepParameter"
-                                   class="form-control" pattern="\d+(\.\d{1,9})?"
+                            <input id="stepParameter" type="number" step="any"  name="stepParameter"
+                                   class="stepParam form-control"
+                                   pattern="\d+(\.\d{1,9})?"
                                    title="Разрешено записывать числа только в виде десятичной дроби, через точку."
                                    required>
                         </div>
@@ -156,7 +158,7 @@
                         </div>
                         <div class="mt-3">
                             <label for="valueCoeff">Введите значение:</label>
-                            <input id="valueCoeff" name="value"
+                            <input id="valueCoeff" name="value" type="number" step="any"
                                    class="form-control" pattern="\d+(\.\d{1,9})?"
                                    title="Разрешено записывать числа только в виде десятичной дроби, через точку."
                                    required>
@@ -333,8 +335,8 @@
                                                 <label for="stepParam"> Степень параметра:</label>
                                             </div>
                                             <div class="col">
-                                                <input id="stepParam" name="step" value="${params.step}"
-                                                       class="form-control" pattern="\d+(\.\d{1,9})?"
+                                                <input id="stepParam" name="step" type="number" step="any" value="${params.step}"
+                                                       class="form-control" pattern="-\d+(\.\d{1,9})?"
                                                        title="Разрешено записывать числа только в виде десятичной дроби, через точку."
                                                        required>
                                             </div>
@@ -466,7 +468,7 @@
                                                 <label for="value"> Значение:</label>
                                             </div>
                                             <div class="col">
-                                                <input id="value" name="value" value="${valueCoefficient.value}"
+                                                <input id="value" name="value" type="number" step="any"  value="${valueCoefficient.value}"
                                                        class="form-control" pattern="\d+(\.\d{1,9})?"
                                                        title="Разрешено записывать числа только в виде десятичной дроби, через точку."
                                                        required>

@@ -28,6 +28,105 @@
     <script src="http://localhost:8081/cstrmo/dist/jstree.min.js"></script>
 </head>
 <body class="d-flex flex-column h-100">
+<%--Модальное окно клонирования карты трудового нормирования--%>
+<div class="modal fade" id="cloneMapTable" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Клонирование карты трудового нормирования</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" id="formCloneableMapTable"
+                      action="${pageContext.request.contextPath}/cloneableMapTable">
+                    <label for="mapTable_id"></label><input id="mapTable_id"
+                                                            name="mapTable_id"
+                                                            value="${map.mapTable_id}"
+                                                            hidden>
+                    <div class="container-fluid">
+                        <p class="h6 mt-auto ml-3">1. Выберите справочник в графе "Справочник".</p>
+                        <div class="row pb-3 ml-5">
+                            <div class="col col-3 ">
+                                <label for="findCollection">Поиск справочника по названию:</label>
+                            </div>
+                            <div class="col  ">
+                                <input onkeyup="filterColl(this)" class="form-control" id="findCollection">
+                            </div>
+
+                        </div>
+                        <div class="row pb-3 ml-5">
+                            <div class="col col-3">
+                                <label for="collection">Справочник:</label>
+                            </div>
+                            <div id="listColl" class="col ">
+                                <data id="dataListColl" value="1212">
+                                    <select id="collection" onchange="getListChapter(this)" name="collection"
+                                            class="form-control">
+                                        <option id="blockColl">Выберите справочник</option>
+                                        <c:forEach var="collection" items="${lCollection}">
+                                            <option value="${collection.collection_id}">${collection.nameCollectionMapTable}</option>
+                                        </c:forEach>
+                                    </select>
+                                </data>
+                            </div>
+                        </div>
+                        <br>
+                        <p class="h6 mt-auto ml-3">2. Выберите главу справочника в графе "Глава".</p>
+                        <div class="row pb-3 ml-5">
+                            <div class="col col-3">
+                                <label for="chapter">Глава: </label>
+                            </div>
+                            <div id="listChapter" class="col ">
+                                <data id="dataListChapter" value="1212">
+                                    <select class="form-control" onchange="getListSection(this)" id="chapter" disabled>
+                                        <option id="blockChapter" >Выберите главу</option>
+                                        <c:forEach var="chapter" items="${lChapter}">
+                                            <option value="${chapter.chapter_id}">${chapter.nameChapter}</option>
+                                        </c:forEach>
+                                    </select>
+                                </data>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <p class="h6 mt-auto ml-3">3. Выберите раздел главы в графе "Раздел".</p>
+                        <div class="row pb-3 ml-5">
+                            <div class="col col-3">
+                                <label for="section">Раздел: </label>
+                            </div>
+                            <div id="listSection" class="col">
+                                <data id="dataListSection" value="1212">
+                                    <select class="form-control" id="section" name="section_id" onchange="selectSections()" disabled>
+                                        <option id="blockSection">Выберите раздел</option>
+                                        <c:forEach var="section" items="${lSection}">
+                                            <option value="${section.section_id}">${section.nameSection}</option>
+                                        </c:forEach>
+                                    </select>
+                                </data>
+                            </div>
+                        </div>
+                        <div class="row pb-3 ml-5">
+                            <div class="col" style="min-width: 50%;">
+                                <button class="btn btn-outline-primary" id="cloneableMap" type="submit" disabled>Клонировать
+                                </button>
+                            </div>
+                            <div class="col" style="min-width: 50%;">
+                                <button class="btn btn-outline-secondary" data-dismiss="modal" type="reset">Отмена
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <%
     Cookie[] cookies = request.getCookies();
     String userName = "";
@@ -107,9 +206,6 @@
                             </button>
                         </div>
                         <div class="col-1 mr-2">
-                            <a class="btn btn-outline-secondary"
-                               href="${pageContext.request.contextPath}/deleteCollMapTable?collection_id=${collection.collection_id}">Удалить
-                                справочник</a>
                         </div>
                     </div>
                 </form>
@@ -118,7 +214,8 @@
     </div>
     <div class="container-fluid">
         <div class="row" style="min-height: 650px; max-height: 700px;">
-            <div id="structureTree" class="col mr-md-5 px-md-5 overflow-auto " style="min-height: 650px; max-height: 700px;">
+            <div id="structureTree" class="col mr-md-5 px-md-5 overflow-auto "
+                 style="min-height: 650px; max-height: 700px;">
                 <%--Структура справочника--%>
                 <a class="btn btn-outline-secondary pb-2"
                    title="Открывает модуль редактирования глав и разделов справочника." type="button"
@@ -129,8 +226,6 @@
                                                                           class="form-control" id="search"></p>
                 <data id="dataStructureTree" value="1212">
                     <div id="jstree">
-
-                        <!-- in this example the tree is populated from inline HTML -->
                         <ul>
                             <c:forEach var="chapter" items="${Chapter}">
                                 <li id="<c:out value="${chapter.chapter_id}"/>">
@@ -143,8 +238,9 @@
                                                     <ul>
                                                         <c:forEach var="mapTable" items="${MapTable}">
                                                             <c:if test="${section.section_id == mapTable.section.section_id}">
-                                                                <li
-                                                                        onclick="findMapTable(${mapTable.mapTable_id})">
+                                                                <li id="map_<c:out value="${mapTable.mapTable_id}"/>"
+                                                                    onclick="findMapTable(<c:out
+                                                                            value="${mapTable.mapTable_id}"/>)">
                                                                     <c:out value="${mapTable.name}"/>
                                                                 </li>
                                                             </c:if>
@@ -175,43 +271,44 @@
                                 <a id="openParamAndCoeff" class="btn btn-outline-secondary btn-sm ${viewParam}"
                                    href="${showPage}">Просмотр параметров и коэффициентов</a>
                             </div>
-                            <div class="col-4">
+                            <div class="col-5">
                             </div>
-                            <div class="col-6"></div>
+                            <div class="col-5"></div>
                         </div>
                         <form id="formUpdateMap" method="post"
                               action="${pageContext.request.contextPath}/updateMapTable">
                             <label for="id"></label><input id="id" name="mapTable_id" value="${map.mapTable_id}"
                                                            hidden>
-                            <br><label for="Collid"></label><input id="Collid" name="collection_Id"
+                            <br><label for="Collid"></label><input id="Collid" value="${collection_id}"
+                                                                   name="collection_Id"
                                                                    hidden>
                             <div class="row mt-md-3">
                                 <div class="col-3">
                                     <label for="numberMap"> Номер карты:</label>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-5">
                                     <input id="numberMap" name="numberMapTable" value="${map.numberTable}"
                                            class="form-control" pattern="^[0-9]+$"
                                            title="Разрешено использовать цифры" required>
                                 </div>
-                                <div class="col-6"></div>
+                                <div class="col-5"></div>
                             </div>
                             <div class="row mt-md-3">
                                 <div class="col-3">
                                     <label for="nameMap"> Название карты:</label>
                                 </div>
-                                <div class="col-4">
-                                    <input id="nameMap" name="nameMapTable" pattern="^[А-Яа-яЁё,\s]+$"
-                                           title="Разрешено использовать только пробелы и русские буквы"
+                                <div class="col-5">
+                                    <input id="nameMap" name="nameMapTable"
+                                           title="Разрешено использовать буквы русского и латинского алфавитов, цифры, точки и запятые. "
                                            value="${map.name}" class="form-control" required>
                                 </div>
-                                <div class="col-6"></div>
+                                <div class="col-5"></div>
                             </div>
                             <div class="row mt-md-3">
                                 <div class="col-3">
                                     <label for="typeTimes"> Тип возвращаемого времени:</label>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-5">
                                     <select id="typeTimes" name="typeTimes" class="form-control">
                                         <c:forEach var="typeTimeMap" items="${TypeTime}">
                                             <c:if test="${typeTimeMap.typeTime_id == map.typeTime.typeTime_id}">
@@ -224,7 +321,7 @@
                                         </c:forEach>
                                     </select>
                                 </div>
-                                <div class="col-6"></div>
+                                <div class="col-5"></div>
 
                             </div>
 
@@ -232,7 +329,7 @@
                                 <div class="col-3">
                                     <label for="discharge">Разряд:</label>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-5">
                                     <select id="discharge" name="discharge" class="form-control">
                                         <c:forEach var="discharge" items="${Discharge}">
                                             <c:if test="${discharge.discharge_id == map.discharge.discharge_id}">
@@ -245,14 +342,14 @@
                                         </c:forEach>
                                     </select>
                                 </div>
-                                <div class="col-6"></div>
+                                <div class="col-5"></div>
                             </div>
 
                             <div class="row mt-md-3">
                                 <div class="col-3">
                                     <label for="typeMapTable">Тип карты нормирования:</label>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-5">
                                     <select id="typeMapTable" name="typeMapTable" class="form-control">
                                         <c:forEach var="typeMap" items="${TypeMapTable}">
                                             <c:if test="${typeMap.type_id == map.typeMapTable.type_id}">
@@ -264,37 +361,42 @@
                                         </c:forEach>
                                     </select>
                                 </div>
-                                <div class="col-6"></div>
+                                <div class="col-5"></div>
                             </div>
 
                             <div class="row mt-md-3">
                                 <div class="col-3">
                                     <label for="formula">Формула:</label>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-5">
                                     <input id="formula" class="form-control"
                                            value="${map.formula}" name="formulaMap">
                                 </div>
-                                <div class="col-6"></div>
+                                <div class="col-5"></div>
                             </div>
 
                             <div class="row mt-md-3">
                                 <div class="col-3">
                                     <label>Управление</label>
                                 </div>
-                                <div class="col-4">
-                                    <button class="btn btn-outline-primary mb-2" id="save" type="submit" ${save}>Сохранить
+                                <div class="col-5">
+                                    <button class="btn btn-outline-primary mb-2" id="save" type="submit" ${save}>
+                                        Сохранить
                                         изменения
                                     </button>
-                                    <button class="btn btn-outline-primary mb-2" id="clone" type="button" ${save}>Клонировать
+
+                                    <button class="btn btn-outline-primary mb-2" data-toggle="modal"
+                                            data-target="#cloneMapTable" id="clone" onclick="findAllCollection()"
+                                            type="button" ${save}>
+                                        Клонировать
                                     </button>
-                                    <button class="btn btn-outline-secondary"
+                                    <button class="btn btn-outline-secondary mb-2"
                                             onclick="deleteMapTableById(${map.mapTable_id})"
                                             type="button" id="deleteMapTable" ${delete}>Удалить
                                         карту
                                     </button>
                                 </div>
-                                <div class="col-6"></div>
+                                <div class="col-5"></div>
                             </div>
                         </form>
                         <div class="row mt-md-3">
@@ -324,8 +426,6 @@
                         </div>
                     </data>
                 </div>
-
-
             </div>
         </div>
     </div>

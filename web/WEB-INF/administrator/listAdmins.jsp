@@ -126,6 +126,7 @@
                     <td><c:out value="${admin.lastName}"/></td>
                     <td><c:out value="${admin.patronymic}"/></td>
                     <td><c:out value="${admin.login}"/></td>
+                    <td><button onclick="breakPassword(<c:out value="${admin.id}"/>)" class="btn btn-secondary" >Сбросить пароль</button></td>
                 </tr>
             </c:forEach>
             </tbody>

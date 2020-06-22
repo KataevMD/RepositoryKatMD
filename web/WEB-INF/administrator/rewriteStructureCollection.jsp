@@ -372,7 +372,7 @@
                                         <data id="dataLSection" value="1313">
 
                                             <select id="sectionsChapter" name="sections" class="form-control" required>
-                                                <c:forEach var="lSectionChapter" items="${listSectionChapter}">
+                                                <c:forEach var="lSectionChapter" items="${lSection}">
                                                     <option value="${lSectionChapter.section_id}">${lSectionChapter.nameSection}</option>
                                                 </c:forEach>
                                             </select>
@@ -398,8 +398,8 @@
                                     <label for="namMap"> Название карты:</label>
                                 </div>
                                 <div class="col-4" style="min-width: 50%;">
-                                    <input id="namMap" name="nameMapTable" pattern="^[А-Яа-яЁё,\s]+$"
-                                           title="Разрешено использовать только пробелы и русские буквы"
+                                    <input id="namMap" name="nameMapTable"
+                                           title="Разрешено использовать буквы русского и латинского алфавитов, цифры, точки и запятые. "
                                            class="form-control" required>
                                 </div>
 
@@ -444,6 +444,15 @@
                                     </select>
                                 </div>
 
+                            </div>
+                            <div class="row mt-md-3">
+                                <div class="col-4">
+                                    <label for="formula">Формула:</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="formula" class="form-control"
+                                           name="formulaMap">
+                                </div>
                             </div>
                             <div class="row mt-md-3">
                                 <div class="col-4">

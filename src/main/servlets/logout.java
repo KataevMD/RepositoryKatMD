@@ -13,6 +13,9 @@ public class logout extends HttpServlet {
             throws ServletException, IOException {
         doPost(request, response);
     }
+    /*
+     *Процесс выхода пользователя из системы
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

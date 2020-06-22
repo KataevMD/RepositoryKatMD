@@ -246,31 +246,32 @@ function deleteCoefficientById() {
 function deleteValueCoefficientById() {
     let res = confirm("Вы точно хотите удалить значение коэффициента?");
     if (res) {
-    let coefficient_id = $('#coeff_id').val();
-    let coeffValue_id = $('#valueCoeff_id').val();
-    $('#saveValueCoeff').prop('disabled', true);
-    $('#deleteValueCoeff').prop('disabled', true);
-    $.ajax({
-        method: 'get',
-        url: 'http://localhost:8081/cstrmo/deleteValueCoefficient',     // URL - сервлет
-        data: {                 // передаваемые сервлету данные
-            coeffValue_id: coeffValue_id,
-            coefficient_id: coefficient_id
-        },
-        success: function (response) {
+        let coefficient_id = $('#coeff_id').val();
+        let coeffValue_id = $('#valueCoeff_id').val();
+        $('#saveValueCoeff').prop('disabled', true);
+        $('#deleteValueCoeff').prop('disabled', true);
+        $.ajax({
+            method: 'get',
+            url: 'http://localhost:8081/cstrmo/deleteValueCoefficient',     // URL - сервлет
+            data: {                 // передаваемые сервлету данные
+                coeffValue_id: coeffValue_id,
+                coefficient_id: coefficient_id
+            },
+            success: function (response) {
 
-            if (response === "fail") {
-                $('#saveValueCoeff').prop('disabled', false);
-                $('#deleteValueCoeff').prop('disabled', false);
-                alert('Значение коэффициента не удалено!');
-            } else {
-                $('#value').val(null);
-                $('#valName').val(null);
-                alert('Значение коэффициента удалено!');
-                $("#loadListValueCoeff").html($(response).find("#dataListValueCoeff").html());
+                if (response === "fail") {
+                    $('#saveValueCoeff').prop('disabled', false);
+                    $('#deleteValueCoeff').prop('disabled', false);
+                    alert('Значение коэффициента не удалено!');
+                } else {
+                    $('#value').val(null);
+                    $('#valName').val(null);
+                    alert('Значение коэффициента удалено!');
+                    $("#loadListValueCoeff").html($(response).find("#dataListValueCoeff").html());
+                }
             }
-        }
-    });}
+        });
+    }
 }
 
 $('#new-parameter-list').click(function () {
@@ -282,3 +283,6 @@ $('#new-coefficient-list').click(function () {
 $('#new-valueCoefficient-list').click(function () {
     $('#formNewValueCoeffMapTableId').val($('#mapTableId').val());
 });
+
+
+

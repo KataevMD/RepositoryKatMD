@@ -125,7 +125,7 @@
                     <div class="form-row justify-content-center">
                         <div class="form-group col-md-6 ">
                             <label for="inputPatronymic">Отчество</label>
-                            <input type="text" name="patronymic" autocomplete="off" onkeyup="checkPatron()"
+                            <input type="text" name="patronymic" autocomplete="off"
                                    class="form-control"
                                    title="Разрешено использовать русские и латинские буквы. Отчество начинается с заглавной."
                                    pattern="^([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{2,30})$" id="inputPatronymic">

@@ -1,78 +1,89 @@
 $(document).ready(function () {
-    let dropZone = $('#upload-container');
+        let dropZone = $('#upload-container');
 
-    $('#chapter').prop('disabled', true);
-    $('#section').prop('disabled', true);
-    $('#typeMap').prop('disabled', true);
-    $('#typeTime').prop('disabled', true);
-    $('#discharge').prop('disabled', true);
-    $('#blockImport').prop('disabled', true);
+        $('#chapter').prop('disabled', true);
+        $('#section').prop('disabled', true);
+        $('#typeMap').prop('disabled', true);
+        $('#typeTime').prop('disabled', true);
+        $('#discharge').prop('disabled', true);
+        $('#blockImport').prop('disabled', true);
 
-    $('#file-input').focus(function () {
-        $('label').addClass('focus');
-    })
-        .focusout(function () {
-            $('label').removeClass('focus');
+        $('#file-input').focus(function () {
+            $('label').addClass('focus');
+        })
+            .focusout(function () {
+                $('label').removeClass('focus');
+            });
+
+
+        dropZone.on('drag dragstart dragend dragover dragenter dragleave drop', function () {
+            return false;
         });
 
+        dropZone.on('dragover dragenter', function () {
+            dropZone.addClass('dragover');
+        });
 
-    dropZone.on('drag dragstart dragend dragover dragenter dragleave drop', function () {
-        return false;
-    });
+        dropZone.on('dragleave', function (e) {
+            let dx = e.pageX - dropZone.offset().left;
+            let dy = e.pageY - dropZone.offset().top;
+            if ((dx < 0) || (dx > dropZone.width()) || (dy < 0) || (dy > dropZone.height())) {
+                dropZone.removeClass('dragover');
+            }
+        });
 
-    dropZone.on('dragover dragenter', function () {
-        dropZone.addClass('dragover');
-    });
-
-    dropZone.on('dragleave', function (e) {
-        let dx = e.pageX - dropZone.offset().left;
-        let dy = e.pageY - dropZone.offset().top;
-        if ((dx < 0) || (dx > dropZone.width()) || (dy < 0) || (dy > dropZone.height())) {
+        dropZone.on('drop', function (e) {
             dropZone.removeClass('dragover');
-        }
-    });
+            let files = e.originalEvent.dataTransfer.files;
+            sendFiles(files);
+        });
 
-    dropZone.on('drop', function (e) {
-        dropZone.removeClass('dragover');
-        let files = e.originalEvent.dataTransfer.files;
-        sendFiles(files);
-    });
+        function sendFiles(files) {
+            let section_id = $('#section_id').val();
+            if (section_id !== '') {
+                let res = confirm("Импортировать выбранные файлы?");
+                if (res) {
 
-    function sendFiles(files) {
-        let res = confirm("Импортировать выбранные файлы?");
-        if (res) {
-            $('#waitingUpload').modal('show');
-            let Data = new FormData($('#upload-container')[0]);
-            // $(files).each(function (index, file) {
-            //     Data.append('file', file);
-            // });
+                    $('#waitingUpload').modal('show');
+                    let Data = new FormData($('#upload-container')[0]);
+                    // $(files).each(function (index, file) {
+                    //     Data.append('file', file);
+                    // });
 
-            $.ajax({
-                url: 'http://localhost:8081/cstrmo/importMapTable',
-                type: 'post',
-                data: Data,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    alert('Файлы были успешно загружены!');
-                    $('#close').click();
+                    $.ajax({
+                        url: 'http://localhost:8081/cstrmo/importMapTable',
+                        type: 'post',
+                        data: Data,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            alert('Файлы были успешно загружены!');
+                            $('#close').click();
+                        }
+
+                    });
                 }
+            } else {
+                alert('Глава и раздел не выбраны! Выберите главу и раздел, а затем повторите загрузку файлов!');
+                $('#chapter').addClass('error');
+            }
 
-            });
         }
+
+        $('#file-input').change(function () {
+            let files = this.files;
+            sendFiles(files);
+        });
+
     }
-
-    $('#file-input').change(function () {
-        let files = this.files;
-        sendFiles(files);
-    });
-
-});
+);
 
 function getChapter(select) {
     $('#blockColl').prop('disabled', true);
     findChapterByIdColl(select.value);
     $('#chapter').prop('disabled', false);
+    $('#section_id').val('');
+    $('#section').prop('disabled',true)
 }
 
 function findChapterByIdColl(collection_id) {

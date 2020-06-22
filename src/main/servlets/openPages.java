@@ -100,18 +100,14 @@ public class openPages extends HttpServlet {
         request.setAttribute("TypeMapTable", lTypeMapTable);
         request.setAttribute("TypeTime", lTypeTime);
         request.setAttribute("Discharge", dischargeList);
-        request.setAttribute("showPage", "http://localhost:8081/cstrmo/openListParameterAndCoefficientPage?mapTable_id=" + mapTable_id.toString());
+        request.setAttribute("showPage", "http://localhost:8081/cstrmo/openListParameterAndCoefficientPage?mapTable_id=" + mapTable_id.toString()+"&collection_id="+collection_id);
         request.setAttribute("showPageRewriteStructureCollection", "http://localhost:8081/cstrmo/openRewriteStructureCollectionPage?collection_id=" + collection_id);
-        request.setAttribute("viewParam", "disabled");
-        request.setAttribute("selectFile", "disabled");
-        request.setAttribute("disabledDownloadFile", "disabled");
-        request.setAttribute("save", "disabled");
-        request.setAttribute("delete", "disabled");
 
         request.setAttribute("Chapter", lChapter);
         request.setAttribute("Section", lSection);
         request.setAttribute("MapTable", lMapTable);
         request.setAttribute("collection", collectionMapTable);
+        request.setAttribute("collection_id", collection_id);
         getServletContext().getRequestDispatcher("/WEB-INF/administrator/structureCollection.jsp").forward(request, response);
 
     }

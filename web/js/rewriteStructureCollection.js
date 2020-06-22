@@ -3,18 +3,17 @@ function getSection(select) {
 }
 
 function findSectionByIdChapter(chapter_id) {
+    let path = "rewriteStructureCollectionPage";
     $.ajax({
         method: 'get',
         url: 'http://localhost:8081/cstrmo/getListSections',     // URL - сервлет
         data: {                 // передаваемые сервлету данные
-            chapter_id: chapter_id
+            chapter_id: chapter_id,
+            path: path
 
         },
         success: function (response) {
-
-            $('#lSection').html($(response).find('#lSection').html());
-
-
+            $('#lSection').html($(response).find('#dataLSection').html());
         }
     });
 }

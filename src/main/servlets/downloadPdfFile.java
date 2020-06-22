@@ -28,18 +28,19 @@ public class downloadPdfFile extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req,resp);
+        doGet(req, resp);
     }
 
+    //Процедура получения бумажного представления карты нормирования из базы данных, с его последующей отправкой пользователю
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
         FileMapTable fileMap = mapTables.findFileMapTableByMapTable_id(mapTable_id);
 
-        if(fileMap != null){
+        if (fileMap != null) {
             Blob fileBlob = fileMap.getFile();
-            File pdf = new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\cstrmo\\file\\" + fileMap.getNameFileMapTable()+".pdf");
+            File pdf = new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\cstrmo\\file\\" + fileMap.getNameFileMapTable() + ".pdf");
             FileOutputStream fileOutputStream = new FileOutputStream(pdf);
             try {
                 IOUtils.copy(fileBlob.getBinaryStream(), fileOutputStream);
@@ -53,15 +54,15 @@ public class downloadPdfFile extends HttpServlet {
             // obtains ServletContext
             ServletContext context = getServletContext();
 
-            // gets MIME type of the file
+            // gets MIME type of the file // Тип данных передаваемых по сети Интернет
             String mimeType = context.getMimeType(pdf.getAbsolutePath());
             if (mimeType == null) {
-                // set to binary type if MIME mapping not found
+                // set to binary type if MIME mapping not found // Установка типа данных по умолчанию
                 mimeType = "application/pdf";
             }
 
 
-            // modifies response
+            // modifies response // Модификация ответа, путем установление типа отправляемых данных
             response.setContentType(mimeType);
             response.setContentLength((int) pdf.length());
 
@@ -89,7 +90,6 @@ public class downloadPdfFile extends HttpServlet {
             String answer = "success";
             response.getWriter().write(answer);
         }
-
 
 
     }

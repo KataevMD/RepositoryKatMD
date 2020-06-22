@@ -75,7 +75,7 @@
             </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Вход</button>
-        <button type="button" onclick="document.location='loadCollForUsers'" hidden
+        <button type="button" onclick="document.location='loadCollForUsers'"
                 class="btn btn-outline-secondary btn-block">Продолжить без авторизации
         </button>
         <p class="mt-5 mb-3 text-muted">&copy; 2020-....</p>

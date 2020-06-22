@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ServletDaoChapter", urlPatterns = {"/findChapter", "/getListSection", "/findSection", "/updateChapter", "/updateSection",
-        "/addNewChapter","/addNewSection","/deleteChapter", "/deleteSection","/loadListChapter","/loadListSection"})
+        "/addNewChapter", "/addNewSection", "/deleteChapter", "/deleteSection", "/loadListChapter", "/loadListSection"})
 public class daoChapter extends HttpServlet {
     @Override
     public void init() throws ServletException {
@@ -42,6 +42,7 @@ public class daoChapter extends HttpServlet {
                 break;
         }
     }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("UTF-8");
@@ -71,6 +72,7 @@ public class daoChapter extends HttpServlet {
         }
     }
 
+    //Сервлет "Загрузка списка разделов по ID главы"
     private void loadListSection(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
@@ -81,6 +83,7 @@ public class daoChapter extends HttpServlet {
         }
     }
 
+    //Сервлет "Загрузка списка глав по ID справчоника"
     private void loadListChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
@@ -92,6 +95,7 @@ public class daoChapter extends HttpServlet {
         }
     }
 
+    //Сервлет "Удаление раздела"
     private void deleteSection(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
         Long section_id = Long.parseLong(request.getParameter("section_id"));
@@ -106,6 +110,7 @@ public class daoChapter extends HttpServlet {
         }
     }
 
+    //Сервлет "Удаление главы"
     private void deleteChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
         Long collection_id = Long.parseLong(request.getParameter("collection_id"));
@@ -120,6 +125,7 @@ public class daoChapter extends HttpServlet {
         }
     }
 
+    //Севрлет "Добавление новой главы"
     private void addNewChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long collection_id = Long.parseLong(request.getParameter("collection_id"));
         String nameChapter = request.getParameter("nameChapter").trim();
@@ -134,6 +140,8 @@ public class daoChapter extends HttpServlet {
             response.getWriter().write(answer);
         }
     }
+
+    //Сервлет "Добавление нового раздела"
     private void addNewSection(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
         String nameSection = request.getParameter("nameSection").trim();
@@ -146,6 +154,8 @@ public class daoChapter extends HttpServlet {
             response.getWriter().write(answer);
         }
     }
+//Сервлет "Обновление данных раздела"
+
     private void updateSection(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
         String nameSection = request.getParameter("nameSection").trim();
@@ -153,7 +163,7 @@ public class daoChapter extends HttpServlet {
 
         boolean res = chapter.rewriteSection(nameSection, section_id);
         if (res) {
-            Section section = chapter.findSectionById(chapter_id);
+            Section section = chapter.findSectionById(section_id);
             List<Section> sections = chapter.findSectionByIdChapter(chapter_id);
             request.setAttribute("listSection", section);
             request.setAttribute("Section", sections);
@@ -164,6 +174,7 @@ public class daoChapter extends HttpServlet {
         }
     }
 
+    //Сервлет "Обновление данных главы"
     private void updateChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long collection_id = Long.parseLong(request.getParameter("collection_id"));
         String nameChapter = request.getParameter("nameChapter").trim();
@@ -183,6 +194,7 @@ public class daoChapter extends HttpServlet {
 
     }
 
+    //Сервлет "Поиск раздела по его ID"
     private void findSection(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
@@ -193,18 +205,21 @@ public class daoChapter extends HttpServlet {
             getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
         }
     }
+
+    //Сервлет "Поиск главы по ее ID"
     private void findChapter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
             Long chapter_id = Long.parseLong(request.getParameter("chapter_id"));
             Chapter chapters = chapter.findChaptersById(chapter_id);
 
-                List<Section> sectionList = chapter.findSectionByIdChapter(chapters.getChapter_id());
+            List<Section> sectionList = chapter.findSectionByIdChapter(chapters.getChapter_id());
             request.setAttribute("chapter", chapters);
             request.setAttribute("Section", sectionList);
             getServletContext().getRequestDispatcher("/WEB-INF/administrator/rewriteStructureCollection.jsp").forward(request, response);
         }
     }
+
     private void getListSection(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));

@@ -19,7 +19,7 @@ import java.util.List;
 
 @WebServlet(name = "daoParameterAndCoefficient", urlPatterns = {"/getValueCoefficient", "/addNewParameter", "/addNewCoefficient",
         "/addNewValueCoefficient", "/deleteParameter", "/deleteCoefficient", "/deleteValueCoefficient", "/updateParameter", "/updateCoefficient",
-        "/updateValueCoefficient","/updateFormula", "/getParameter", "/findValueCoefficient"})
+        "/updateValueCoefficient", "/updateFormula", "/getParameter", "/findValueCoefficient"})
 public class daoParameterAndCoefficient extends HttpServlet {
     @Override
     public void init() throws ServletException {
@@ -82,6 +82,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
 
+    //Поиск Значение коэффициента по его идентификатору
     private void findValueCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
@@ -92,6 +93,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
 
+    //Поиск Параметра по его идентификатор
     private void findParameter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean ajax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if (ajax) {
@@ -102,6 +104,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
 
+    //обновление данных Значений коэффициента
     private void updateValueCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long coefficient_id = Long.parseLong(request.getParameter("coefficient_id"));
 
@@ -120,6 +123,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
 
     }
 
+    //обновление данных Коэффициента
     private void updateCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
         String nameCoefficient = request.getParameter("nameCoefficient").trim();
@@ -136,6 +140,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
 
+    //Обновление данных Параметра
     private void updateParameter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
@@ -155,6 +160,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
 
     }
 
+    //Удаление Коэффициента
     private void deleteCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
@@ -170,6 +176,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
 
+    //удаление Значения коэффициента
     private void deleteValueCoefficient(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Long coefficient_id = Long.parseLong(request.getParameter("coefficient_id"));
         Long coeffValue_id = Long.parseLong(request.getParameter("coeffValue_id"));
@@ -184,6 +191,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
 
+    //Удаление параметра по его идентификатору
     private void deleteParameter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
         Long parameter_id = Long.parseLong(request.getParameter("parameter_id"));
@@ -198,7 +206,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
 
-
+    //Создание нового Значение коэффициента
     private void addValueCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long coefficient_id = Long.parseLong(request.getParameter("coefficient_id"));
         String valName = request.getParameter("valName").trim();
@@ -216,6 +224,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
 
+    //Создание нового коэффициента карты трудового нормирования
     private void addCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
         String nameCoefficient = request.getParameter("nameCoefficient").trim();
@@ -231,6 +240,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
         }
     }
 
+    //Создание нового параметра карты трудового нормирования
     private void addParameter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Long mapTable_id = Long.parseLong(request.getParameter("mapTable_id"));
         String nameParameter = request.getParameter("nameParameter").trim();
@@ -248,6 +258,7 @@ public class daoParameterAndCoefficient extends HttpServlet {
 
     }
 
+    //Получение списка Значений коэффициента
     private void getValueCoefficient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Long coefficient_id = Long.parseLong(request.getParameter("coefficient_id"));
